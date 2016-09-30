@@ -64,6 +64,8 @@ public class MainActivity extends AppCompatActivity
     int id;
     RadioGroup optionsRadioGroup;
     CheckBox subscribeCheckBox;
+    Button reportButton;
+    Button newButton;
     // get a layout defined in xml
     LinearLayout layout;
     // programmatically create a PieChart
@@ -89,6 +91,8 @@ public class MainActivity extends AppCompatActivity
         subscribeCheckBox = (CheckBox)findViewById(R.id.subscribeCheckBox);
         layout = (LinearLayout) findViewById(R.id.linearLayout);
         chart = new PieChart(getApplicationContext());
+        reportButton = (Button) findViewById(R.id.reportButton);
+        newButton = (Button) findViewById(R.id.newButton);
         //Load a random poll
         ResultSet rs = connectionClass.randomPoll();
         try {
@@ -137,6 +141,8 @@ public class MainActivity extends AppCompatActivity
             optionsRadioGroup.setVisibility(View.VISIBLE);
             voteButton.setVisibility(View.VISIBLE);
             subscribeCheckBox.setVisibility(View.VISIBLE);
+            reportButton.setVisibility(View.VISIBLE);
+            newButton.setVisibility(View.VISIBLE);
             layout.removeViewAt(6);
         }
 
@@ -185,6 +191,8 @@ public class MainActivity extends AppCompatActivity
 
         optionsRadioGroup.setVisibility(View.GONE);
         voteButton.setVisibility(View.GONE);
+        reportButton.setVisibility(View.GONE);
+        newButton.setVisibility(View.GONE);
         subscribeCheckBox.setVisibility(View.GONE);
         chart.getLegend().setEnabled(false);
         DisplayMetrics metrics = new DisplayMetrics();
@@ -232,17 +240,17 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_create) {
+            // Handle the create poll button
+        } else if (id == R.id.nav_search) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_settings) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_login) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_register) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_profile) {
 
         }
 
