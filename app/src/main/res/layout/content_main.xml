@@ -29,8 +29,7 @@
             android:maxLength="50"
             android:maxWidth="80dp"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:onClick="next"/>
+            android:layout_alignParentEnd="true"/>
 
         <Button
             style="?android:attr/buttonStyleSmall"
@@ -142,8 +141,7 @@
                 android:layout_above="@+id/subscribeCheckBox"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:onClick="vote"/>
+                android:layout_marginBottom="10dp"/>
 
             <CheckBox
                 android:layout_width="wrap_content"

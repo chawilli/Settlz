@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public static class PollFragment extends Fragment{
+    public static class PollFragment extends Fragment implements View.OnClickListener {
         Database connectionClass;
         Statement stmt = null;
         TextView pollTextView;
@@ -215,8 +215,8 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        //ButtonListener method for nextButton
-        public void next(View view) {
+        //method for nextButton
+        public void next() {
             ResultSet rs = connectionClass.nextPoll(id);
             try {
                 rs.next();
@@ -244,8 +244,8 @@ public class MainActivity extends AppCompatActivity
         }
 
 
-        //ButtonListener method for voteButton
-        public void vote(View view) {
+        //method for voteButton
+        public void vote() {
             int selected =0;
             if (option1RadioButton.isChecked()){
                 selected = 1;
@@ -297,6 +297,15 @@ public class MainActivity extends AppCompatActivity
             int height = (int)(metrics.heightPixels*0.9);
             int width = (int)(metrics.widthPixels*0.9);
             layout.addView(chart,height,width); // add the programmatically created chart
+        }
+
+        @Override
+        public void onClick(View v) {
+            if(v.getId() == voteButton.getId()){
+                vote();
+            }else if(v.getId() == nextButton.getId()){
+                next();
+            }
         }
     }
 
