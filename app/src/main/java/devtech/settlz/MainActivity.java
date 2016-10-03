@@ -186,7 +186,9 @@ public class MainActivity extends AppCompatActivity
             category = (TextView)rootView.findViewById(R.id.categoryTextView);
             expire = (TextView)rootView.findViewById(R.id.expiredTextView);
             nextButton = (Button) rootView.findViewById(R.id.nextButton);
+            nextButton.setOnClickListener(this);
             voteButton = (Button) rootView.findViewById(R.id.voteButton);
+            voteButton.setOnClickListener(this);
             optionsRadioGroup = (RadioGroup) rootView.findViewById(R.id.optionsRadioGroup);
             subscribeCheckBox = (CheckBox)rootView.findViewById(R.id.subscribeCheckBox);
             layout = (LinearLayout) rootView.findViewById(R.id.linearLayout);
