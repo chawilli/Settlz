@@ -78,90 +78,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
-//    //ButtonListener method for nextButton
-//    public void next(View view) {
-//        ResultSet rs = connectionClass.nextPoll(id);
-//        try {
-//            rs.next();
-//            id = rs.getInt("PollId");
-//            pollTextView.setText(rs.getString("Argument"));
-//            option1RadioButton.setText(rs.getString("Option1"));
-//            option2RadioButton.setText(rs.getString("Option2"));
-//            option3RadioButton.setText(rs.getString("Option3"));
-//            option4RadioButton.setText(rs.getString("Option4"));
-//            category.setText(rs.getString("CategoryName"));
-//            expire.setText(rs.getDate("ExpiryDate").toString());
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        optionsRadioGroup.clearCheck();
-//        if(optionsRadioGroup.getVisibility() == View.GONE){
-//            optionsRadioGroup.setVisibility(View.VISIBLE);
-//            voteButton.setVisibility(View.VISIBLE);
-//            subscribeCheckBox.setVisibility(View.VISIBLE);
-//            reportButton.setVisibility(View.VISIBLE);
-//            newButton.setVisibility(View.VISIBLE);
-//            layout.removeViewAt(6);
-//        }
-//
-//    }
-//
-//    //ButtonListener method for voteButton
-//    public void vote(View view) {
-//        int selected =0;
-//        if (option1RadioButton.isChecked()){
-//            selected = 1;
-//        }
-//        else if (option2RadioButton.isChecked()){
-//            selected = 2;
-//        }
-//        else if (option3RadioButton.isChecked()){
-//            selected = 3;
-//        }
-//        else if (option4RadioButton.isChecked()){
-//            selected = 4;
-//        }
-//
-//        // programmatically create a PieChart
-//        PieChart chart = new PieChart(getApplicationContext());
-//
-//        try {
-//            ResultSet rs = connectionClass.vote(id, selected);
-//            rs.next();
-//            ArrayList<Entry> entries = new ArrayList<Entry>();
-//            entries.add(new Entry((float)rs.getInt("Vote1"),rs.getInt("Vote1")));
-//            entries.add(new Entry((float)rs.getInt("Vote2"),rs.getInt("Vote2")));
-//            entries.add(new Entry((float)rs.getInt("Vote3"),rs.getInt("Vote3")));
-//            entries.add(new Entry((float)rs.getInt("Vote4"),rs.getInt("Vote4")));
-//            PieDataSet dataset = new PieDataSet(entries,"");
-//            dataset.setColors(ColorTemplate.COLORFUL_COLORS);
-//            dataset.setValueTextSize(16);
-//            ArrayList<String> labels= new ArrayList<String>();
-//            labels.add(rs.getString("Option1"));
-//            labels.add(rs.getString("Option2"));
-//            labels.add(rs.getString("Option3"));
-//            labels.add(rs.getString("Option4"));
-//            PieData data = new PieData(labels,dataset);
-//            chart.setData(data);
-//            chart.setDescription("Results");
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        optionsRadioGroup.setVisibility(View.GONE);
-//        voteButton.setVisibility(View.GONE);
-//        reportButton.setVisibility(View.GONE);
-//        newButton.setVisibility(View.GONE);
-//        subscribeCheckBox.setVisibility(View.GONE);
-//        chart.getLegend().setEnabled(false);
-//        DisplayMetrics metrics = new DisplayMetrics();
-//        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-//        int height = (int)(metrics.heightPixels*0.9);
-//        int width = (int)(metrics.widthPixels*0.9);
-//        layout.addView(chart,height,width); // add the programmatically created chart
-//    }
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -262,21 +178,21 @@ public class MainActivity extends AppCompatActivity
             View rootView = inflater.inflate(R.layout.content_main,container,false);
             connectionClass = new Database();
             Log.d("POLLTEXTVIEWID",Integer.toString(R.id.pollTextView));
-            pollTextView = (TextView)getView().findViewById(R.id.pollTextView);
-            option1RadioButton = (RadioButton)getView().findViewById(R.id.option1RadioButton);
-            option2RadioButton = (RadioButton)getView().findViewById(R.id.option2RadioButton);
-            option3RadioButton = (RadioButton)getView().findViewById(R.id.option3RadioButton);
-            option4RadioButton = (RadioButton)getView().findViewById(R.id.option4RadioButton);
-            category = (TextView)getView().findViewById(R.id.categoryTextView);
-            expire = (TextView)getView().findViewById(R.id.expiredTextView);
-            nextButton = (Button) getView().findViewById(R.id.nextButton);
-            voteButton = (Button) getView().findViewById(R.id.voteButton);
-            optionsRadioGroup = (RadioGroup) getView().findViewById(R.id.optionsRadioGroup);
-            subscribeCheckBox = (CheckBox)getView().findViewById(R.id.subscribeCheckBox);
-            layout = (LinearLayout) getView().findViewById(R.id.linearLayout);
+            pollTextView = (TextView)rootView.findViewById(R.id.pollTextView);
+            option1RadioButton = (RadioButton)rootView.findViewById(R.id.option1RadioButton);
+            option2RadioButton = (RadioButton)rootView.findViewById(R.id.option2RadioButton);
+            option3RadioButton = (RadioButton)rootView.findViewById(R.id.option3RadioButton);
+            option4RadioButton = (RadioButton)rootView.findViewById(R.id.option4RadioButton);
+            category = (TextView)rootView.findViewById(R.id.categoryTextView);
+            expire = (TextView)rootView.findViewById(R.id.expiredTextView);
+            nextButton = (Button) rootView.findViewById(R.id.nextButton);
+            voteButton = (Button) rootView.findViewById(R.id.voteButton);
+            optionsRadioGroup = (RadioGroup) rootView.findViewById(R.id.optionsRadioGroup);
+            subscribeCheckBox = (CheckBox)rootView.findViewById(R.id.subscribeCheckBox);
+            layout = (LinearLayout) rootView.findViewById(R.id.linearLayout);
             chart = new PieChart(getActivity().getApplicationContext());
-            reportButton = (Button) getView().findViewById(R.id.reportButton);
-            newButton = (Button) getView().findViewById(R.id.newButton);
+            reportButton = (Button) rootView.findViewById(R.id.reportButton);
+            newButton = (Button) rootView.findViewById(R.id.newButton);
             random();
             return rootView;
         }
@@ -297,6 +213,90 @@ public class MainActivity extends AppCompatActivity
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }
+
+        //ButtonListener method for nextButton
+        public void next(View view) {
+            ResultSet rs = connectionClass.nextPoll(id);
+            try {
+                rs.next();
+                id = rs.getInt("PollId");
+                pollTextView.setText(rs.getString("Argument"));
+                option1RadioButton.setText(rs.getString("Option1"));
+                option2RadioButton.setText(rs.getString("Option2"));
+                option3RadioButton.setText(rs.getString("Option3"));
+                option4RadioButton.setText(rs.getString("Option4"));
+                category.setText(rs.getString("CategoryName"));
+                expire.setText(rs.getDate("ExpiryDate").toString());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            optionsRadioGroup.clearCheck();
+            if(optionsRadioGroup.getVisibility() == View.GONE){
+                optionsRadioGroup.setVisibility(View.VISIBLE);
+                voteButton.setVisibility(View.VISIBLE);
+                subscribeCheckBox.setVisibility(View.VISIBLE);
+                reportButton.setVisibility(View.VISIBLE);
+                newButton.setVisibility(View.VISIBLE);
+                layout.removeViewAt(6);
+            }
+
+        }
+
+
+        //ButtonListener method for voteButton
+        public void vote(View view) {
+            int selected =0;
+            if (option1RadioButton.isChecked()){
+                selected = 1;
+            }
+            else if (option2RadioButton.isChecked()){
+                selected = 2;
+            }
+            else if (option3RadioButton.isChecked()){
+                selected = 3;
+            }
+            else if (option4RadioButton.isChecked()){
+                selected = 4;
+            }
+
+            // programmatically create a PieChart
+            PieChart chart = new PieChart(getActivity().getApplicationContext());
+
+            try {
+                ResultSet rs = connectionClass.vote(id, selected);
+                rs.next();
+                ArrayList<Entry> entries = new ArrayList<Entry>();
+                entries.add(new Entry((float)rs.getInt("Vote1"),rs.getInt("Vote1")));
+                entries.add(new Entry((float)rs.getInt("Vote2"),rs.getInt("Vote2")));
+                entries.add(new Entry((float)rs.getInt("Vote3"),rs.getInt("Vote3")));
+                entries.add(new Entry((float)rs.getInt("Vote4"),rs.getInt("Vote4")));
+                PieDataSet dataset = new PieDataSet(entries,"");
+                dataset.setColors(ColorTemplate.COLORFUL_COLORS);
+                dataset.setValueTextSize(16);
+                ArrayList<String> labels= new ArrayList<String>();
+                labels.add(rs.getString("Option1"));
+                labels.add(rs.getString("Option2"));
+                labels.add(rs.getString("Option3"));
+                labels.add(rs.getString("Option4"));
+                PieData data = new PieData(labels,dataset);
+                chart.setData(data);
+                chart.setDescription("Results");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            optionsRadioGroup.setVisibility(View.GONE);
+            voteButton.setVisibility(View.GONE);
+            reportButton.setVisibility(View.GONE);
+            newButton.setVisibility(View.GONE);
+            subscribeCheckBox.setVisibility(View.GONE);
+            chart.getLegend().setEnabled(false);
+            DisplayMetrics metrics = new DisplayMetrics();
+            getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            int height = (int)(metrics.heightPixels*0.9);
+            int width = (int)(metrics.widthPixels*0.9);
+            layout.addView(chart,height,width); // add the programmatically created chart
         }
     }
 
