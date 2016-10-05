@@ -177,7 +177,6 @@ public class MainActivity extends AppCompatActivity
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
             View rootView = inflater.inflate(R.layout.content_main,container,false);
             connectionClass = new Database();
-            Log.d("POLLTEXTVIEWID",Integer.toString(R.id.pollTextView));
             pollTextView = (TextView)rootView.findViewById(R.id.pollTextView);
             option1RadioButton = (RadioButton)rootView.findViewById(R.id.option1RadioButton);
             option2RadioButton = (RadioButton)rootView.findViewById(R.id.option2RadioButton);
