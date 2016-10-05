@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity
             ft.commit();
 
         } else if (id == R.id.nav_profile) {
-            SharedPreferences pref = getApplicationContext().getSharedPreferences("Settlz", Context.MODE_PRIVATE);
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);;
             boolean login = pref.getBoolean("login",false);
             //user logged in
             if(login){
@@ -174,6 +174,11 @@ public class MainActivity extends AppCompatActivity
     public static class ProfileFragment extends Fragment implements View.OnClickListener {
         Database connectionClass;
         LinearLayout subscribeLayout;
+        Button logoutButton;
+        Button changeButton;
+        EditText passwordEditText;
+        EditText verifyEditText;
+        EditText changedEditText;
 
         public ProfileFragment() {
 
@@ -182,6 +187,15 @@ public class MainActivity extends AppCompatActivity
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
             connectionClass = new Database();
+
+            passwordEditText = (EditText) rootView.findViewById(R.id.passwordEditText);
+            verifyEditText = (EditText) rootView.findViewById(R.id.verifyEditText);
+            changedEditText = (EditText) rootView.findViewById(R.id.changedEditText);
+            logoutButton = (Button)rootView.findViewById(R.id.logoutButton);
+            logoutButton.setOnClickListener(this);
+            changeButton = (Button)rootView.findViewById(R.id.changeButton);
+            changeButton.setOnClickListener(this);
+
             subscribeLayout = (LinearLayout)rootView.findViewById(R.id.subscribeLayout);
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             if(pref.getInt("id",-1) != -1){
@@ -192,6 +206,7 @@ public class MainActivity extends AppCompatActivity
                         button.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                         button.setText(rs.getString("Argument"));
                         button.setId(rs.getInt("PollId"));
+                        button.setOnClickListener(this);
                         subscribeLayout.addView(button);
                     }
                 }catch(SQLException e){
@@ -200,17 +215,66 @@ public class MainActivity extends AppCompatActivity
                 }
 
 
-            }else{
-                Toast toast = Toast.makeText(getActivity().getApplicationContext(), Integer.toString(pref.getInt("id",123)), Toast.LENGTH_SHORT);
-                toast.show();
             }
 
             return rootView;
         }
 
-        @Override
-        public void onClick(View view) {
+        public void logout(){
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            SharedPreferences.Editor editor = pref.edit();
+            editor.remove("id");
+            editor.remove("email");
+            editor.remove("password");
+            editor.putBoolean("login",false);
+            editor.commit();
+            Fragment fragment = new PollFragment();
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.content_frame,fragment);
+            ft.addToBackStack(null);
+            ft.commit();
+        }
 
+        @Override
+        public void onClick(View v) {
+            if(v.getId() == logoutButton.getId()){
+                this.logout();
+            }
+            if (v.getId() == changeButton.getId()) {
+                this.changePassword();
+            }
+        }
+
+        public void changePassword() {
+            String password = passwordEditText.getText().toString();
+            String changedPassword = changedEditText.getText().toString();
+            String verifyPassword = verifyEditText.getText().toString();
+            if(!password.isEmpty() && password.length() >= 6 && !changedPassword.isEmpty() && changedPassword.length() >= 6 && !verifyPassword.isEmpty() && verifyPassword.length() >= 6 && verifyPassword.equals(changedPassword)){
+
+                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                if(password.equals(pref.getString("password",""))){
+                    int id = pref.getInt("id",-1);
+                    connectionClass.changePassword(id, changedPassword);
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putString("password",changedPassword);
+                    editor.commit();
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Password updated", Toast.LENGTH_SHORT);
+                    toast.show();
+                    Fragment fragment = new ProfileFragment();
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.content_frame,fragment);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }else{
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+
+
+            }else{
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_SHORT);
+                toast.show();
+            }
         }
     }
 
@@ -258,8 +322,35 @@ public class MainActivity extends AppCompatActivity
 
         public void login(){
             String email = emailEditText.getText().toString();
-            String password = passwordEditText.getText().toString()
+            String password = passwordEditText.getText().toString();
             connectionClass.login(email, password);
+
+            if(!password.isEmpty() && password.length() >= 6 && !email.isEmpty()){
+
+
+                int id = connectionClass.login(email,password);
+                if(id != -1) {
+                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putString("email", email);
+                    editor.putString("password", password);
+                    editor.putBoolean("login", true);
+                    editor.putInt("id", id);
+                    editor.commit();
+
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), Integer.toString(id), Toast.LENGTH_SHORT);
+                    toast.show();
+                    Fragment fragment = new ProfileFragment();
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.content_frame, fragment);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }
+            }else{
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+
         }
 
         public void register(){
@@ -330,8 +421,6 @@ public class MainActivity extends AppCompatActivity
                     editor.putInt("id",id);
                     editor.commit();
 
-                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), Integer.toString(id), Toast.LENGTH_SHORT);
-                    toast.show();
                     Fragment fragment = new ProfileFragment();
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
                     ft.replace(R.id.content_frame,fragment);

@@ -148,7 +148,7 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 2;
+        return -1;
     }
 
     public ResultSet getSubscribedPolls(int userId) {
@@ -189,6 +189,38 @@ public class Database {
         return false;
     }
 
-    public void login(String email, String password) {
+    public int login(String email, String password) {
+        try {
+
+            String query = "SELECT UserId " +
+                    "FROM Users " +
+                    "WHERE Email = '"+email+"' AND Password ='"+password+"';";
+
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            if(rs.next()){
+                return rs.getInt("UserId");
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public void changePassword(int id, String password) {
+        try {
+
+            String query = "UPDATE Users " +
+                    "SET Password='"+password+"' " +
+                    "WHERE UserId="+id+"";
+
+            Statement stmt = conn.createStatement();
+            stmt.executeQuery(query);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
