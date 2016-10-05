@@ -3,14 +3,28 @@
               android:id="@+id/login"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:padding="10dp"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Login "
+        android:id="@+id/textView6"
+        android:layout_gravity="center_horizontal"
+        android:textSize="30dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Email"
-        android:id="@+id/emailTextView" />
+        android:id="@+id/emailTextView"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        />
 
     <EditText
         android:layout_width="match_parent"
@@ -23,7 +37,8 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Password"
-        android:id="@+id/passwordTextView" />
+        android:id="@+id/passwordTextView"
+        android:layout_gravity="center"/>
 
     <EditText
         android:layout_width="match_parent"
@@ -35,7 +50,8 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center">
 
         <Button
             android:layout_width="wrap_content"
@@ -48,14 +64,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Register"
-            android:id="@+id/registerButton"/>
+            android:id="@+id/registerButton"
+            />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Login"
             android:id="@+id/loginButton"
-            android:layout_gravity="center_horizontal"
             />
 
     </LinearLayout>
@@ -64,6 +80,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Forgot Password"
-        android:id="@+id/forgotButton"/>
+        android:id="@+id/forgotButton"
+        android:layout_gravity="center"/>
 
 </LinearLayout>
