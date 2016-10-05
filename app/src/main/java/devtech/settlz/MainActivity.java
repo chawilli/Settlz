@@ -137,15 +137,50 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public static class RegisterFragment extends Fragment{
-
+    public static class RegisterFragment extends Fragment implements View.OnClickListener{
+        Database connectionClass;
+        Statement stmt = null;
+        EditText usernameEditText;
+        EditText passwordEditText;
+        EditText verifyEditText;
+        Button backButton;
+        Button registerButton;
         public RegisterFragment(){
 
         }
 
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
             View rootView = inflater.inflate(R.layout.fragment_register,container,false);
+            connectionClass = new Database();
+            usernameEditText=(EditText)rootView.findViewById(R.id.usernameEditText);
+            passwordEditText=(EditText)rootView.findViewById(R.id.passwordEditText);
+            verifyEditText=(EditText)rootView.findViewById(R.id.verifyEditText);
+            backButton=(Button)rootView.findViewById(R.id.backButton);
+            backButton.setOnClickListener(this);
+            registerButton=(Button)rootView.findViewById(R.id.registerButton);
+            registerButton.setOnClickListener(this);
             return rootView;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if(v.getId() == backButton.getId()){
+                this.back();
+            }else if(v.getId() == registerButton.getId()){
+                this.register();
+            }
+        }
+
+        public void register() {
+        }
+
+        public void back() {
+            Log.d("ERRORTAG","I GOT TO THE BACK METHOD");
+            Fragment fragment = new PollFragment();
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.content_frame,fragment);
+            ft.addToBackStack(null);
+            ft.commit();
         }
     }
 
