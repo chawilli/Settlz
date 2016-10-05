@@ -2,6 +2,7 @@ package devtech.settlz;
 
 import android.annotation.SuppressLint;
 import android.os.StrictMode;
+import android.text.Editable;
 import android.util.Log;
 
 import java.sql.Connection;
@@ -124,4 +125,70 @@ public class Database {
 
     }
 
+    public int register(String email, String password) {
+        try {
+            String query="INSERT INTO Users (Password, Email) " +
+                     "VALUES ('"+password+"', '"+email+"');";
+
+            Statement stmt = conn.createStatement();
+            stmt.executeQuery(query);
+
+            String userid = "SELECT UserId " +
+                    "FROM Users " +
+                    "WHERE Email="+email+";";
+
+            Statement stmt2 = conn.createStatement();
+            ResultSet rs = stmt2.executeQuery(userid);
+            rs.next();
+            return rs.getInt("UserId");
+//            return 2;
+
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 2;
+    }
+
+    public ResultSet getSubscribedPolls(int userId) {
+        String query="SELECT Argument, PollId " +
+                "From Polls " +
+                "INNER JOIN PollUser " +
+                "ON PollId = PollUser.Polls_PollId " +
+                "INNER JOIN Users " +
+                "ON PollUser.Users_UserId = Users.UserId " +
+                "WHERE UserId = "+userId+";";
+        ResultSet rs = null;
+        try {
+            Statement stmt = conn.createStatement();
+            rs = stmt.executeQuery(query);
+            return rs;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rs;
+    }
+
+    public boolean verifyEmail(String email) {
+        String query="SELECT * FROM USERS WHERE email='"+email+"';";
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            //rs.next() returns false if the ResultSet is empty because the cursor is before first line
+            //this means email is available to register
+            if(rs.next() == false){
+                return true;
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public void login(String email, String password) {
+    }
 }

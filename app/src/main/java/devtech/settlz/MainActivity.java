@@ -5,10 +5,14 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -119,17 +123,46 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_create) {
             // Handle the create poll button
+        } else if (id == R.id.nav_featured){
+            Fragment fragment = new PollFragment();
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.content_frame,fragment);
+            ft.addToBackStack(null);
+            ft.commit();
         } else if (id == R.id.nav_search) {
 
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_login) {
-
+            Fragment fragment = new LoginFragment();
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.content_frame,fragment);
+            ft.addToBackStack(null);
+            ft.commit();
         } else if (id == R.id.nav_register) {
             Fragment fragment = new RegisterFragment();
-            getFragmentManager().beginTransaction().replace(R.id.content_frame,fragment).commit();
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.content_frame,fragment);
+            ft.addToBackStack(null);
+            ft.commit();
 
         } else if (id == R.id.nav_profile) {
+            SharedPreferences pref = getApplicationContext().getSharedPreferences("Settlz", Context.MODE_PRIVATE);
+            boolean login = pref.getBoolean("login",false);
+            //user logged in
+            if(login){
+                Fragment fragment = new ProfileFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame,fragment);
+                ft.addToBackStack(null);
+                ft.commit();
+            }else{
+                Fragment fragment = new LoginFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame,fragment);
+                ft.addToBackStack(null);
+                ft.commit();
+            }
 
         }
 
@@ -138,10 +171,118 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    public static class ProfileFragment extends Fragment implements View.OnClickListener {
+        Database connectionClass;
+        LinearLayout subscribeLayout;
+
+        public ProfileFragment() {
+
+        }
+
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+            connectionClass = new Database();
+            subscribeLayout = (LinearLayout)rootView.findViewById(R.id.subscribeLayout);
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            if(pref.getInt("id",-1) != -1){
+                ResultSet rs = connectionClass.getSubscribedPolls(pref.getInt("id",-1));
+                try{
+                    while(rs.next()){
+                        Button button = new Button(getActivity());
+                        button.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                        button.setText(rs.getString("Argument"));
+                        button.setId(rs.getInt("PollId"));
+                        subscribeLayout.addView(button);
+                    }
+                }catch(SQLException e){
+                    Log.d("SQLPROBLEM",e.toString());
+
+                }
+
+
+            }else{
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(), Integer.toString(pref.getInt("id",123)), Toast.LENGTH_SHORT);
+                toast.show();
+            }
+
+            return rootView;
+        }
+
+        @Override
+        public void onClick(View view) {
+
+        }
+    }
+
+    public static class LoginFragment extends Fragment implements View.OnClickListener {
+        Database connectionClass;
+        EditText emailEditText;
+        EditText passwordEditText;
+        Button registerButton;
+        Button loginButton;
+        Button backButton;
+        Button forgotButton;
+
+        public LoginFragment() {
+
+        }
+
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_login, container, false);
+            connectionClass = new Database();
+            emailEditText = (EditText)rootView.findViewById(R.id.emailEditText);
+            passwordEditText = (EditText)rootView.findViewById(R.id.passwordEditText);
+            registerButton = (Button)rootView.findViewById(R.id.registerButton);
+            registerButton.setOnClickListener(this);
+            loginButton = (Button)rootView.findViewById(R.id.loginButton);
+            loginButton.setOnClickListener(this);
+            backButton = (Button)rootView.findViewById(R.id.backButton);
+            backButton.setOnClickListener(this);
+            forgotButton = (Button)rootView.findViewById(R.id.forgotButton);
+            forgotButton.setOnClickListener(this);
+            return rootView;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if(v.getId() == backButton.getId()){
+                this.back();
+            }else if(v.getId() == registerButton.getId()){
+                this.register();
+            }else if(v.getId() == loginButton.getId()){
+                this.login();
+            }else if(v.getId() == forgotButton.getId()){
+
+            }
+        }
+
+        public void login(){
+            String email = emailEditText.getText().toString();
+            String password = passwordEditText.getText().toString()
+            connectionClass.login(email, password);
+        }
+
+        public void register(){
+            Fragment fragment = new RegisterFragment();
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.content_frame,fragment);
+            ft.addToBackStack(null);
+            ft.commit();
+        }
+
+        public void back() {
+            Fragment fragment = new PollFragment();
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.content_frame,fragment);
+            ft.addToBackStack(null);
+            ft.commit();
+        }
+    }
+
     public static class RegisterFragment extends Fragment implements View.OnClickListener{
         Database connectionClass;
-        Statement stmt = null;
-        EditText usernameEditText;
+//        Statement stmt = null;
+        EditText emailEditText;
         EditText passwordEditText;
         EditText verifyEditText;
         Button backButton;
@@ -153,7 +294,7 @@ public class MainActivity extends AppCompatActivity
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
             View rootView = inflater.inflate(R.layout.fragment_register,container,false);
             connectionClass = new Database();
-            usernameEditText=(EditText)rootView.findViewById(R.id.usernameEditText);
+            emailEditText=(EditText)rootView.findViewById(R.id.emailEditText);
             passwordEditText=(EditText)rootView.findViewById(R.id.passwordEditText);
             verifyEditText=(EditText)rootView.findViewById(R.id.verifyEditText);
             backButton=(Button)rootView.findViewById(R.id.backButton);
@@ -173,10 +314,41 @@ public class MainActivity extends AppCompatActivity
         }
 
         public void register() {
+            String password = passwordEditText.getText().toString();
+            String email = emailEditText.getText().toString();
+            boolean emailValid = Patterns.EMAIL_ADDRESS.matcher(email).matches();
+            if(password.equals(verifyEditText.getText().toString()) && !password.isEmpty() && password.length() >= 6 && emailValid){
+
+                if(connectionClass.verifyEmail(email)){
+
+                    int id = connectionClass.register(email,password);
+                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putString("email",email);
+                    editor.putString("password",password);
+                    editor.putBoolean("login",true);
+                    editor.putInt("id",id);
+                    editor.commit();
+
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), Integer.toString(id), Toast.LENGTH_SHORT);
+                    toast.show();
+                    Fragment fragment = new ProfileFragment();
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.content_frame,fragment);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }else{
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Email already in use", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+
+            }else{
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_SHORT);
+                toast.show();
+            }
         }
 
         public void back() {
-            Log.d("ERRORTAG","I GOT TO THE BACK METHOD");
             Fragment fragment = new PollFragment();
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.content_frame,fragment);
@@ -187,7 +359,7 @@ public class MainActivity extends AppCompatActivity
 
     public static class PollFragment extends Fragment implements View.OnClickListener {
         Database connectionClass;
-        Statement stmt = null;
+//        Statement stmt = null;
         TextView pollTextView;
         RadioButton option1RadioButton;
         RadioButton option2RadioButton;

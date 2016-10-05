@@ -5,4 +5,6 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_share">Share</string>
     <string name="action_settings">Settings</string>
+    <string name="thanks">Thank you for downloading Settlz</string>
+    <string name="info">To get started using Settlz please register with a valid email address</string>
 </resources>

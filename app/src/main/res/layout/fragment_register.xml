@@ -3,20 +3,43 @@
               android:id="@+id/register"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:padding="10dp"
+    >
+
+    <TextView
+        android:text="@string/thanks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/textView3"
+        android:gravity="center"
+        android:layout_marginBottom="20dp"
+        android:textColor="#0004ff"/>
+
+    <TextView
+        android:text="@string/info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/textView2"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:textColor="#0004ff"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Username"
-        android:id="@+id/usernameTextView" />
+        android:text="Email"
+        android:id="@+id/emailTextView" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/usernameEditText"
-        />
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/emailEditText"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -44,7 +67,8 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
-        android:id="@+id/verifyEditText" />
+        android:id="@+id/verifyEditText"
+        />
 
     <LinearLayout
         android:orientation="horizontal"
