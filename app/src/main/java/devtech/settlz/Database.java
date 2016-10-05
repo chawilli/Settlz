@@ -223,4 +223,23 @@ public class Database {
             e.printStackTrace();
         }
     }
+
+    public ResultSet subscribedPoll(int pollId) {
+        String query = "Select PollId, Argument, CategoryName, ExpiryDate, Option1, Option2, Option3, Option4 " +
+                "from Polls " +
+                "INNER JOIN Options ON Polls.Option_OptionsId = Options.OptionsId " +
+                "INNER JOIN Categories ON Polls.CategoryCategoryId = Categories.CategoryId " +
+                "WHERE PollId = "+pollId+";";
+
+        ResultSet rs = null;
+        try {
+            Statement stmt = conn.createStatement();
+            rs = stmt.executeQuery(query);
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rs;
+    }
 }

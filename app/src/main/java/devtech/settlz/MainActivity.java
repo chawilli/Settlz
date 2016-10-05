@@ -179,6 +179,7 @@ public class MainActivity extends AppCompatActivity
         EditText passwordEditText;
         EditText verifyEditText;
         EditText changedEditText;
+        ArrayList<Button> buttonList;
 
         public ProfileFragment() {
 
@@ -187,7 +188,7 @@ public class MainActivity extends AppCompatActivity
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
             connectionClass = new Database();
-
+            buttonList = new ArrayList<Button>();
             passwordEditText = (EditText) rootView.findViewById(R.id.passwordEditText);
             verifyEditText = (EditText) rootView.findViewById(R.id.verifyEditText);
             changedEditText = (EditText) rootView.findViewById(R.id.changedEditText);
@@ -207,6 +208,7 @@ public class MainActivity extends AppCompatActivity
                         button.setText(rs.getString("Argument"));
                         button.setId(rs.getInt("PollId"));
                         button.setOnClickListener(this);
+                        buttonList.add(button);
                         subscribeLayout.addView(button);
                     }
                 }catch(SQLException e){
@@ -242,6 +244,19 @@ public class MainActivity extends AppCompatActivity
             }
             if (v.getId() == changeButton.getId()) {
                 this.changePassword();
+            }
+            for(int i=0;i<buttonList.size();i++){
+                if(v.getId() == buttonList.get(i).getId()){
+                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putInt("pollid",buttonList.get(i).getId());
+                    Fragment fragment = new PollFragment();
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.content_frame,fragment);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                    editor.commit();
+                }
             }
         }
 
@@ -491,8 +506,38 @@ public class MainActivity extends AppCompatActivity
             chart = new PieChart(getActivity().getApplicationContext());
             reportButton = (Button) rootView.findViewById(R.id.reportButton);
             newButton = (Button) rootView.findViewById(R.id.newButton);
-            random();
+
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            SharedPreferences.Editor editor = pref.edit();
+            int pollId = pref.getInt("pollid",0);
+            if(pollId != 0){
+                subscribedPoll(pollId);
+                editor.remove("pollid");
+                editor.commit();
+            }else{
+                random();
+            }
+
+
             return rootView;
+        }
+
+        private void subscribedPoll(int pollId) {
+            //Load a random poll
+            ResultSet rs = connectionClass.subscribedPoll(pollId);
+            try {
+                rs.next();
+                id = rs.getInt("PollId");
+                pollTextView.setText(rs.getString("Argument"));
+                option1RadioButton.setText(rs.getString("Option1"));
+                option2RadioButton.setText(rs.getString("Option2"));
+                option3RadioButton.setText(rs.getString("Option3"));
+                option4RadioButton.setText(rs.getString("Option4"));
+                category.setText(rs.getString("CategoryName"));
+                expire.setText(rs.getDate("ExpiryDate").toString());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
         public void random(){
