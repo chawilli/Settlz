@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity
 
             subscribeLayout = (LinearLayout)rootView.findViewById(R.id.subscribeLayout);
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            emailTextView = (TextView)rootView.findViewById(R.id.changeButton);
+            emailTextView = (TextView)rootView.findViewById(R.id.emailTextView);
             emailTextView.setText(pref.getString("email",""));
             if(pref.getInt("id",-1) != -1){
                 ResultSet rs = connectionClass.getSubscribedPolls(pref.getInt("id",-1));
