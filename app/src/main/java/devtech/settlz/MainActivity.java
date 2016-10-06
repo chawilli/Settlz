@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity
                 ft.replace(R.id.content_frame,fragment);
                 ft.addToBackStack(null);
                 ft.commit();
-                Toast toast = Toast.makeText(this.getApplicationContext(), "Login account required", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(this.getApplicationContext(), "Please Login/Register", Toast.LENGTH_SHORT);
                 toast.show();
             }
 
@@ -279,7 +279,7 @@ public class MainActivity extends AppCompatActivity
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putString("password",changedPassword);
                     editor.commit();
-                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Password updated", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Password changed", Toast.LENGTH_SHORT);
                     toast.show();
                     Fragment fragment = new ProfileFragment();
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -443,6 +443,8 @@ public class MainActivity extends AppCompatActivity
                     ft.replace(R.id.content_frame,fragment);
                     ft.addToBackStack(null);
                     ft.commit();
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Thank you for registering", Toast.LENGTH_SHORT);
+                    toast.show();
                 }else{
                     Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Email already in use", Toast.LENGTH_SHORT);
                     toast.show();
