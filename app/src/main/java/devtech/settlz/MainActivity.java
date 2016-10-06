@@ -232,6 +232,8 @@ public class MainActivity extends AppCompatActivity
             editor.remove("password");
             editor.putBoolean("login",false);
             editor.commit();
+            Toast toast = Toast.makeText(getActivity().getApplicationContext(), "You have been logged out!", Toast.LENGTH_SHORT);
+            toast.show();
             Fragment fragment = new PollFragment();
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.content_frame,fragment);
@@ -340,13 +342,17 @@ public class MainActivity extends AppCompatActivity
         public void login(){
             String email = emailEditText.getText().toString();
             String password = passwordEditText.getText().toString();
-            connectionClass.login(email, password);
+            //connectionClass.login(email, password);
 
             if(!password.isEmpty() && password.length() >= 6 && !email.isEmpty()){
 
 
                 int id = connectionClass.login(email,password);
-                if(id != -1) {
+                if(id == -1){
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                else if(id != -1) {
                     SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putString("email", email);
@@ -354,9 +360,10 @@ public class MainActivity extends AppCompatActivity
                     editor.putBoolean("login", true);
                     editor.putInt("id", id);
                     editor.commit();
-
-                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), Integer.toString(id), Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(),"Thank you for logging in!", Toast.LENGTH_SHORT);
                     toast.show();
+                    //Toast toast = Toast.makeText(getActivity().getApplicationContext(), Integer.toString(id), Toast.LENGTH_SHORT);
+                   // toast.show();
                     Fragment fragment = new ProfileFragment();
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
                     ft.replace(R.id.content_frame, fragment);
