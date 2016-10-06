@@ -183,6 +183,7 @@ public class MainActivity extends AppCompatActivity
         EditText passwordEditText;
         EditText verifyEditText;
         EditText changedEditText;
+        TextView emailTextView;
         ArrayList<Button> buttonList;
 
         public ProfileFragment() {
@@ -203,6 +204,8 @@ public class MainActivity extends AppCompatActivity
 
             subscribeLayout = (LinearLayout)rootView.findViewById(R.id.subscribeLayout);
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            emailTextView = (TextView)rootView.findViewById(R.id.emailTextView);
+            emailTextView.setText(pref.getString("email",""));
             if(pref.getInt("id",-1) != -1){
                 ResultSet rs = connectionClass.getSubscribedPolls(pref.getInt("id",-1));
                 try{
@@ -579,6 +582,7 @@ public class MainActivity extends AppCompatActivity
                 e.printStackTrace();
             }
             optionsRadioGroup.clearCheck();
+            subscribeCheckBox.setChecked(false);
             if(optionsRadioGroup.getVisibility() == View.GONE){
                 optionsRadioGroup.setVisibility(View.VISIBLE);
                 voteButton.setVisibility(View.VISIBLE);
