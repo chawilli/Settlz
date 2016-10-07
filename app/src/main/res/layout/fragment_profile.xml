@@ -23,7 +23,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/emailTextView"/>
+            android:id="@+id/emailTextView"
+            android:layout_marginBottom="30dp"
+            android:textColor="#0004ff"/>
 
         <TextView
             android:layout_width="wrap_content"
