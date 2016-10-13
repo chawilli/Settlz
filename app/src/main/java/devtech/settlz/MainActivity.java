@@ -468,6 +468,31 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public static class CreateFragment extends Fragment implements View.OnClickListener{
+        Database connectionClass;
+        Button backButton;
+        public CreateFragment(){
+
+        }
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+            View rootView = inflater.inflate(R.layout.content_main,container,false);
+            backButton = (Button)rootView.findViewById(R.id.backButton);
+            backButton.setOnClickListener(this);
+            return rootView;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (v.getId() == backButton.getId()){
+                Fragment fragment = new PollFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame,fragment);
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+        }
+    }
+
     public static class PollFragment extends Fragment implements View.OnClickListener {
         Database connectionClass;
 //        Statement stmt = null;
@@ -513,6 +538,7 @@ public class MainActivity extends AppCompatActivity
             chart = new PieChart(getActivity().getApplicationContext());
             reportButton = (Button) rootView.findViewById(R.id.reportButton);
             newButton = (Button) rootView.findViewById(R.id.newButton);
+            newButton.setOnClickListener(this);
 
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             SharedPreferences.Editor editor = pref.edit();
@@ -662,7 +688,14 @@ public class MainActivity extends AppCompatActivity
                 vote();
             }else if(v.getId() == nextButton.getId()){
                 next();
+            }else if(v.getId() == newButton.getId()){
+                Fragment fragment = new CreateFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame,fragment);
+                ft.addToBackStack(null);
+                ft.commit();
             }
+
         }
     }
 
