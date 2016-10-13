@@ -124,7 +124,24 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_create) {
-            // Handle the create poll button
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);;
+            boolean login = pref.getBoolean("login",false);
+            //user logged in
+            if(login){
+                Fragment fragment = new CreateFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame,fragment);
+                ft.addToBackStack(null);
+                ft.commit();
+            }else{
+                Fragment fragment = new LoginFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame,fragment);
+                ft.addToBackStack(null);
+                ft.commit();
+                Toast toast = Toast.makeText(this.getApplicationContext(), "Please Login/Register", Toast.LENGTH_SHORT);
+                toast.show();
+            }
         } else if (id == R.id.nav_featured){
             Fragment fragment = new PollFragment();
             FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -484,11 +501,24 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onClick(View v) {
             if (v.getId() == backButton.getId()){
-                Fragment fragment = new PollFragment();
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.content_frame,fragment);
-                ft.addToBackStack(null);
-                ft.commit();
+                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                boolean login = pref.getBoolean("login",false);
+                //user logged in
+                if(login){
+                    Fragment fragment = new CreateFragment();
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.content_frame,fragment);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }else{
+                    Fragment fragment = new LoginFragment();
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.content_frame,fragment);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Please Login/Register", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
             }
         }
     }
