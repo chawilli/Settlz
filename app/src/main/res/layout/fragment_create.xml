@@ -26,7 +26,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText5"
+        android:id="@+id/argumentEditText"
         android:layout_gravity="center_horizontal"
         android:background="#FFFFFF" />
 
@@ -41,7 +41,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText"
+        android:id="@+id/option1EditText"
         android:layout_gravity="center_horizontal"
         android:background="#FFFFFF" />
 
@@ -56,7 +56,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText2"
+        android:id="@+id/option2EditText"
         android:layout_gravity="center_horizontal"
         android:background="#FFFFFF" />
 
@@ -71,7 +71,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText3"
+        android:id="@+id/option3EditText"
         android:layout_gravity="center_horizontal"
         android:background="#FFFFFF" />
 
@@ -86,7 +86,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText4"
+        android:id="@+id/option4EditText"
         android:layout_gravity="center_horizontal"
         android:background="#FFFFFF" />
 
@@ -112,11 +112,15 @@
         android:id="@+id/textView17"
         android:layout_gravity="center_horizontal" />
 
-    <DatePicker
-        android:layout_width="wrap_content"
+    <EditText
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/datePicker"
-        android:layout_gravity="center_horizontal" />
+        android:inputType="date"
+        android:ems="10"
+        android:id="@+id/expiryEditText"
+        android:layout_gravity="center_horizontal"
+        android:text="Expiry Date"
+        android:background="#FFFFFF" />
 
     <LinearLayout
         android:orientation="horizontal"

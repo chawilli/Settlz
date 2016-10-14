@@ -1,24 +1,18 @@
 package devtech.settlz;
 
-import android.annotation.SuppressLint;
-import android.app.ActionBar;
-import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Point;
-import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
+import android.text.InputType;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -29,12 +23,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -42,23 +34,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
-import org.w3c.dom.Text;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
-import java.util.List;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -488,37 +474,77 @@ public class MainActivity extends AppCompatActivity
     public static class CreateFragment extends Fragment implements View.OnClickListener{
         Database connectionClass;
         Button backButton;
+        Button createButton;
+        private EditText expiryEditText;
+        EditText argumentEditText;
+        EditText option1EditText;
+        EditText option2EditText;
+        EditText option3EditText;
+        EditText option4EditText;
+
         public CreateFragment(){
 
         }
+
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-            View rootView = inflater.inflate(R.layout.content_main,container,false);
+            View rootView = inflater.inflate(R.layout.fragment_create,container,false);
+            connectionClass = new Database();
+
+            argumentEditText = (EditText)rootView.findViewById(R.id.argumentEditText);
+            option1EditText = (EditText)rootView.findViewById(R.id.option1EditText);
+            option2EditText = (EditText)rootView.findViewById(R.id.option2EditText);
+            option3EditText = (EditText)rootView.findViewById(R.id.option3EditText);
+            option4EditText = (EditText)rootView.findViewById(R.id.option4EditText);
+
             backButton = (Button)rootView.findViewById(R.id.backButton);
             backButton.setOnClickListener(this);
+
+            expiryEditText = (EditText) rootView.findViewById(R.id.expiryEditText);
+            expiryEditText.setInputType(InputType.TYPE_NULL);
+            expiryEditText.setOnClickListener(this);
+
+            createButton = (Button)rootView.findViewById(R.id.createButton);
+            createButton.setOnClickListener(this);
             return rootView;
         }
 
         @Override
         public void onClick(View v) {
             if (v.getId() == backButton.getId()){
+                Fragment fragment = new PollFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame,fragment);
+                ft.addToBackStack(null);
+                ft.commit();
+            }else if(v.getId() == expiryEditText.getId()){
+                Log.d("ERRORR","I GOT INTO HER");
+
+            }else if(v.getId() == createButton.getId()){
+                String argument = argumentEditText.getText().toString();
+                String option1 = option1EditText.getText().toString();
+                String option2 = option2EditText.getText().toString();
+                String option3 = option3EditText.getText().toString();
+                String option4 = option4EditText.getText().toString();
+                int categoryId = 3;
                 SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                boolean login = pref.getBoolean("login",false);
-                //user logged in
-                if(login){
-                    Fragment fragment = new CreateFragment();
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.content_frame,fragment);
-                    ft.addToBackStack(null);
-                    ft.commit();
+
+                int pollId = connectionClass.create(argument,option1,option2,option3,option4,expiryEditText.getText().toString(),categoryId,pref.getInt("id",0));
+
+                if(pollId == -1){
+                    Log.d("ERRORR","PROBLEMS");
                 }else{
-                    Fragment fragment = new LoginFragment();
+                    pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putInt("pollid",pollId);
+                    Fragment fragment = new PollFragment();
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
                     ft.replace(R.id.content_frame,fragment);
                     ft.addToBackStack(null);
                     ft.commit();
-                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Please Login/Register", Toast.LENGTH_SHORT);
-                    toast.show();
+                    editor.commit();
                 }
+
+
             }
         }
     }
@@ -719,15 +745,26 @@ public class MainActivity extends AppCompatActivity
             }else if(v.getId() == nextButton.getId()){
                 next();
             }else if(v.getId() == newButton.getId()){
-                Fragment fragment = new CreateFragment();
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.content_frame,fragment);
-                ft.addToBackStack(null);
-                ft.commit();
-            }
+                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());;
+                boolean login = pref.getBoolean("login",false);
+                //user logged in
+                if(login){
+                    Fragment fragment = new CreateFragment();
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.content_frame,fragment);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }else{
+                    Fragment fragment = new LoginFragment();
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.content_frame,fragment);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Please Login/Register", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
 
+            }
         }
     }
-
-
 }

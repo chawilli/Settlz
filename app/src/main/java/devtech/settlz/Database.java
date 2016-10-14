@@ -242,4 +242,81 @@ public class Database {
         }
         return rs;
     }
+
+    public int create(String argument, String option1, String option2, String option3, String option4, String s, int categoryId, int userId) {
+        try {
+//            DECLARE @voteid int
+//            DECLARE @twitterid int
+//            DECLARE @facebookid int
+//            DECLARE @optionsid int
+            int voteId;
+            int twitterId;
+            int facebookId;
+            int optionsId;
+            String insertVoteQuery = "INSERT INTO Votes (Vote1,Vote2,Vote3,Vote4) " +
+                    "VALUES (0,0,0,0)";
+            String getVoteIdQuery = "SELECT TOP 1 VotesId FROM Votes " +
+                    "ORDER BY VotesId DESC;";
+            String getOptionsQuery = "SELECT TOP 1 OptionsId FROM Options " +
+                    "ORDER BY OptionsId DESC";
+            String insertTwitterQuery = "INSERT INTO Twitters (TimesShared) " +
+                    "VALUES(0);";
+            String getTwitterQuery = "SELECT TOP 1 TwitterId FROM Twitters " +
+                    "ORDER BY TwitterId DESC";
+            String insertFacebookQuery = "INSERT INTO Facebooks (TimesShared) " +
+                    "VALUES(0);";
+            String getFacebookQuery = "SELECT TOP 1 FacebookId FROM Facebooks " +
+                    "ORDER BY FacebookId DESC";
+
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(insertVoteQuery);
+            stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(getVoteIdQuery);
+            rs.next();
+            voteId = rs.getInt("VotesId");
+
+            String insertOptionsQuery = "INSERT INTO Options (Option1,Option2,Option3,Option4,Vote_VotesId) " +
+                    "VALUES('"+option1+"','"+option2+"','"+option3+"','"+option4+"',"+voteId+");";
+            stmt = conn.createStatement();
+            stmt.executeUpdate(insertOptionsQuery);
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(getOptionsQuery);
+            rs.next();
+            optionsId = rs.getInt("OptionsId");
+
+            stmt = conn.createStatement();
+            stmt.executeUpdate(insertTwitterQuery);
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(getTwitterQuery);
+            rs.next();
+            twitterId = rs.getInt("TwitterId");
+
+            stmt = conn.createStatement();
+            stmt.executeUpdate(insertFacebookQuery);
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(getFacebookQuery);
+            rs.next();
+            facebookId = rs.getInt("FacebookId");
+
+            String insertPollsQuery = "INSERT INTO Polls (Argument,ReportCount,PollStatus,ExpiryDate,CategoryCategoryId,Option_OptionsId,Twitter_TwitterId,Facebook_FacebookId) " +
+                    "VALUES('"+argument+"',0,'True','2017-04-09',"+categoryId+","+optionsId+","+twitterId+","+facebookId+");";
+            String getPollsQuery = "SELECT TOP 1 PollId FROM Polls " +
+                    "ORDER BY PollId DESC";
+            stmt = conn.createStatement();
+            stmt.executeUpdate(insertPollsQuery);
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(getPollsQuery);
+            rs.next();
+            int pollId = rs.getInt("PollId");
+
+            String insertPollUserQuery= "INSERT INTO PollUser (Polls_PollId, Users_UserId) VALUES("+pollId+", "+userId+");";
+            stmt = conn.createStatement();
+            stmt.executeUpdate(insertPollUserQuery);
+
+            return pollId;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
 }
