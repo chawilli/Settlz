@@ -1,35 +1,33 @@
 package devtech.settlz;
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.support.v4.app.DialogFragment;
-import android.text.InputType;
-import android.util.Log;
-import android.util.Patterns;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.view.View;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,10 +39,8 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -481,6 +477,9 @@ public class MainActivity extends AppCompatActivity
         EditText option2EditText;
         EditText option3EditText;
         EditText option4EditText;
+        int id;
+        Spinner spinnerCategory;
+        final List<String> categories = new ArrayList<String>();
 
         public CreateFragment(){
 
@@ -503,9 +502,26 @@ public class MainActivity extends AppCompatActivity
             expiryEditText.setInputType(InputType.TYPE_NULL);
             expiryEditText.setOnClickListener(this);
 
+            getCategories();
+            spinnerCategory = (Spinner)rootView.findViewById(R.id.spinnerCategory);
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item, categories);
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerCategory.setAdapter(dataAdapter);
+
             createButton = (Button)rootView.findViewById(R.id.createButton);
             createButton.setOnClickListener(this);
             return rootView;
+        }
+
+        public void getCategories(){
+            ResultSet rs = connectionClass.getCategories();
+            try {
+                while(rs.next()) {
+                    categories.add(rs.getString("CategoryName"));
+                };
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
@@ -525,7 +541,10 @@ public class MainActivity extends AppCompatActivity
                 String option2 = option2EditText.getText().toString();
                 String option3 = option3EditText.getText().toString();
                 String option4 = option4EditText.getText().toString();
-                int categoryId = 3;
+                String categoryName = spinnerCategory.getSelectedItem().toString();
+                int categoryId = -1;
+                categoryId = connectionClass.getCategoryId(categoryName);
+
                 SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
                 int pollId = connectionClass.create(argument,option1,option2,option3,option4,expiryEditText.getText().toString(),categoryId,pref.getInt("id",0));

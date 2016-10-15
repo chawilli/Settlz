@@ -2,7 +2,6 @@ package devtech.settlz;
 
 import android.annotation.SuppressLint;
 import android.os.StrictMode;
-import android.text.Editable;
 import android.util.Log;
 
 import java.sql.Connection;
@@ -241,6 +240,40 @@ public class Database {
             e.printStackTrace();
         }
         return rs;
+    }
+
+    public ResultSet getCategories(){
+        String query = "Select CategoryId, CategoryName " +
+                "from Categories;";
+
+        ResultSet rs = null;
+        try {
+            Statement stmt = conn.createStatement();
+            rs = stmt.executeQuery(query);
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rs;
+    }
+
+    public int getCategoryId(String name){
+        String query = "Select CategoryId, CategoryName " +
+                "from Categories " +
+                "where CategoryName = '"+name+"';";
+
+        ResultSet rs = null;
+        try {
+            Statement stmt = conn.createStatement();
+            rs = stmt.executeQuery(query);
+            rs.next();
+            return rs.getInt("CategoryId");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     public int create(String argument, String option1, String option2, String option3, String option4, String s, int categoryId, int userId) {
