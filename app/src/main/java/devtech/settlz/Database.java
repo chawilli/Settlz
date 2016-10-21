@@ -223,6 +223,7 @@ public class Database {
         }
     }
 
+    //USED WHEN YOU PRESS A BUTTON IN SUBSCRIBEFRAGMENT
     public ResultSet subscribedPoll(int pollId) {
         String query = "Select PollId, Argument, CategoryName, ExpiryDate, Option1, Option2, Option3, Option4 " +
                 "from Polls " +

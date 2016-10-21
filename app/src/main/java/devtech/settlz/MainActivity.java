@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity
 
 
         Fragment fragment = new PollFragment();
-        getFragmentManager().beginTransaction().replace(R.id.content_frame,fragment).commit();
+        getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -106,34 +106,35 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_create) {
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);;
-            boolean login = pref.getBoolean("login",false);
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+            ;
+            boolean login = pref.getBoolean("login", false);
             //user logged in
-            if(login){
+            if (login) {
                 Fragment fragment = new CreateFragment();
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.content_frame,fragment);
+                ft.replace(R.id.content_frame, fragment);
                 ft.addToBackStack(null);
                 ft.commit();
-            }else{
+            } else {
                 Fragment fragment = new LoginFragment();
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.content_frame,fragment);
+                ft.replace(R.id.content_frame, fragment);
                 ft.addToBackStack(null);
                 ft.commit();
                 Toast toast = Toast.makeText(this.getApplicationContext(), "Please Login/Register", Toast.LENGTH_SHORT);
                 toast.show();
             }
-        } else if (id == R.id.nav_featured){
+        } else if (id == R.id.nav_featured) {
             Fragment fragment = new PollFragment();
             FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.content_frame,fragment);
+            ft.replace(R.id.content_frame, fragment);
             ft.addToBackStack(null);
             ft.commit();
         } else if (id == R.id.nav_search) {
             Fragment fragment = new SearchFragment();
             FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.content_frame,fragment);
+            ft.replace(R.id.content_frame, fragment);
             ft.addToBackStack(null);
             ft.commit();
         } else if (id == R.id.nav_settings) {
@@ -141,30 +142,31 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_login) {
             Fragment fragment = new LoginFragment();
             FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.content_frame,fragment);
+            ft.replace(R.id.content_frame, fragment);
             ft.addToBackStack(null);
             ft.commit();
         } else if (id == R.id.nav_register) {
             Fragment fragment = new RegisterFragment();
             FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.content_frame,fragment);
+            ft.replace(R.id.content_frame, fragment);
             ft.addToBackStack(null);
             ft.commit();
 
         } else if (id == R.id.nav_profile) {
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);;
-            boolean login = pref.getBoolean("login",false);
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+            ;
+            boolean login = pref.getBoolean("login", false);
             //user logged in
-            if(login){
+            if (login) {
                 Fragment fragment = new ProfileFragment();
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.content_frame,fragment);
+                ft.replace(R.id.content_frame, fragment);
                 ft.addToBackStack(null);
                 ft.commit();
-            }else{
+            } else {
                 Fragment fragment = new LoginFragment();
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.content_frame,fragment);
+                ft.replace(R.id.content_frame, fragment);
                 ft.addToBackStack(null);
                 ft.commit();
                 Toast toast = Toast.makeText(this.getApplicationContext(), "Please Login/Register", Toast.LENGTH_SHORT);
@@ -180,14 +182,14 @@ public class MainActivity extends AppCompatActivity
 
     public static class ProfileFragment extends Fragment implements View.OnClickListener {
         Database connectionClass;
-        LinearLayout subscribeLayout;
         Button logoutButton;
         Button changeButton;
+        Button subscribeButton;
         EditText passwordEditText;
         EditText verifyEditText;
         EditText changedEditText;
         TextView emailTextView;
-        ArrayList<Button> buttonList;
+
 
         public ProfileFragment() {
 
@@ -196,109 +198,87 @@ public class MainActivity extends AppCompatActivity
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
             connectionClass = new Database();
-            buttonList = new ArrayList<Button>();
+
             passwordEditText = (EditText) rootView.findViewById(R.id.passwordEditText);
             verifyEditText = (EditText) rootView.findViewById(R.id.verifyEditText);
             changedEditText = (EditText) rootView.findViewById(R.id.changedEditText);
-            logoutButton = (Button)rootView.findViewById(R.id.logoutButton);
+            logoutButton = (Button) rootView.findViewById(R.id.logoutButton);
             logoutButton.setOnClickListener(this);
-            changeButton = (Button)rootView.findViewById(R.id.changeButton);
+            changeButton = (Button) rootView.findViewById(R.id.changeButton);
             changeButton.setOnClickListener(this);
+            subscribeButton = (Button) rootView.findViewById(R.id.subscribedPollButton);
+            subscribeButton.setOnClickListener(this);
 
-            subscribeLayout = (LinearLayout)rootView.findViewById(R.id.subscribeLayout);
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            emailTextView = (TextView)rootView.findViewById(R.id.emailTextView);
-            emailTextView.setText(pref.getString("email",""));
-            if(pref.getInt("id",-1) != -1){
-                ResultSet rs = connectionClass.getSubscribedPolls(pref.getInt("id",-1));
-                try{
-                    while(rs.next()){
-                        Button button = new Button(getActivity());
-                        button.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                        button.setText(rs.getString("Argument"));
-                        button.setId(rs.getInt("PollId"));
-                        button.setOnClickListener(this);
-                        buttonList.add(button);
-                        subscribeLayout.addView(button);
-                    }
-                }catch(SQLException e){
-                    Log.d("SQLPROBLEM",e.toString());
+            emailTextView = (TextView) rootView.findViewById(R.id.emailTextView);
+            emailTextView.setText(pref.getString("email", ""));
 
-                }
-
-
-            }
 
             return rootView;
         }
 
-        public void logout(){
+        public void logout() {
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             SharedPreferences.Editor editor = pref.edit();
             editor.remove("id");
             editor.remove("email");
             editor.remove("password");
-            editor.putBoolean("login",false);
+            editor.putBoolean("login", false);
             editor.commit();
             Toast toast = Toast.makeText(getActivity().getApplicationContext(), "You have been logged out", Toast.LENGTH_SHORT);
             toast.show();
             Fragment fragment = new PollFragment();
             FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.content_frame,fragment);
+            ft.replace(R.id.content_frame, fragment);
             ft.addToBackStack(null);
             ft.commit();
         }
 
         @Override
         public void onClick(View v) {
-            if(v.getId() == logoutButton.getId()){
+            if (v.getId() == logoutButton.getId()) {
                 this.logout();
             }
             if (v.getId() == changeButton.getId()) {
                 this.changePassword();
             }
-            for(int i=0;i<buttonList.size();i++){
-                if(v.getId() == buttonList.get(i).getId()){
-                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                    SharedPreferences.Editor editor = pref.edit();
-                    editor.putInt("pollid",buttonList.get(i).getId());
-                    Fragment fragment = new PollFragment();
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.content_frame,fragment);
-                    ft.addToBackStack(null);
-                    ft.commit();
-                    editor.commit();
-                }
+            if (v.getId() == subscribeButton.getId()) {
+                Fragment fragment = new SubscribeFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame, fragment);
+                ft.addToBackStack(null);
+                ft.commit();
             }
+
         }
 
         public void changePassword() {
             String password = passwordEditText.getText().toString();
             String changedPassword = changedEditText.getText().toString();
             String verifyPassword = verifyEditText.getText().toString();
-            if(!password.isEmpty() && password.length() >= 6 && !changedPassword.isEmpty() && changedPassword.length() >= 6 && !verifyPassword.isEmpty() && verifyPassword.length() >= 6 && verifyPassword.equals(changedPassword)){
+            if (!password.isEmpty() && password.length() >= 6 && !changedPassword.isEmpty() && changedPassword.length() >= 6 && !verifyPassword.isEmpty() && verifyPassword.length() >= 6 && verifyPassword.equals(changedPassword)) {
 
                 SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                if(password.equals(pref.getString("password",""))){
-                    int id = pref.getInt("id",-1);
+                if (password.equals(pref.getString("password", ""))) {
+                    int id = pref.getInt("id", -1);
                     connectionClass.changePassword(id, changedPassword);
                     SharedPreferences.Editor editor = pref.edit();
-                    editor.putString("password",changedPassword);
+                    editor.putString("password", changedPassword);
                     editor.commit();
                     Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Password changed", Toast.LENGTH_SHORT);
                     toast.show();
                     Fragment fragment = new ProfileFragment();
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.content_frame,fragment);
+                    ft.replace(R.id.content_frame, fragment);
                     ft.addToBackStack(null);
                     ft.commit();
-                }else{
+                } else {
                     Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_SHORT);
                     toast.show();
                 }
 
 
-            }else{
+            } else {
                 Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_SHORT);
                 toast.show();
             }
@@ -321,65 +301,64 @@ public class MainActivity extends AppCompatActivity
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_login, container, false);
             connectionClass = new Database();
-            emailEditText = (EditText)rootView.findViewById(R.id.emailEditText);
-            passwordEditText = (EditText)rootView.findViewById(R.id.passwordEditText);
-            registerButton = (Button)rootView.findViewById(R.id.registerButton);
+            emailEditText = (EditText) rootView.findViewById(R.id.emailEditText);
+            passwordEditText = (EditText) rootView.findViewById(R.id.passwordEditText);
+            registerButton = (Button) rootView.findViewById(R.id.registerButton);
             registerButton.setOnClickListener(this);
-            loginButton = (Button)rootView.findViewById(R.id.loginButton);
+            loginButton = (Button) rootView.findViewById(R.id.loginButton);
             loginButton.setOnClickListener(this);
-            backButton = (Button)rootView.findViewById(R.id.backButton);
+            backButton = (Button) rootView.findViewById(R.id.backButton);
             backButton.setOnClickListener(this);
-            forgotButton = (Button)rootView.findViewById(R.id.forgotButton);
+            forgotButton = (Button) rootView.findViewById(R.id.forgotButton);
             forgotButton.setOnClickListener(this);
             return rootView;
         }
 
         @Override
         public void onClick(View v) {
-            if(v.getId() == backButton.getId()){
+            if (v.getId() == backButton.getId()) {
                 this.back();
-            }else if(v.getId() == registerButton.getId()){
+            } else if (v.getId() == registerButton.getId()) {
                 this.register();
-            }else if(v.getId() == loginButton.getId()){
+            } else if (v.getId() == loginButton.getId()) {
                 this.login();
-            }else if(v.getId() == forgotButton.getId()){
+            } else if (v.getId() == forgotButton.getId()) {
 
             }
         }
 
-        public void login(){
+        public void login() {
             String email = emailEditText.getText().toString();
             String password = passwordEditText.getText().toString();
             connectionClass.login(email, password);
-            int id = connectionClass.login(email,password);
+            int id = connectionClass.login(email, password);
 
-            if(!password.isEmpty() && id != -1 && !email.isEmpty()){
-                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                    SharedPreferences.Editor editor = pref.edit();
-                    editor.putString("email", email);
-                    editor.putString("password", password);
-                    editor.putBoolean("login", true);
-                    editor.putInt("id", id);
-                    editor.commit();
-                    Toast toast = Toast.makeText(getActivity().getApplicationContext(),"Thank you for logging in", Toast.LENGTH_SHORT);
-                    toast.show();
-                    Fragment fragment = new ProfileFragment();
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.content_frame, fragment);
-                    ft.addToBackStack(null);
-                    ft.commit();
-                }
-            else{
+            if (!password.isEmpty() && id != -1 && !email.isEmpty()) {
+                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putString("email", email);
+                editor.putString("password", password);
+                editor.putBoolean("login", true);
+                editor.putInt("id", id);
+                editor.commit();
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Thank you for logging in", Toast.LENGTH_SHORT);
+                toast.show();
+                Fragment fragment = new ProfileFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame, fragment);
+                ft.addToBackStack(null);
+                ft.commit();
+            } else {
                 Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_SHORT);
                 toast.show();
             }
 
         }
 
-        public void register(){
+        public void register() {
             Fragment fragment = new RegisterFragment();
             FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.content_frame,fragment);
+            ft.replace(R.id.content_frame, fragment);
             ft.addToBackStack(null);
             ft.commit();
         }
@@ -387,42 +366,43 @@ public class MainActivity extends AppCompatActivity
         public void back() {
             Fragment fragment = new PollFragment();
             FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.content_frame,fragment);
+            ft.replace(R.id.content_frame, fragment);
             ft.addToBackStack(null);
             ft.commit();
         }
     }
 
-    public static class RegisterFragment extends Fragment implements View.OnClickListener{
+    public static class RegisterFragment extends Fragment implements View.OnClickListener {
         Database connectionClass;
-//        Statement stmt = null;
+        //        Statement stmt = null;
         EditText emailEditText;
         EditText passwordEditText;
         EditText verifyEditText;
         Button backButton;
         Button registerButton;
-        public RegisterFragment(){
+
+        public RegisterFragment() {
 
         }
 
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-            View rootView = inflater.inflate(R.layout.fragment_register,container,false);
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_register, container, false);
             connectionClass = new Database();
-            emailEditText=(EditText)rootView.findViewById(R.id.emailEditText);
-            passwordEditText=(EditText)rootView.findViewById(R.id.passwordEditText);
-            verifyEditText=(EditText)rootView.findViewById(R.id.verifyEditText);
-            backButton=(Button)rootView.findViewById(R.id.backButton);
+            emailEditText = (EditText) rootView.findViewById(R.id.emailEditText);
+            passwordEditText = (EditText) rootView.findViewById(R.id.passwordEditText);
+            verifyEditText = (EditText) rootView.findViewById(R.id.verifyEditText);
+            backButton = (Button) rootView.findViewById(R.id.backButton);
             backButton.setOnClickListener(this);
-            registerButton=(Button)rootView.findViewById(R.id.registerButton);
+            registerButton = (Button) rootView.findViewById(R.id.registerButton);
             registerButton.setOnClickListener(this);
             return rootView;
         }
 
         @Override
         public void onClick(View v) {
-            if(v.getId() == backButton.getId()){
+            if (v.getId() == backButton.getId()) {
                 this.back();
-            }else if(v.getId() == registerButton.getId()){
+            } else if (v.getId() == registerButton.getId()) {
                 this.register();
             }
         }
@@ -431,32 +411,32 @@ public class MainActivity extends AppCompatActivity
             String password = passwordEditText.getText().toString();
             String email = emailEditText.getText().toString();
             boolean emailValid = Patterns.EMAIL_ADDRESS.matcher(email).matches();
-            if(password.equals(verifyEditText.getText().toString()) && !password.isEmpty() && password.length() >= 6 && emailValid){
+            if (password.equals(verifyEditText.getText().toString()) && !password.isEmpty() && password.length() >= 6 && emailValid) {
 
-                if(connectionClass.verifyEmail(email)){
+                if (connectionClass.verifyEmail(email)) {
 
-                    int id = connectionClass.register(email,password);
+                    int id = connectionClass.register(email, password);
                     SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                     SharedPreferences.Editor editor = pref.edit();
-                    editor.putString("email",email);
-                    editor.putString("password",password);
-                    editor.putBoolean("login",true);
-                    editor.putInt("id",id);
+                    editor.putString("email", email);
+                    editor.putString("password", password);
+                    editor.putBoolean("login", true);
+                    editor.putInt("id", id);
                     editor.commit();
 
                     Fragment fragment = new ProfileFragment();
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.content_frame,fragment);
+                    ft.replace(R.id.content_frame, fragment);
                     ft.addToBackStack(null);
                     ft.commit();
                     Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Thank you for registering", Toast.LENGTH_SHORT);
                     toast.show();
-                }else{
+                } else {
                     Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Email already in use", Toast.LENGTH_SHORT);
                     toast.show();
                 }
 
-            }else{
+            } else {
                 Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_SHORT);
                 toast.show();
             }
@@ -465,13 +445,13 @@ public class MainActivity extends AppCompatActivity
         public void back() {
             Fragment fragment = new PollFragment();
             FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.content_frame,fragment);
+            ft.replace(R.id.content_frame, fragment);
             ft.addToBackStack(null);
             ft.commit();
         }
     }
 
-    public static class CreateFragment extends Fragment implements View.OnClickListener{
+    public static class CreateFragment extends Fragment implements View.OnClickListener {
         Database connectionClass;
         Button backButton;
         Button createButton;
@@ -485,21 +465,21 @@ public class MainActivity extends AppCompatActivity
         Spinner spinnerCategory;
         final List<String> categories = new ArrayList<String>();
 
-        public CreateFragment(){
+        public CreateFragment() {
 
         }
 
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-            View rootView = inflater.inflate(R.layout.fragment_create,container,false);
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_create, container, false);
             connectionClass = new Database();
 
-            argumentEditText = (EditText)rootView.findViewById(R.id.argumentEditText);
-            option1EditText = (EditText)rootView.findViewById(R.id.option1EditText);
-            option2EditText = (EditText)rootView.findViewById(R.id.option2EditText);
-            option3EditText = (EditText)rootView.findViewById(R.id.option3EditText);
-            option4EditText = (EditText)rootView.findViewById(R.id.option4EditText);
+            argumentEditText = (EditText) rootView.findViewById(R.id.argumentEditText);
+            option1EditText = (EditText) rootView.findViewById(R.id.option1EditText);
+            option2EditText = (EditText) rootView.findViewById(R.id.option2EditText);
+            option3EditText = (EditText) rootView.findViewById(R.id.option3EditText);
+            option4EditText = (EditText) rootView.findViewById(R.id.option4EditText);
 
-            backButton = (Button)rootView.findViewById(R.id.backButton);
+            backButton = (Button) rootView.findViewById(R.id.backButton);
             backButton.setOnClickListener(this);
 
             expiryEditText = (EditText) rootView.findViewById(R.id.expiryEditText);
@@ -507,22 +487,23 @@ public class MainActivity extends AppCompatActivity
             expiryEditText.setOnClickListener(this);
 
             getCategories();
-            spinnerCategory = (Spinner)rootView.findViewById(R.id.spinnerCategory);
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item, categories);
+            spinnerCategory = (Spinner) rootView.findViewById(R.id.spinnerCategory);
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, categories);
             dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerCategory.setAdapter(dataAdapter);
 
-            createButton = (Button)rootView.findViewById(R.id.createButton);
+            createButton = (Button) rootView.findViewById(R.id.createButton);
             createButton.setOnClickListener(this);
             return rootView;
         }
 
-        public void getCategories(){
+        public void getCategories() {
             ResultSet rs = connectionClass.getCategories();
             try {
-                while(rs.next()) {
+                while (rs.next()) {
                     categories.add(rs.getString("CategoryName"));
-                };
+                }
+                ;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -530,16 +511,16 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onClick(View v) {
-            if (v.getId() == backButton.getId()){
+            if (v.getId() == backButton.getId()) {
                 Fragment fragment = new PollFragment();
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.content_frame,fragment);
+                ft.replace(R.id.content_frame, fragment);
                 ft.addToBackStack(null);
                 ft.commit();
-            }else if(v.getId() == expiryEditText.getId()){
+            } else if (v.getId() == expiryEditText.getId()) {
 
 
-            }else if(v.getId() == createButton.getId()){
+            } else if (v.getId() == createButton.getId()) {
                 String argument = argumentEditText.getText().toString();
                 String option1 = option1EditText.getText().toString();
                 String option2 = option2EditText.getText().toString();
@@ -551,17 +532,17 @@ public class MainActivity extends AppCompatActivity
 
                 SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-                int pollId = connectionClass.create(argument,option1,option2,option3,option4,expiryEditText.getText().toString(),categoryId,pref.getInt("id",0));
+                int pollId = connectionClass.create(argument, option1, option2, option3, option4, expiryEditText.getText().toString(), categoryId, pref.getInt("id", 0));
 
-                if(pollId == -1){
-                    Log.d("ERRORR","PROBLEMS");
-                }else{
+                if (pollId == -1) {
+                    Log.d("ERRORR", "PROBLEMS");
+                } else {
                     pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                     SharedPreferences.Editor editor = pref.edit();
-                    editor.putInt("pollid",pollId);
+                    editor.putInt("pollid", pollId);
                     Fragment fragment = new PollFragment();
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.content_frame,fragment);
+                    ft.replace(R.id.content_frame, fragment);
                     ft.addToBackStack(null);
                     ft.commit();
                     editor.commit();
@@ -574,7 +555,7 @@ public class MainActivity extends AppCompatActivity
 
     public static class PollFragment extends Fragment implements View.OnClickListener {
         Database connectionClass;
-//        Statement stmt = null;
+        //        Statement stmt = null;
         TextView pollTextView;
         RadioButton option1RadioButton;
         RadioButton option2RadioButton;
@@ -593,26 +574,27 @@ public class MainActivity extends AppCompatActivity
         LinearLayout layout;
         // programmatically create a PieChart
         PieChart chart;
-        public PollFragment(){
+
+        public PollFragment() {
 
         }
 
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-            View rootView = inflater.inflate(R.layout.content_main,container,false);
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.content_main, container, false);
             connectionClass = new Database();
-            pollTextView = (TextView)rootView.findViewById(R.id.pollTextView);
-            option1RadioButton = (RadioButton)rootView.findViewById(R.id.option1RadioButton);
-            option2RadioButton = (RadioButton)rootView.findViewById(R.id.option2RadioButton);
-            option3RadioButton = (RadioButton)rootView.findViewById(R.id.option3RadioButton);
-            option4RadioButton = (RadioButton)rootView.findViewById(R.id.option4RadioButton);
-            category = (TextView)rootView.findViewById(R.id.categoryTextView);
-            expire = (TextView)rootView.findViewById(R.id.expiredTextView);
+            pollTextView = (TextView) rootView.findViewById(R.id.pollTextView);
+            option1RadioButton = (RadioButton) rootView.findViewById(R.id.option1RadioButton);
+            option2RadioButton = (RadioButton) rootView.findViewById(R.id.option2RadioButton);
+            option3RadioButton = (RadioButton) rootView.findViewById(R.id.option3RadioButton);
+            option4RadioButton = (RadioButton) rootView.findViewById(R.id.option4RadioButton);
+            category = (TextView) rootView.findViewById(R.id.categoryTextView);
+            expire = (TextView) rootView.findViewById(R.id.expiredTextView);
             nextButton = (Button) rootView.findViewById(R.id.nextButton);
             nextButton.setOnClickListener(this);
             voteButton = (Button) rootView.findViewById(R.id.voteButton);
             voteButton.setOnClickListener(this);
             optionsRadioGroup = (RadioGroup) rootView.findViewById(R.id.optionsRadioGroup);
-            subscribeCheckBox = (CheckBox)rootView.findViewById(R.id.subscribeCheckBox);
+            subscribeCheckBox = (CheckBox) rootView.findViewById(R.id.subscribeCheckBox);
             layout = (LinearLayout) rootView.findViewById(R.id.linearLayout);
             chart = new PieChart(getActivity().getApplicationContext());
             reportButton = (Button) rootView.findViewById(R.id.reportButton);
@@ -621,12 +603,12 @@ public class MainActivity extends AppCompatActivity
 
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             SharedPreferences.Editor editor = pref.edit();
-            int pollId = pref.getInt("pollid",0);
-            if(pollId != 0){
+            int pollId = pref.getInt("pollid", 0);
+            if (pollId != 0) {
                 subscribedPoll(pollId);
                 editor.remove("pollid");
                 editor.commit();
-            }else{
+            } else {
                 random();
             }
 
@@ -634,8 +616,9 @@ public class MainActivity extends AppCompatActivity
             return rootView;
         }
 
+        //CALLED WHEN POLLFRAGMENT IS LOADED AFTER SUBSCRIBEFRAGMENT
         private void subscribedPoll(int pollId) {
-            //Load a random poll
+            //Load a specific poll
             ResultSet rs = connectionClass.subscribedPoll(pollId);
             try {
                 rs.next();
@@ -652,7 +635,7 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        public void random(){
+        public void random() {
             //Load a random poll
             ResultSet rs = connectionClass.randomPoll();
             try {
@@ -688,7 +671,7 @@ public class MainActivity extends AppCompatActivity
             }
             optionsRadioGroup.clearCheck();
             subscribeCheckBox.setChecked(false);
-            if(optionsRadioGroup.getVisibility() == View.GONE){
+            if (optionsRadioGroup.getVisibility() == View.GONE) {
                 optionsRadioGroup.setVisibility(View.VISIBLE);
                 voteButton.setVisibility(View.VISIBLE);
                 subscribeCheckBox.setVisibility(View.VISIBLE);
@@ -702,21 +685,18 @@ public class MainActivity extends AppCompatActivity
 
         //method for voteButton
         public void vote() {
-            int selected =0;
-            if (option1RadioButton.isChecked()){
+            int selected = 0;
+            if (option1RadioButton.isChecked()) {
                 selected = 1;
-            }
-            else if (option2RadioButton.isChecked()){
+            } else if (option2RadioButton.isChecked()) {
                 selected = 2;
-            }
-            else if (option3RadioButton.isChecked()){
+            } else if (option3RadioButton.isChecked()) {
                 selected = 3;
-            }
-            else if (option4RadioButton.isChecked()){
+            } else if (option4RadioButton.isChecked()) {
                 selected = 4;
             }
 
-            if(selected !=0){
+            if (selected != 0) {
                 // programmatically create a PieChart
                 PieChart chart = new PieChart(getActivity().getApplicationContext());
 
@@ -724,19 +704,19 @@ public class MainActivity extends AppCompatActivity
                     ResultSet rs = connectionClass.vote(id, selected);
                     rs.next();
                     ArrayList<Entry> entries = new ArrayList<Entry>();
-                    entries.add(new Entry((float)rs.getInt("Vote1"),rs.getInt("Vote1")));
-                    entries.add(new Entry((float)rs.getInt("Vote2"),rs.getInt("Vote2")));
-                    entries.add(new Entry((float)rs.getInt("Vote3"),rs.getInt("Vote3")));
-                    entries.add(new Entry((float)rs.getInt("Vote4"),rs.getInt("Vote4")));
-                    PieDataSet dataset = new PieDataSet(entries,"");
+                    entries.add(new Entry((float) rs.getInt("Vote1"), rs.getInt("Vote1")));
+                    entries.add(new Entry((float) rs.getInt("Vote2"), rs.getInt("Vote2")));
+                    entries.add(new Entry((float) rs.getInt("Vote3"), rs.getInt("Vote3")));
+                    entries.add(new Entry((float) rs.getInt("Vote4"), rs.getInt("Vote4")));
+                    PieDataSet dataset = new PieDataSet(entries, "");
                     dataset.setColors(ColorTemplate.COLORFUL_COLORS);
                     dataset.setValueTextSize(16);
-                    ArrayList<String> labels= new ArrayList<String>();
+                    ArrayList<String> labels = new ArrayList<String>();
                     labels.add(rs.getString("Option1"));
                     labels.add(rs.getString("Option2"));
                     labels.add(rs.getString("Option3"));
                     labels.add(rs.getString("Option4"));
-                    PieData data = new PieData(labels,dataset);
+                    PieData data = new PieData(labels, dataset);
                     chart.setData(data);
                     chart.setDescription("Results");
                 } catch (SQLException e) {
@@ -751,10 +731,10 @@ public class MainActivity extends AppCompatActivity
                 chart.getLegend().setEnabled(false);
                 DisplayMetrics metrics = new DisplayMetrics();
                 getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-                int height = (int)(metrics.heightPixels*0.9);
-                int width = (int)(metrics.widthPixels*0.9);
-                layout.addView(chart,height,width); // add the programmatically created chart
-            } else{
+                int height = (int) (metrics.heightPixels * 0.9);
+                int width = (int) (metrics.widthPixels * 0.9);
+                layout.addView(chart, height, width); // add the programmatically created chart
+            } else {
                 Toast toast = Toast.makeText(getActivity().getApplicationContext(), "You have to select an option", Toast.LENGTH_SHORT);
                 toast.show();
             }
@@ -763,24 +743,25 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onClick(View v) {
-            if(v.getId() == voteButton.getId()){
+            if (v.getId() == voteButton.getId()) {
                 vote();
-            }else if(v.getId() == nextButton.getId()){
+            } else if (v.getId() == nextButton.getId()) {
                 next();
-            }else if(v.getId() == newButton.getId()){
-                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());;
-                boolean login = pref.getBoolean("login",false);
+            } else if (v.getId() == newButton.getId()) {
+                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                ;
+                boolean login = pref.getBoolean("login", false);
                 //user logged in
-                if(login){
+                if (login) {
                     Fragment fragment = new CreateFragment();
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.content_frame,fragment);
+                    ft.replace(R.id.content_frame, fragment);
                     ft.addToBackStack(null);
                     ft.commit();
-                }else{
+                } else {
                     Fragment fragment = new LoginFragment();
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.content_frame,fragment);
+                    ft.replace(R.id.content_frame, fragment);
                     ft.addToBackStack(null);
                     ft.commit();
                     Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Please Login/Register", Toast.LENGTH_SHORT);
@@ -790,7 +771,8 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
-    public static class SearchFragment extends Fragment implements View.OnClickListener{
+
+    public static class SearchFragment extends Fragment implements View.OnClickListener {
         Database connectionClass;
         EditText argumentEditTextView;
         Button searchButton;
@@ -801,91 +783,154 @@ public class MainActivity extends AppCompatActivity
         ArrayList<Button> buttonList;
         final List<String> categories = new ArrayList<String>();
 
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-            View rootView = inflater.inflate(R.layout.fragment_search,container,false);
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_search, container, false);
             connectionClass = new Database();
-            searchResultsLayout=(LinearLayout)rootView.findViewById(R.id.searchResultsLayout);
+            searchResultsLayout = (LinearLayout) rootView.findViewById(R.id.searchResultsLayout);
             buttonList = new ArrayList<Button>();
-            argumentEditTextView=(EditText)rootView.findViewById(R.id.argumentEditText);
-            searchButton=(Button)rootView.findViewById(R.id.searchButton);
+            argumentEditTextView = (EditText) rootView.findViewById(R.id.argumentEditText);
+            searchButton = (Button) rootView.findViewById(R.id.searchButton);
             searchButton.setOnClickListener(this);
-            backButton=(Button)rootView.findViewById(R.id.backButton);
+            backButton = (Button) rootView.findViewById(R.id.backButton);
             backButton.setOnClickListener(this);
             getCategories();
-            spinnerCategory = (Spinner)rootView.findViewById(R.id.spinnerCategory);
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item, categories);
+            spinnerCategory = (Spinner) rootView.findViewById(R.id.spinnerCategory);
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, categories);
             dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerCategory.setAdapter(dataAdapter);
 
             return rootView;
         }
-        public void getCategories(){
+
+        public void getCategories() {
             ResultSet rs = connectionClass.getCategories();
             categories.add("");
             try {
-                while(rs.next()) {
+                while (rs.next()) {
                     categories.add(rs.getString("CategoryName"));
-                };
+                }
+                ;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-        public SearchFragment(){
+
+        public SearchFragment() {
 
         }
+
         @Override
         public void onClick(View view) {
-            for(int i=0;i<buttonList.size();i++){
-                if(view.getId() == buttonList.get(i).getId()){
+            for (int i = 0; i < buttonList.size(); i++) {
+                if (view.getId() == buttonList.get(i).getId()) {
                     SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                     SharedPreferences.Editor editor = pref.edit();
-                    editor.putInt("pollid",buttonList.get(i).getId());
+                    editor.putInt("pollid", buttonList.get(i).getId());
                     Fragment fragment = new PollFragment();
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.content_frame,fragment);
+                    ft.replace(R.id.content_frame, fragment);
                     ft.addToBackStack(null);
                     ft.commit();
                     editor.commit();
                 }
             }
 
-if(view.getId()==searchButton.getId()){
-    String categoryName = spinnerCategory.getSelectedItem().toString();
-    int categoryId = -1;
-    if (!categoryName.equals("")) {
-        categoryId = connectionClass.getCategoryId(categoryName);
-    }
+            if (view.getId() == searchButton.getId()) {
+                String categoryName = spinnerCategory.getSelectedItem().toString();
+                int categoryId = -1;
+                if (!categoryName.equals("")) {
+                    categoryId = connectionClass.getCategoryId(categoryName);
+                }
 
 
-    ResultSet rs = connectionClass.getSearchResults(argumentEditTextView.getText().toString(),categoryId);
-    try{
-        if( searchResultsLayout.getChildCount() > 0){
-            searchResultsLayout.removeAllViews();
-        }
+                ResultSet rs = connectionClass.getSearchResults(argumentEditTextView.getText().toString(), categoryId);
+                try {
+                    if (searchResultsLayout.getChildCount() > 0) {
+                        searchResultsLayout.removeAllViews();
+                    }
 
-        while(rs.next()){
-            Button button = new Button(getActivity());
-            button.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            button.setText(rs.getString("Argument"));
-            button.setId(rs.getInt("PollId"));
-            button.setOnClickListener(this);
-            buttonList.add(button);
-            searchResultsLayout.addView(button);
-        }
-    }catch(SQLException e){
-        Log.d("SQLPROBLEM",e.toString());
+                    while (rs.next()) {
+                        Button button = new Button(getActivity());
+                        button.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                        button.setText(rs.getString("Argument"));
+                        button.setId(rs.getInt("PollId"));
+                        button.setOnClickListener(this);
+                        buttonList.add(button);
+                        searchResultsLayout.addView(button);
+                    }
+                } catch (SQLException e) {
+                    Log.d("SQLPROBLEM", e.toString());
 
-    }
+                }
 
-}
-           else if(view.getId()==backButton.getId()){
-    Fragment fragment = new PollFragment();
-    FragmentTransaction ft = getFragmentManager().beginTransaction();
-    ft.replace(R.id.content_frame,fragment);
-    ft.addToBackStack(null);
-    ft.commit();
+            } else if (view.getId() == backButton.getId()) {
+                Fragment fragment = new PollFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame, fragment);
+                ft.addToBackStack(null);
+                ft.commit();
             }
 
         }
     }
+
+    public static class SubscribeFragment extends Fragment implements View.OnClickListener {
+        Database connectionClass;
+        ArrayList<Button> buttonList;
+        LinearLayout subscribeLayout;
+
+        public SubscribeFragment() {
+
+        }
+
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_subscribe, container, false);
+            buttonList = new ArrayList<Button>();
+            subscribeLayout = (LinearLayout) rootView.findViewById(R.id.subscribedResultsLayout);
+            connectionClass = new Database();
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+            if (pref.getInt("id", -1) != -1) {
+                ResultSet rs = connectionClass.getSubscribedPolls(pref.getInt("id", -1));
+                try {
+                    while (rs.next()) {
+                        Button button = new Button(getActivity());
+                        button.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                        button.setText(rs.getString("Argument"));
+                        button.setId(rs.getInt("PollId"));
+                        button.setOnClickListener(this);
+                        buttonList.add(button);
+                        subscribeLayout.addView(button);
+                    }
+                } catch (SQLException e) {
+                    Log.d("SQLPROBLEM", e.toString());
+
+                }
+
+
+            }
+
+            return rootView;
+
+        }
+
+        @Override
+        public void onClick(View view) {
+            for (int i = 0; i < buttonList.size(); i++) {
+                if (view.getId() == buttonList.get(i).getId()) {
+                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putInt("pollid", buttonList.get(i).getId());
+                    Fragment fragment = new PollFragment();
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.content_frame, fragment);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                    editor.commit();
+                }
+            }
+        }
+
+    }
+
 }
