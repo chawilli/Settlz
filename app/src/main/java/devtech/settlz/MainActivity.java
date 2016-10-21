@@ -131,7 +131,11 @@ public class MainActivity extends AppCompatActivity
             ft.addToBackStack(null);
             ft.commit();
         } else if (id == R.id.nav_search) {
-
+            Fragment fragment = new SearchFragment();
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.content_frame,fragment);
+            ft.addToBackStack(null);
+            ft.commit();
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_login) {
@@ -533,7 +537,7 @@ public class MainActivity extends AppCompatActivity
                 ft.addToBackStack(null);
                 ft.commit();
             }else if(v.getId() == expiryEditText.getId()){
-                Log.d("ERRORR","I GOT INTO HER");
+
 
             }else if(v.getId() == createButton.getId()){
                 String argument = argumentEditText.getText().toString();
@@ -784,6 +788,104 @@ public class MainActivity extends AppCompatActivity
                 }
 
             }
+        }
+    }
+    public static class SearchFragment extends Fragment implements View.OnClickListener{
+        Database connectionClass;
+        EditText argumentEditTextView;
+        Button searchButton;
+        Button backButton;
+        int id;
+        Spinner spinnerCategory;
+        LinearLayout searchResultsLayout;
+        ArrayList<Button> buttonList;
+        final List<String> categories = new ArrayList<String>();
+
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+            View rootView = inflater.inflate(R.layout.fragment_search,container,false);
+            connectionClass = new Database();
+            searchResultsLayout=(LinearLayout)rootView.findViewById(R.id.searchResultsLayout);
+            buttonList = new ArrayList<Button>();
+            argumentEditTextView=(EditText)rootView.findViewById(R.id.argumentEditText);
+            searchButton=(Button)rootView.findViewById(R.id.searchButton);
+            searchButton.setOnClickListener(this);
+            backButton=(Button)rootView.findViewById(R.id.backButton);
+            backButton.setOnClickListener(this);
+            getCategories();
+            spinnerCategory = (Spinner)rootView.findViewById(R.id.spinnerCategory);
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item, categories);
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerCategory.setAdapter(dataAdapter);
+
+            return rootView;
+        }
+        public void getCategories(){
+            ResultSet rs = connectionClass.getCategories();
+            categories.add("");
+            try {
+                while(rs.next()) {
+                    categories.add(rs.getString("CategoryName"));
+                };
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        public SearchFragment(){
+
+        }
+        @Override
+        public void onClick(View view) {
+            for(int i=0;i<buttonList.size();i++){
+                if(view.getId() == buttonList.get(i).getId()){
+                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putInt("pollid",buttonList.get(i).getId());
+                    Fragment fragment = new PollFragment();
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.content_frame,fragment);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                    editor.commit();
+                }
+            }
+
+if(view.getId()==searchButton.getId()){
+    String categoryName = spinnerCategory.getSelectedItem().toString();
+    int categoryId = -1;
+    if (!categoryName.equals("")) {
+        categoryId = connectionClass.getCategoryId(categoryName);
+    }
+
+
+    ResultSet rs = connectionClass.getSearchResults(argumentEditTextView.getText().toString(),categoryId);
+    try{
+        if( searchResultsLayout.getChildCount() > 0){
+            searchResultsLayout.removeAllViews();
+        }
+
+        while(rs.next()){
+            Button button = new Button(getActivity());
+            button.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            button.setText(rs.getString("Argument"));
+            button.setId(rs.getInt("PollId"));
+            button.setOnClickListener(this);
+            buttonList.add(button);
+            searchResultsLayout.addView(button);
+        }
+    }catch(SQLException e){
+        Log.d("SQLPROBLEM",e.toString());
+
+    }
+
+}
+           else if(view.getId()==backButton.getId()){
+    Fragment fragment = new PollFragment();
+    FragmentTransaction ft = getFragmentManager().beginTransaction();
+    ft.replace(R.id.content_frame,fragment);
+    ft.addToBackStack(null);
+    ft.commit();
+            }
+
         }
     }
 }

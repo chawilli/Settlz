@@ -352,4 +352,27 @@ public class Database {
         }
         return -1;
     }
+
+    public ResultSet getSearchResults(String s, int categoryId) {
+            String query="SELECT TOP 10 PollId, Argument FROM Polls WHERE ";
+        if(categoryId!=-1){
+            query+="CategoryCategoryId = "+categoryId+" AND Argument LIKE '%%"+s+"%%' ";
+        }
+        else{
+            query+="Argument LIKE '%%"+s+"%%' ";
+        }
+
+//        String query ="SELECT TOP 2 PollId, Argument FROM Polls WHERE CategoryCategoryId = 7 AND Argument LIKE '%%%%';";
+            ResultSet rs = null;
+            try {
+                Statement stmt = conn.createStatement();
+                rs = stmt.executeQuery(query);
+                return rs;
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return rs;
+
+    }
 }
