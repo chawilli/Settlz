@@ -1,5 +1,8 @@
 package devtech.settlz;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
@@ -23,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -40,6 +44,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -453,9 +458,10 @@ public class MainActivity extends AppCompatActivity
 
     public static class CreateFragment extends Fragment implements View.OnClickListener {
         Database connectionClass;
+        Button expiryButton;
         Button backButton;
         Button createButton;
-        private EditText expiryEditText;
+        static EditText expiryEditText;
         EditText argumentEditText;
         EditText option1EditText;
         EditText option2EditText;
@@ -482,9 +488,13 @@ public class MainActivity extends AppCompatActivity
             backButton = (Button) rootView.findViewById(R.id.backButton);
             backButton.setOnClickListener(this);
 
+            expiryButton = (Button) rootView.findViewById(R.id.expiryButton);
+            expiryButton.setOnClickListener(this);
+
             expiryEditText = (EditText) rootView.findViewById(R.id.expiryEditText);
             expiryEditText.setInputType(InputType.TYPE_NULL);
-            expiryEditText.setOnClickListener(this);
+            //expiryEditText.setOnClickListener(this);
+
 
             getCategories();
             spinnerCategory = (Spinner) rootView.findViewById(R.id.spinnerCategory);
@@ -495,6 +505,27 @@ public class MainActivity extends AppCompatActivity
             createButton = (Button) rootView.findViewById(R.id.createButton);
             createButton.setOnClickListener(this);
             return rootView;
+        }
+
+        public static class DatePickerFragment extends DialogFragment
+                implements DatePickerDialog.OnDateSetListener {
+
+
+            @Override
+            public Dialog onCreateDialog(Bundle savedInstanceState) {
+                // Use the current date as the default date in the picker
+                final Calendar c = Calendar.getInstance();
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+                int day = c.get(Calendar.DAY_OF_MONTH);
+
+                // Create a new instance of DatePickerDialog and return it
+                return new DatePickerDialog(getActivity(), this, year, month, day);
+            }
+
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                expiryEditText.setText(year + "-" + month + "-" + day);
+            }
         }
 
         public void getCategories() {
@@ -511,14 +542,17 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onClick(View v) {
+
             if (v.getId() == backButton.getId()) {
                 Fragment fragment = new PollFragment();
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.replace(R.id.content_frame, fragment);
                 ft.addToBackStack(null);
                 ft.commit();
+            } else if (v.getId() == expiryButton.getId()) {
+                DialogFragment newFragment = new DatePickerFragment();
+                newFragment.show(getFragmentManager(), "datePicker");
             } else if (v.getId() == expiryEditText.getId()) {
-
 
             } else if (v.getId() == createButton.getId()) {
                 String argument = argumentEditText.getText().toString();

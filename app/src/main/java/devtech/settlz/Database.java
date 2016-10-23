@@ -333,7 +333,7 @@ public class Database {
             facebookId = rs.getInt("FacebookId");
 
             String insertPollsQuery = "INSERT INTO Polls (Argument,ReportCount,PollStatus,ExpiryDate,CategoryCategoryId,Option_OptionsId,Twitter_TwitterId,Facebook_FacebookId) " +
-                    "VALUES('"+argument+"',0,'True','2017-04-09',"+categoryId+","+optionsId+","+twitterId+","+facebookId+");";
+                    "VALUES('"+argument+"',0,'True','"+s+"',"+categoryId+","+optionsId+","+twitterId+","+facebookId+");";
             String getPollsQuery = "SELECT TOP 1 PollId FROM Polls " +
                     "ORDER BY PollId DESC";
             stmt = conn.createStatement();
