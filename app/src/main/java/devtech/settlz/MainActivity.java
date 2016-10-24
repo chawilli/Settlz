@@ -46,11 +46,11 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -470,6 +470,8 @@ public class MainActivity extends AppCompatActivity
         EditText option4EditText;
         Spinner spinnerCategory;
         final List<String> categories = new ArrayList<String>();
+        static Date nextDate;
+        static Date expiryDate;
 
         public CreateFragment() {
 
@@ -478,12 +480,6 @@ public class MainActivity extends AppCompatActivity
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_create, container, false);
             connectionClass = new Database();
-
-            Calendar c = Calendar.getInstance();
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            String formattedDate = df.format(c.getTime());
-            Toast toast = Toast.makeText(getActivity().getApplicationContext(), formattedDate, Toast.LENGTH_SHORT);
-            toast.show();
 
             argumentEditText = (EditText) rootView.findViewById(R.id.argumentEditText);
             option1EditText = (EditText) rootView.findViewById(R.id.option1EditText);
@@ -499,8 +495,6 @@ public class MainActivity extends AppCompatActivity
 
             expiryEditText = (EditText) rootView.findViewById(R.id.expiryEditText);
             expiryEditText.setInputType(InputType.TYPE_NULL);
-            //expiryEditText.setOnClickListener(this);
-
 
             getCategories();
             spinnerCategory = (Spinner) rootView.findViewById(R.id.spinnerCategory);
@@ -523,15 +517,40 @@ public class MainActivity extends AppCompatActivity
                 final Calendar c = Calendar.getInstance();
                 int year = c.get(Calendar.YEAR);
                 int month = c.get(Calendar.MONTH);
-                int day = c.get(Calendar.DAY_OF_MONTH);
+                int day = c.get(Calendar.DAY_OF_MONTH) + 1;
+
+                c.set(Calendar.YEAR, year);
+                c.set(Calendar.MONTH, month);
+                c.set(Calendar.DAY_OF_MONTH, day);
+                c.set(Calendar.HOUR_OF_DAY, 0);
+                c.set(Calendar.MINUTE, 0);
+                c.set(Calendar.SECOND, 0);
+                c.set(Calendar.MILLISECOND, 0);
+                nextDate = c.getTime();
 
                 // Create a new instance of DatePickerDialog and return it
                 return new DatePickerDialog(getActivity(), this, year, month, day);
             }
 
             public void onDateSet(DatePicker view, int year, int month, int day) {
-                month +=1;
-                expiryEditText.setText(year + "-" + month + "-" + day);
+
+                Calendar d = Calendar.getInstance();
+                d.set(Calendar.YEAR, year);
+                d.set(Calendar.MONTH, month);
+                d.set(Calendar.DAY_OF_MONTH, day);
+                d.set(Calendar.HOUR_OF_DAY, 0);
+                d.set(Calendar.MINUTE, 0);
+                d.set(Calendar.SECOND, 0);
+                d.set(Calendar.MILLISECOND, 0);
+                expiryDate = d.getTime();
+
+                if(nextDate.after(expiryDate)){
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_SHORT);
+                    toast.show();
+                } else {
+                    month +=1;
+                    expiryEditText.setText(year + "-" + month + "-" + day);
+                }
             }
         }
 
@@ -615,7 +634,6 @@ public class MainActivity extends AppCompatActivity
         LinearLayout layout;
         // programmatically create a PieChart
         PieChart chart;
-
         Calendar c ;
         SimpleDateFormat df;
         String currentDate;
@@ -627,6 +645,11 @@ public class MainActivity extends AppCompatActivity
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.content_main, container, false);
             connectionClass = new Database();
+
+            c = Calendar.getInstance();
+            df = new SimpleDateFormat("yyyy-MM-dd");
+            currentDate = df.format(c.getTime());
+
             pollTextView = (TextView) rootView.findViewById(R.id.pollTextView);
             option1RadioButton = (RadioButton) rootView.findViewById(R.id.option1RadioButton);
             option2RadioButton = (RadioButton) rootView.findViewById(R.id.option2RadioButton);
@@ -645,10 +668,6 @@ public class MainActivity extends AppCompatActivity
             reportButton = (Button) rootView.findViewById(R.id.reportButton);
             newButton = (Button) rootView.findViewById(R.id.newButton);
             newButton.setOnClickListener(this);
-
-            c = Calendar.getInstance();
-            df = new SimpleDateFormat("yyyy-MM-dd");
-            currentDate = df.format(c.getTime());
 
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             SharedPreferences.Editor editor = pref.edit();
