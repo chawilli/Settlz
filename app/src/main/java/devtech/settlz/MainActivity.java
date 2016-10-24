@@ -41,12 +41,13 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.util.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -698,7 +699,24 @@ public class MainActivity extends AppCompatActivity
                 option4RadioButton.setText(rs.getString("Option4"));
                 category.setText(rs.getString("CategoryName"));
                 expire.setText(rs.getDate("ExpiryDate").toString());
+
+                c = Calendar.getInstance();
+                df = new SimpleDateFormat("yyyy-MM-dd");
+                c.setTime(df.parse(currentDate));
+                Date today = c.getTime();
+
+                Calendar e = Calendar.getInstance();
+                e.setTime(df.parse(rs.getDate("ExpiryDate").toString()));
+                Date expiryDate = e.getTime();
+
+                if(today.after(expiryDate) || today.equals(expiryDate)){
+                    result(-1);
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Poll is expired", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
             } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
@@ -765,48 +783,52 @@ public class MainActivity extends AppCompatActivity
             }
 
             if (selected != 0) {
-                // programmatically create a PieChart
-                PieChart chart = new PieChart(getActivity().getApplicationContext());
-
-                try {
-                    ResultSet rs = connectionClass.vote(id, selected);
-                    rs.next();
-                    ArrayList<Entry> entries = new ArrayList<Entry>();
-                    entries.add(new Entry((float) rs.getInt("Vote1"), rs.getInt("Vote1")));
-                    entries.add(new Entry((float) rs.getInt("Vote2"), rs.getInt("Vote2")));
-                    entries.add(new Entry((float) rs.getInt("Vote3"), rs.getInt("Vote3")));
-                    entries.add(new Entry((float) rs.getInt("Vote4"), rs.getInt("Vote4")));
-                    PieDataSet dataset = new PieDataSet(entries, "");
-                    dataset.setColors(ColorTemplate.COLORFUL_COLORS);
-                    dataset.setValueTextSize(16);
-                    ArrayList<String> labels = new ArrayList<String>();
-                    labels.add(rs.getString("Option1"));
-                    labels.add(rs.getString("Option2"));
-                    labels.add(rs.getString("Option3"));
-                    labels.add(rs.getString("Option4"));
-                    PieData data = new PieData(labels, dataset);
-                    chart.setData(data);
-                    chart.setDescription("Results");
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-
-                optionsRadioGroup.setVisibility(View.GONE);
-                voteButton.setVisibility(View.GONE);
-                reportButton.setVisibility(View.GONE);
-                newButton.setVisibility(View.GONE);
-                subscribeCheckBox.setVisibility(View.GONE);
-                chart.getLegend().setEnabled(false);
-                DisplayMetrics metrics = new DisplayMetrics();
-                getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-                int height = (int) (metrics.heightPixels * 0.9);
-                int width = (int) (metrics.widthPixels * 0.9);
-                layout.addView(chart, height, width); // add the programmatically created chart
+                result(selected);
             } else {
                 Toast toast = Toast.makeText(getActivity().getApplicationContext(), "You have to select an option", Toast.LENGTH_SHORT);
                 toast.show();
             }
 
+        }
+
+        public void result(int selected){
+            // programmatically create a PieChart
+            PieChart chart = new PieChart(getActivity().getApplicationContext());
+
+            try {
+                ResultSet rs = connectionClass.vote(id, selected);
+                rs.next();
+                ArrayList<Entry> entries = new ArrayList<Entry>();
+                entries.add(new Entry((float) rs.getInt("Vote1"), rs.getInt("Vote1")));
+                entries.add(new Entry((float) rs.getInt("Vote2"), rs.getInt("Vote2")));
+                entries.add(new Entry((float) rs.getInt("Vote3"), rs.getInt("Vote3")));
+                entries.add(new Entry((float) rs.getInt("Vote4"), rs.getInt("Vote4")));
+                PieDataSet dataset = new PieDataSet(entries, "");
+                dataset.setColors(ColorTemplate.COLORFUL_COLORS);
+                dataset.setValueTextSize(16);
+                ArrayList<String> labels = new ArrayList<String>();
+                labels.add(rs.getString("Option1"));
+                labels.add(rs.getString("Option2"));
+                labels.add(rs.getString("Option3"));
+                labels.add(rs.getString("Option4"));
+                PieData data = new PieData(labels, dataset);
+                chart.setData(data);
+                chart.setDescription("Results");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            optionsRadioGroup.setVisibility(View.GONE);
+            voteButton.setVisibility(View.GONE);
+            reportButton.setVisibility(View.GONE);
+            newButton.setVisibility(View.GONE);
+            subscribeCheckBox.setVisibility(View.GONE);
+            chart.getLegend().setEnabled(false);
+            DisplayMetrics metrics = new DisplayMetrics();
+            getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            int height = (int) (metrics.heightPixels * 0.9);
+            int width = (int) (metrics.widthPixels * 0.9);
+            layout.addView(chart, height, width); // add the programmatically created chart
         }
 
         @Override

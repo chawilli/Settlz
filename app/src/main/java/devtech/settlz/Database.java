@@ -108,11 +108,13 @@ public class Database {
             rs.next();
             int optionsId = rs.getInt("OptionsId");
             int votesId = rs.getInt("VotesId"); //Store the VotesId to retrieve for results activity
-            String update = "UPDATE Votes " +
-                    "SET Vote"+ selected + "= Vote" + selected + "+1 " +
-                    "WHERE VotesId = " +rs.getInt("VotesId")+";";
-            Statement stmt2 = conn.createStatement();
-            stmt2.executeUpdate(update);
+            if(selected != -1){
+                String update = "UPDATE Votes " +
+                        "SET Vote"+ selected + "= Vote" + selected + "+1 " +
+                        "WHERE VotesId = " +rs.getInt("VotesId")+";";
+                Statement stmt2 = conn.createStatement();
+                stmt2.executeUpdate(update);
+            }
 
             String resultQuery= "Select Option1, Option2, Option3, Option4, Vote1, Vote2, Vote3, Vote4 " +
                     "FROM Options " +
@@ -248,6 +250,48 @@ public class Database {
         }
         return rs;
     }
+
+    public ResultSet subscribedExpiredPoll(int pollId) {
+        /*String query = "Select PollId, Argument, CategoryName, ExpiryDate, Option1, Option2, Option3, Option4 " +
+                "from Polls " +
+                "INNER JOIN Options ON Polls.Option_OptionsId = Options.OptionsId " +
+                "INNER JOIN Categories ON Polls.CategoryCategoryId = Categories.CategoryId " +
+                "WHERE PollId = "+pollId+";";*/
+        String query = "Select PollId, OptionsId, VotesId " +
+                "from Polls " +
+                "INNER JOIN Options ON Polls.Option_OptionsId = Options.OptionsId " +
+                "INNER JOIN Votes ON Options.Vote_VotesId = Votes.VotesId " +
+                "WHERE PollId = " +pollId+
+                ";";
+
+        ResultSet rs = null;
+        try {
+            Statement stmt = conn.createStatement();
+            rs = stmt.executeQuery(query);
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rs;
+    }
+
+    /*public ResultSet expiredPoll(int pollId) {
+        String query = "Select ExpiryDate " +
+                "from Polls " +
+                "WHERE PollId = "+pollId+";";
+
+        ResultSet rs = null;
+        try {
+            Statement stmt = conn.createStatement();
+            rs = stmt.executeQuery(query);
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rs;
+    }*/
 
     public ResultSet getCategories(){
         String query = "Select CategoryId, CategoryName " +
