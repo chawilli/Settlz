@@ -143,9 +143,9 @@
         android:layout_gravity="center_horizontal"
         android:text=""
         android:focusable="false"
-        android:background="#FFFFFF"
+        android:background="@color/bright_foreground_disabled_material_light"
         android:clickable="false"
-        />
+        android:textColor="#ffffff"/>
 
     <LinearLayout
         android:orientation="horizontal"
