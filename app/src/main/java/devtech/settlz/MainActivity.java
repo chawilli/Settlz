@@ -5,7 +5,9 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
@@ -35,11 +37,17 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
+
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -56,6 +64,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         Fragment fragment = new PollFragment();
         getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
@@ -99,6 +108,9 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+        else if(id == R.id.action_share){
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -629,6 +641,7 @@ public class MainActivity extends AppCompatActivity
         CheckBox subscribeCheckBox;
         Button reportButton;
         Button newButton;
+        Button shareButton;
         // get a layout defined in xml
         LinearLayout layout;
         // programmatically create a PieChart
@@ -636,6 +649,8 @@ public class MainActivity extends AppCompatActivity
         Calendar c ;
         SimpleDateFormat df;
         String currentDate;
+        CallbackManager callbackManager;
+        ShareDialog shareDialog;
 
         public PollFragment() {
 
@@ -643,6 +658,13 @@ public class MainActivity extends AppCompatActivity
 
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.content_main, container, false);
+
+            FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
+            callbackManager = CallbackManager.Factory.create();
+            shareDialog = new ShareDialog(this);
+            shareButton = (Button)rootView.findViewById(R.id.shareButton);
+            shareButton.setOnClickListener(this);
+
             connectionClass = new Database();
 
             c = Calendar.getInstance();
@@ -670,12 +692,26 @@ public class MainActivity extends AppCompatActivity
 
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             SharedPreferences.Editor editor = pref.edit();
+
             int pollId = pref.getInt("pollid", 0);
             if (pollId != 0) {
                 subscribedPoll(pollId);
                 editor.remove("pollid");
                 editor.commit();
-            } else {
+            } else if(savedInstanceState == null){
+                Intent intent;
+                try{
+                    intent = getActivity().getIntent();
+                    if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+                        Uri uri = intent.getData();
+                        id = Integer.valueOf(uri.getQueryParameter("id"));
+                    }
+                } catch(Exception ex){
+
+                }
+                subscribedPoll(id);
+            }
+            else {
                 random();
             }
 
@@ -812,7 +848,13 @@ public class MainActivity extends AppCompatActivity
         public void onClick(View v) {
             if (v.getId() == voteButton.getId()) {
                 vote();
-            } else if (v.getId() == nextButton.getId()) {
+            }else if(v.getId() == shareButton.getId()){
+                ShareLinkContent content = new ShareLinkContent.Builder()
+                        .setContentUrl(Uri.parse("http://settlz.com/view?id="+id))
+                        .build();
+                shareDialog.show(content);
+            }
+            else if (v.getId() == nextButton.getId()) {
                 next();
             } else if (v.getId() == newButton.getId()) {
                 SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
