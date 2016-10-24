@@ -43,6 +43,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -478,6 +479,12 @@ public class MainActivity extends AppCompatActivity
             View rootView = inflater.inflate(R.layout.fragment_create, container, false);
             connectionClass = new Database();
 
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String formattedDate = df.format(c.getTime());
+            Toast toast = Toast.makeText(getActivity().getApplicationContext(), formattedDate, Toast.LENGTH_SHORT);
+            toast.show();
+
             argumentEditText = (EditText) rootView.findViewById(R.id.argumentEditText);
             option1EditText = (EditText) rootView.findViewById(R.id.option1EditText);
             option2EditText = (EditText) rootView.findViewById(R.id.option2EditText);
@@ -609,6 +616,10 @@ public class MainActivity extends AppCompatActivity
         // programmatically create a PieChart
         PieChart chart;
 
+        Calendar c ;
+        SimpleDateFormat df;
+        String currentDate;
+
         public PollFragment() {
 
         }
@@ -634,6 +645,10 @@ public class MainActivity extends AppCompatActivity
             reportButton = (Button) rootView.findViewById(R.id.reportButton);
             newButton = (Button) rootView.findViewById(R.id.newButton);
             newButton.setOnClickListener(this);
+
+            c = Calendar.getInstance();
+            df = new SimpleDateFormat("yyyy-MM-dd");
+            currentDate = df.format(c.getTime());
 
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             SharedPreferences.Editor editor = pref.edit();
@@ -671,7 +686,7 @@ public class MainActivity extends AppCompatActivity
 
         public void random() {
             //Load a random poll
-            ResultSet rs = connectionClass.randomPoll();
+            ResultSet rs = connectionClass.randomPoll(currentDate);
             try {
                 rs.next();
                 id = rs.getInt("PollId");
@@ -689,7 +704,7 @@ public class MainActivity extends AppCompatActivity
 
         //method for nextButton
         public void next() {
-            ResultSet rs = connectionClass.nextPoll(id);
+            ResultSet rs = connectionClass.nextPoll(id, currentDate);
             try {
                 rs.next();
                 id = rs.getInt("PollId");

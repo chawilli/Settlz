@@ -9,6 +9,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 
 public class Database {
@@ -46,11 +48,15 @@ public class Database {
         }
     }
 
-    public ResultSet randomPoll(){
+    public ResultSet randomPoll(String currentDate){
+        //c = Calendar.getInstance();
+        //df = new SimpleDateFormat("yyyy-MM-dd");
+        //currentDate = df.format(c.getTime());
         String query = "Select PollId, Argument, CategoryName, ExpiryDate, Option1, Option2, Option3, Option4 " +
                 "from Polls " +
                 "INNER JOIN Options ON Polls.Option_OptionsId = Options.OptionsId " +
                 "INNER JOIN Categories ON Polls.CategoryCategoryId = Categories.CategoryId " +
+                "WHERE ExpiryDate > '"+currentDate+"' " +
                 "ORDER BY NEWID();";
 
         ResultSet rs = null;
@@ -65,12 +71,12 @@ public class Database {
         return rs;
     }
 
-    public ResultSet nextPoll (int id){
+    public ResultSet nextPoll (int id, String currentDate){
         String query = "Select PollId, Argument, CategoryName, ExpiryDate, Option1, Option2, Option3, Option4 " +
                 "from Polls " +
                 "INNER JOIN Options ON Polls.Option_OptionsId = Options.OptionsId " +
                 "INNER JOIN Categories ON Polls.CategoryCategoryId = Categories.CategoryId " +
-                "WHERE PollId != " +id+
+                "WHERE PollId != " +id+ " AND ExpiryDate > '"+currentDate+"' " +
                 "ORDER BY NEWID();";
 
         ResultSet rs = null;
