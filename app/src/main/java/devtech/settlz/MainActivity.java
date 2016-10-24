@@ -524,6 +524,7 @@ public class MainActivity extends AppCompatActivity
             }
 
             public void onDateSet(DatePicker view, int year, int month, int day) {
+                month +=1;
                 expiryEditText.setText(year + "-" + month + "-" + day);
             }
         }
