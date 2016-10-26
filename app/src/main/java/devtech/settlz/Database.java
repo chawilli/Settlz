@@ -406,7 +406,7 @@ public class Database {
     }
 
     public ResultSet getSearchResults(String s, int categoryId) {
-            String query="SELECT TOP 10 PollId, Argument FROM Polls WHERE ";
+            String query="SELECT TOP 10 PollId, Argument FROM Polls WHERE ReportCount < 3 AND";
         if(categoryId!=-1){
             query+="CategoryCategoryId = "+categoryId+" AND Argument LIKE '%%"+s+"%%' ";
         }

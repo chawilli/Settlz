@@ -485,6 +485,8 @@ public class MainActivity extends AppCompatActivity
         final List<String> categories = new ArrayList<String>();
         static Date nextDate;
         static Date expiryDate;
+        TextView option3TextView;
+        TextView option4TextView;
 
         public CreateFragment() {
 
@@ -498,9 +500,13 @@ public class MainActivity extends AppCompatActivity
             option1EditText = (EditText) rootView.findViewById(R.id.option1EditText);
             option2EditText = (EditText) rootView.findViewById(R.id.option2EditText);
             option3EditText = (EditText) rootView.findViewById(R.id.option3EditText);
-            option3EditText.setEnabled(false);
+            option3TextView = (TextView) rootView.findViewById(R.id.option3TextView);
+            option3TextView.setVisibility(View.GONE);
+            option3EditText.setVisibility(View.GONE);
             option4EditText = (EditText) rootView.findViewById(R.id.option4EditText);
-            option4EditText.setEnabled(false);
+            option4TextView = (TextView) rootView.findViewById(R.id.option4TextView);
+            option4TextView.setVisibility(View.GONE);
+            option4EditText.setVisibility(View.GONE);
             option2EditText.addTextChangedListener(new TextWatcher(){
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -510,12 +516,15 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if(s.length() > 0){
-                        option3EditText.setEnabled(true);
+                        option3TextView.setVisibility(View.VISIBLE);
+                        option3EditText.setVisibility(View.VISIBLE);
                     }else if(s.length() == 0){
+                        option3TextView.setVisibility(View.GONE);
+                        option4TextView.setVisibility(View.GONE);
                         option3EditText.setText("");
                         option4EditText.setText("");
-                        option3EditText.setEnabled(false);
-                        option4EditText.setEnabled(false);
+                        option3EditText.setVisibility(View.GONE);
+                        option4EditText.setVisibility(View.GONE);
                     }
                 }
 
@@ -533,10 +542,12 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if(s.length() > 0){
-                        option4EditText.setEnabled(true);
+                        option4TextView.setVisibility(View.VISIBLE);
+                        option4EditText.setVisibility(View.VISIBLE);
                     }else if(s.length() == 0){
+                        option4TextView.setVisibility(View.GONE);
                         option4EditText.setText("");
-                        option4EditText.setEnabled(false);
+                        option4EditText.setVisibility(View.GONE);
                     }
                 }
 
@@ -913,8 +924,12 @@ public class MainActivity extends AppCompatActivity
                 ArrayList<Entry> entries = new ArrayList<Entry>();
                 entries.add(new Entry((float) rs.getInt("Vote1"), rs.getInt("Vote1")));
                 entries.add(new Entry((float) rs.getInt("Vote2"), rs.getInt("Vote2")));
-                entries.add(new Entry((float) rs.getInt("Vote3"), rs.getInt("Vote3")));
-                entries.add(new Entry((float) rs.getInt("Vote4"), rs.getInt("Vote4")));
+                if (option3RadioButton.getVisibility() == View.VISIBLE) {
+                    entries.add(new Entry((float) rs.getInt("Vote3"), rs.getInt("Vote3")));
+                }
+                if (option4RadioButton.getVisibility() == View.VISIBLE) {
+                    entries.add(new Entry((float) rs.getInt("Vote4"), rs.getInt("Vote4")));
+                }
                 PieDataSet dataset = new PieDataSet(entries, "");
                 dataset.setColors(ColorTemplate.COLORFUL_COLORS);
                 dataset.setValueTextSize(16);

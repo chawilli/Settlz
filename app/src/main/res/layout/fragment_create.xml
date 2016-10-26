@@ -81,7 +81,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Option 3"
-        android:id="@+id/textView13"
+        android:id="@+id/option3TextView"
         android:layout_gravity="center_horizontal" />
 
     <EditText
@@ -96,7 +96,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Option 4"
-        android:id="@+id/textView14"
+        android:id="@+id/option4TextView"
         android:layout_gravity="center_horizontal" />
 
     <EditText
