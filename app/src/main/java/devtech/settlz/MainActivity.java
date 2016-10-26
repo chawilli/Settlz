@@ -16,7 +16,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Patterns;
@@ -483,6 +485,8 @@ public class MainActivity extends AppCompatActivity
         final List<String> categories = new ArrayList<String>();
         static Date nextDate;
         static Date expiryDate;
+        TextView option3TextView;
+        TextView option4TextView;
 
         public CreateFragment() {
 
@@ -496,7 +500,65 @@ public class MainActivity extends AppCompatActivity
             option1EditText = (EditText) rootView.findViewById(R.id.option1EditText);
             option2EditText = (EditText) rootView.findViewById(R.id.option2EditText);
             option3EditText = (EditText) rootView.findViewById(R.id.option3EditText);
+            option3TextView = (TextView) rootView.findViewById(R.id.option3TextView);
+            option3TextView.setVisibility(View.GONE);
+            option3EditText.setVisibility(View.GONE);
             option4EditText = (EditText) rootView.findViewById(R.id.option4EditText);
+            option4TextView = (TextView) rootView.findViewById(R.id.option4TextView);
+            option4TextView.setVisibility(View.GONE);
+            option4EditText.setVisibility(View.GONE);
+            option2EditText.addTextChangedListener(new TextWatcher(){
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if(s.length() > 0){
+                        option3TextView.setVisibility(View.VISIBLE);
+                        option3EditText.setVisibility(View.VISIBLE);
+                    }else if(s.length() == 0){
+                        option3TextView.setVisibility(View.GONE);
+                        option4TextView.setVisibility(View.GONE);
+                        option3EditText.setText("");
+                        option4EditText.setText("");
+                        option3EditText.setVisibility(View.GONE);
+                        option4EditText.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+            option3EditText.addTextChangedListener(new TextWatcher(){
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if(s.length() > 0){
+                        option4TextView.setVisibility(View.VISIBLE);
+                        option4EditText.setVisibility(View.VISIBLE);
+                    }else if(s.length() == 0){
+                        option4TextView.setVisibility(View.GONE);
+                        option4EditText.setText("");
+                        option4EditText.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+
+
+
 
             backButton = (Button) rootView.findViewById(R.id.backButton);
             backButton.setOnClickListener(this);
@@ -658,6 +720,9 @@ public class MainActivity extends AppCompatActivity
         Boolean login;
         Boolean checked;
 
+        int facebookId;
+        int twitterId;
+
         public PollFragment() {
 
         }
@@ -696,6 +761,8 @@ public class MainActivity extends AppCompatActivity
             reportButton = (Button) rootView.findViewById(R.id.reportButton);
             newButton = (Button) rootView.findViewById(R.id.newButton);
             newButton.setOnClickListener(this);
+            reportButton = (Button)rootView.findViewById(R.id.reportButton);
+            reportButton.setOnClickListener(this);
 
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             SharedPreferences.Editor editor = pref.edit();
@@ -736,6 +803,12 @@ public class MainActivity extends AppCompatActivity
                 pollTextView.setText(rs.getString("Argument"));
                 option1RadioButton.setText(rs.getString("Option1"));
                 option2RadioButton.setText(rs.getString("Option2"));
+                if(rs.getString("Option3").equals("")){
+                    option3RadioButton.setVisibility(View.GONE);
+                }
+                if(rs.getString("Option4").equals("")){
+                    option4RadioButton.setVisibility(View.GONE);
+                }
                 option3RadioButton.setText(rs.getString("Option3"));
                 option4RadioButton.setText(rs.getString("Option4"));
                 category.setText(rs.getString("CategoryName"));
@@ -769,10 +842,18 @@ public class MainActivity extends AppCompatActivity
                 pollTextView.setText(rs.getString("Argument"));
                 option1RadioButton.setText(rs.getString("Option1"));
                 option2RadioButton.setText(rs.getString("Option2"));
+                if(rs.getString("Option3").equals("")){
+                    option3RadioButton.setVisibility(View.GONE);
+                }
+                if(rs.getString("Option4").equals("")){
+                    option4RadioButton.setVisibility(View.GONE);
+                }
                 option3RadioButton.setText(rs.getString("Option3"));
                 option4RadioButton.setText(rs.getString("Option4"));
                 category.setText(rs.getString("CategoryName"));
                 expire.setText(rs.getDate("ExpiryDate").toString());
+                facebookId = rs.getInt("Facebook_FacebookId");
+                twitterId = rs.getInt("Twitter_TwitterId");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -782,16 +863,30 @@ public class MainActivity extends AppCompatActivity
         //method for nextButton
         public void next() {
             ResultSet rs = connectionClass.nextPoll(id, currentDate);
+            if(option3RadioButton.getVisibility() == View.GONE){
+                option3RadioButton.setVisibility(View.VISIBLE);
+            }
+            if(option4RadioButton.getVisibility() == View.GONE){
+                option4RadioButton.setVisibility(View.VISIBLE);
+            }
             try {
                 rs.next();
                 id = rs.getInt("PollId");
                 pollTextView.setText(rs.getString("Argument"));
                 option1RadioButton.setText(rs.getString("Option1"));
                 option2RadioButton.setText(rs.getString("Option2"));
+                if(rs.getString("Option3").equals("")){
+                    option3RadioButton.setVisibility(View.GONE);
+                }
+                if(rs.getString("Option4").equals("")){
+                    option4RadioButton.setVisibility(View.GONE);
+                }
                 option3RadioButton.setText(rs.getString("Option3"));
                 option4RadioButton.setText(rs.getString("Option4"));
                 category.setText(rs.getString("CategoryName"));
                 expire.setText(rs.getDate("ExpiryDate").toString());
+                facebookId = rs.getInt("Facebook_FacebookId");
+                twitterId = rs.getInt("Twitter_TwitterId");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -846,8 +941,12 @@ public class MainActivity extends AppCompatActivity
                 ArrayList<Entry> entries = new ArrayList<Entry>();
                 entries.add(new Entry((float) rs.getInt("Vote1"), rs.getInt("Vote1")));
                 entries.add(new Entry((float) rs.getInt("Vote2"), rs.getInt("Vote2")));
-                entries.add(new Entry((float) rs.getInt("Vote3"), rs.getInt("Vote3")));
-                entries.add(new Entry((float) rs.getInt("Vote4"), rs.getInt("Vote4")));
+                if (option3RadioButton.getVisibility() == View.VISIBLE) {
+                    entries.add(new Entry((float) rs.getInt("Vote3"), rs.getInt("Vote3")));
+                }
+                if (option4RadioButton.getVisibility() == View.VISIBLE) {
+                    entries.add(new Entry((float) rs.getInt("Vote4"), rs.getInt("Vote4")));
+                }
                 PieDataSet dataset = new PieDataSet(entries, "");
                 dataset.setColors(ColorTemplate.COLORFUL_COLORS);
                 dataset.setValueTextSize(16);
@@ -880,14 +979,20 @@ public class MainActivity extends AppCompatActivity
         public void onClick(View v) {
             if (v.getId() == voteButton.getId()) {
                 vote();
-            } else if(v.getId() == shareButton.getId()){
+            }else if(v.getId() == shareButton.getId()){
+                connectionClass.updateShareCount(facebookId);
                 ShareLinkContent content = new ShareLinkContent.Builder()
                         .setContentUrl(Uri.parse("http://settlz.com/view?id="+id))
                         .build();
                 shareDialog.show(content);
             } else if (v.getId() == nextButton.getId()) {
                 next();
-            } else if (v.getId() == newButton.getId()) {
+            } else if(v.getId() == reportButton.getId()){
+                connectionClass.reportPoll(id);
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Thank you for reporting the malicious poll!", Toast.LENGTH_SHORT);
+                toast.show();
+                next();
+            }else if (v.getId() == newButton.getId()) {
                 SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 boolean login = pref.getBoolean("login", false);
                 //user logged in
@@ -1011,7 +1116,7 @@ public class MainActivity extends AppCompatActivity
 
                     while (rs.next()) {
                         Button button = new Button(getActivity());
-                        button.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                        button.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                         button.setText(rs.getString("Argument"));
                         button.setId(rs.getInt("PollId"));
                         button.setOnClickListener(this);
@@ -1038,13 +1143,15 @@ public class MainActivity extends AppCompatActivity
         Database connectionClass;
         ArrayList<Button> buttonList;
         LinearLayout subscribeLayout;
-
+        Button backButton;
         public SubscribeFragment() {
 
         }
 
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_subscribe, container, false);
+            backButton = (Button)rootView.findViewById(R.id.backButton);
+            backButton.setOnClickListener(this);
             buttonList = new ArrayList<Button>();
             subscribeLayout = (LinearLayout) rootView.findViewById(R.id.subscribedResultsLayout);
             connectionClass = new Database();
@@ -1055,7 +1162,7 @@ public class MainActivity extends AppCompatActivity
                 try {
                     while (rs.next()) {
                         Button button = new Button(getActivity());
-                        button.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                        button.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                         button.setText(rs.getString("Argument"));
                         button.setId(rs.getInt("PollId"));
                         button.setOnClickListener(this);
@@ -1088,6 +1195,13 @@ public class MainActivity extends AppCompatActivity
                     ft.commit();
                     editor.commit();
                 }
+            }
+            if(view.getId() == backButton.getId()){
+                Fragment fragment = new ProfileFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame, fragment);
+                ft.addToBackStack(null);
+                ft.commit();
             }
         }
 
