@@ -216,7 +216,8 @@ public class Database {
                 "ON PollId = PollUser.Polls_PollId " +
                 "INNER JOIN Users " +
                 "ON PollUser.Users_UserId = Users.UserId " +
-                "WHERE UserId = "+userId+";";
+                "WHERE UserId = "+userId+" " +
+                "ORDER BY Argument;";
         ResultSet rs = null;
         try {
             Statement stmt = conn.createStatement();
@@ -457,13 +458,14 @@ public class Database {
     }
 
     public ResultSet getSearchResults(String s, int categoryId) {
-            String query="SELECT TOP 10 PollId, Argument FROM Polls WHERE ReportCount < 3 AND";
+            String query="SELECT TOP 10 PollId, Argument FROM Polls WHERE ReportCount < 3 AND ";
         if(categoryId!=-1){
             query+="CategoryCategoryId = "+categoryId+" AND Argument LIKE '%%"+s+"%%' ";
         }
         else{
             query+="Argument LIKE '%%"+s+"%%' ";
         }
+        query += "ORDER BY Argument;";
 
 //        String query ="SELECT TOP 2 PollId, Argument FROM Polls WHERE CategoryCategoryId = 7 AND Argument LIKE '%%%%';";
             ResultSet rs = null;

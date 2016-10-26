@@ -966,7 +966,6 @@ public class MainActivity extends AppCompatActivity
             voteButton.setVisibility(View.GONE);
             reportButton.setVisibility(View.GONE);
             newButton.setVisibility(View.GONE);
-            subscribeCheckBox.setVisibility(View.GONE);
             chart.getLegend().setEnabled(false);
             DisplayMetrics metrics = new DisplayMetrics();
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -1069,7 +1068,7 @@ public class MainActivity extends AppCompatActivity
 
         public void getCategories() {
             ResultSet rs = connectionClass.getCategories();
-            categories.add("");
+            categories.add("All");
             try {
                 while (rs.next()) {
                     categories.add(rs.getString("CategoryName"));
@@ -1103,7 +1102,7 @@ public class MainActivity extends AppCompatActivity
             if (view.getId() == searchButton.getId()) {
                 String categoryName = spinnerCategory.getSelectedItem().toString();
                 int categoryId = -1;
-                if (!categoryName.equals("")) {
+                if (!categoryName.equals("All")) {
                     categoryId = connectionClass.getCategoryId(categoryName);
                 }
 
