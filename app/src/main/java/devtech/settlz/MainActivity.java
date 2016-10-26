@@ -1019,10 +1019,6 @@ public class MainActivity extends AppCompatActivity
                     if (login) {
                         connectionClass.setSubscribePoll(id, userId);
                         checked = connectionClass.checkPollUser(id, userId);
-
-                        Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Subscribe Checkbox Checked Poll: " + id + " - User: " + userId + " - Checked:" + checked, Toast.LENGTH_SHORT);
-                        toast.show();
-
                     } else {
                         Fragment fragment = new LoginFragment();
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -1034,8 +1030,6 @@ public class MainActivity extends AppCompatActivity
                     }
                 } else {
                     connectionClass.deleteSubscribedPoll(id, userId);
-                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Subscribe Checkbox Unchecked", Toast.LENGTH_SHORT);
-                    toast.show();
                 }
             }
         }
