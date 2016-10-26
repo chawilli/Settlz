@@ -62,6 +62,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    //this is a comment
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
