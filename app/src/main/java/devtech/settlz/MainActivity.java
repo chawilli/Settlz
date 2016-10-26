@@ -16,7 +16,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Patterns;
@@ -496,7 +498,56 @@ public class MainActivity extends AppCompatActivity
             option1EditText = (EditText) rootView.findViewById(R.id.option1EditText);
             option2EditText = (EditText) rootView.findViewById(R.id.option2EditText);
             option3EditText = (EditText) rootView.findViewById(R.id.option3EditText);
+            option3EditText.setEnabled(false);
             option4EditText = (EditText) rootView.findViewById(R.id.option4EditText);
+            option4EditText.setEnabled(false);
+            option2EditText.addTextChangedListener(new TextWatcher(){
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if(s.length() > 0){
+                        option3EditText.setEnabled(true);
+                    }else if(s.length() == 0){
+                        option3EditText.setText("");
+                        option4EditText.setText("");
+                        option3EditText.setEnabled(false);
+                        option4EditText.setEnabled(false);
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+            option3EditText.addTextChangedListener(new TextWatcher(){
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if(s.length() > 0){
+                        option4EditText.setEnabled(true);
+                    }else if(s.length() == 0){
+                        option4EditText.setText("");
+                        option4EditText.setEnabled(false);
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+
+
+
 
             backButton = (Button) rootView.findViewById(R.id.backButton);
             backButton.setOnClickListener(this);
@@ -728,6 +779,12 @@ public class MainActivity extends AppCompatActivity
                 pollTextView.setText(rs.getString("Argument"));
                 option1RadioButton.setText(rs.getString("Option1"));
                 option2RadioButton.setText(rs.getString("Option2"));
+                if(rs.getString("Option3").equals("")){
+                    option3RadioButton.setVisibility(View.GONE);
+                }
+                if(rs.getString("Option4").equals("")){
+                    option4RadioButton.setVisibility(View.GONE);
+                }
                 option3RadioButton.setText(rs.getString("Option3"));
                 option4RadioButton.setText(rs.getString("Option4"));
                 category.setText(rs.getString("CategoryName"));
@@ -763,6 +820,12 @@ public class MainActivity extends AppCompatActivity
                 pollTextView.setText(rs.getString("Argument"));
                 option1RadioButton.setText(rs.getString("Option1"));
                 option2RadioButton.setText(rs.getString("Option2"));
+                if(rs.getString("Option3").equals("")){
+                    option3RadioButton.setVisibility(View.GONE);
+                }
+                if(rs.getString("Option4").equals("")){
+                    option4RadioButton.setVisibility(View.GONE);
+                }
                 option3RadioButton.setText(rs.getString("Option3"));
                 option4RadioButton.setText(rs.getString("Option4"));
                 category.setText(rs.getString("CategoryName"));
@@ -777,12 +840,24 @@ public class MainActivity extends AppCompatActivity
         //method for nextButton
         public void next() {
             ResultSet rs = connectionClass.nextPoll(id, currentDate);
+            if(option3RadioButton.getVisibility() == View.GONE){
+                option3RadioButton.setVisibility(View.VISIBLE);
+            }
+            if(option4RadioButton.getVisibility() == View.GONE){
+                option4RadioButton.setVisibility(View.VISIBLE);
+            }
             try {
                 rs.next();
                 id = rs.getInt("PollId");
                 pollTextView.setText(rs.getString("Argument"));
                 option1RadioButton.setText(rs.getString("Option1"));
                 option2RadioButton.setText(rs.getString("Option2"));
+                if(rs.getString("Option3").equals("")){
+                    option3RadioButton.setVisibility(View.GONE);
+                }
+                if(rs.getString("Option4").equals("")){
+                    option4RadioButton.setVisibility(View.GONE);
+                }
                 option3RadioButton.setText(rs.getString("Option3"));
                 option4RadioButton.setText(rs.getString("Option4"));
                 category.setText(rs.getString("CategoryName"));

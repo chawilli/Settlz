@@ -359,6 +359,7 @@ public class Database {
             rs.next();
             voteId = rs.getInt("VotesId");
 
+
             String insertOptionsQuery = "INSERT INTO Options (Option1,Option2,Option3,Option4,Vote_VotesId) " +
                     "VALUES('"+option1+"','"+option2+"','"+option3+"','"+option4+"',"+voteId+");";
             stmt = conn.createStatement();
