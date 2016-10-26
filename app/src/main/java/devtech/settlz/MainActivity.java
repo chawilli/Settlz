@@ -652,6 +652,9 @@ public class MainActivity extends AppCompatActivity
         CallbackManager callbackManager;
         ShareDialog shareDialog;
 
+        int facebookId;
+        int twitterId;
+
         public PollFragment() {
 
         }
@@ -689,6 +692,8 @@ public class MainActivity extends AppCompatActivity
             reportButton = (Button) rootView.findViewById(R.id.reportButton);
             newButton = (Button) rootView.findViewById(R.id.newButton);
             newButton.setOnClickListener(this);
+            reportButton = (Button)rootView.findViewById(R.id.reportButton);
+            reportButton.setOnClickListener(this);
 
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             SharedPreferences.Editor editor = pref.edit();
@@ -762,6 +767,8 @@ public class MainActivity extends AppCompatActivity
                 option4RadioButton.setText(rs.getString("Option4"));
                 category.setText(rs.getString("CategoryName"));
                 expire.setText(rs.getDate("ExpiryDate").toString());
+                facebookId = rs.getInt("Facebook_FacebookId");
+                twitterId = rs.getInt("Twitter_TwitterId");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -780,6 +787,8 @@ public class MainActivity extends AppCompatActivity
                 option4RadioButton.setText(rs.getString("Option4"));
                 category.setText(rs.getString("CategoryName"));
                 expire.setText(rs.getDate("ExpiryDate").toString());
+                facebookId = rs.getInt("Facebook_FacebookId");
+                twitterId = rs.getInt("Twitter_TwitterId");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -864,6 +873,7 @@ public class MainActivity extends AppCompatActivity
             if (v.getId() == voteButton.getId()) {
                 vote();
             }else if(v.getId() == shareButton.getId()){
+                connectionClass.updateShareCount(facebookId);
                 ShareLinkContent content = new ShareLinkContent.Builder()
                         .setContentUrl(Uri.parse("http://settlz.com/view?id="+id))
                         .build();
@@ -871,9 +881,14 @@ public class MainActivity extends AppCompatActivity
             }
             else if (v.getId() == nextButton.getId()) {
                 next();
-            } else if (v.getId() == newButton.getId()) {
+            } else if(v.getId() == reportButton.getId()){
+                connectionClass.reportPoll(id);
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Thank you for reporting the malicious poll!", Toast.LENGTH_SHORT);
+                toast.show();
+                next();
+            }else if (v.getId() == newButton.getId()) {
                 SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                ;
+
                 boolean login = pref.getBoolean("login", false);
                 //user logged in
                 if (login) {
@@ -974,7 +989,7 @@ public class MainActivity extends AppCompatActivity
 
                     while (rs.next()) {
                         Button button = new Button(getActivity());
-                        button.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                        button.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                         button.setText(rs.getString("Argument"));
                         button.setId(rs.getInt("PollId"));
                         button.setOnClickListener(this);
@@ -1001,13 +1016,15 @@ public class MainActivity extends AppCompatActivity
         Database connectionClass;
         ArrayList<Button> buttonList;
         LinearLayout subscribeLayout;
-
+        Button backButton;
         public SubscribeFragment() {
 
         }
 
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_subscribe, container, false);
+            backButton = (Button)rootView.findViewById(R.id.backButton);
+            backButton.setOnClickListener(this);
             buttonList = new ArrayList<Button>();
             subscribeLayout = (LinearLayout) rootView.findViewById(R.id.subscribedResultsLayout);
             connectionClass = new Database();
@@ -1018,7 +1035,7 @@ public class MainActivity extends AppCompatActivity
                 try {
                     while (rs.next()) {
                         Button button = new Button(getActivity());
-                        button.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                        button.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                         button.setText(rs.getString("Argument"));
                         button.setId(rs.getInt("PollId"));
                         button.setOnClickListener(this);
@@ -1051,6 +1068,13 @@ public class MainActivity extends AppCompatActivity
                     ft.commit();
                     editor.commit();
                 }
+            }
+            if(view.getId() == backButton.getId()){
+                Fragment fragment = new ProfileFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame, fragment);
+                ft.addToBackStack(null);
+                ft.commit();
             }
         }
 

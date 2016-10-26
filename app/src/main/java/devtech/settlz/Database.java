@@ -52,11 +52,11 @@ public class Database {
         //c = Calendar.getInstance();
         //df = new SimpleDateFormat("yyyy-MM-dd");
         //currentDate = df.format(c.getTime());
-        String query = "Select PollId, Argument, CategoryName, ExpiryDate, Option1, Option2, Option3, Option4 " +
+        String query = "Select PollId, Argument, CategoryName, ExpiryDate, Option1, Option2, Option3, Option4, Facebook_FacebookId, Twitter_TwitterId " +
                 "from Polls " +
                 "INNER JOIN Options ON Polls.Option_OptionsId = Options.OptionsId " +
                 "INNER JOIN Categories ON Polls.CategoryCategoryId = Categories.CategoryId " +
-                "WHERE ExpiryDate > '"+currentDate+"' " +
+                "WHERE ExpiryDate > '"+currentDate+"' AND ReportCount < 3 " +
                 "ORDER BY NEWID();";
 
         ResultSet rs = null;
@@ -72,11 +72,11 @@ public class Database {
     }
 
     public ResultSet nextPoll (int id, String currentDate){
-        String query = "Select PollId, Argument, CategoryName, ExpiryDate, Option1, Option2, Option3, Option4 " +
+        String query = "Select PollId, Argument, CategoryName, ExpiryDate, Option1, Option2, Option3, Option4, Facebook_FacebookId, Twitter_TwitterId " +
                 "from Polls " +
                 "INNER JOIN Options ON Polls.Option_OptionsId = Options.OptionsId " +
                 "INNER JOIN Categories ON Polls.CategoryCategoryId = Categories.CategoryId " +
-                "WHERE PollId != " +id+ " AND ExpiryDate > '"+currentDate+"' " +
+                "WHERE PollId != " +id+ " AND ExpiryDate > '"+currentDate+"' AND ReportCount < 3 " +
                 "ORDER BY NEWID();";
 
         ResultSet rs = null;
@@ -425,5 +425,27 @@ public class Database {
             }
             return rs;
 
+    }
+
+    public void updateShareCount(int facebookId) {
+        String query = "UPDATE Facebooks Set TimesShared = TimesShared + 1 WHERE FacebookId = '"+facebookId+"'";
+        try {
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(query);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void reportPoll(int id) {
+        String query = "UPDATE Polls Set ReportCount = ReportCount + 1 WHERE PollId = "+id;
+        try {
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(query);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
