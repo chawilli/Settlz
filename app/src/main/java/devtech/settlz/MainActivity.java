@@ -646,7 +646,7 @@ public class MainActivity extends AppCompatActivity
         LinearLayout layout;
         // programmatically create a PieChart
         PieChart chart;
-        Calendar c ;
+        Calendar c;
         SimpleDateFormat df;
         String currentDate;
         CallbackManager callbackManager;
@@ -693,22 +693,16 @@ public class MainActivity extends AppCompatActivity
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             SharedPreferences.Editor editor = pref.edit();
 
+            Intent intent;
+            intent = getActivity().getIntent();
             int pollId = pref.getInt("pollid", 0);
             if (pollId != 0) {
                 subscribedPoll(pollId);
                 editor.remove("pollid");
                 editor.commit();
-            } else if(savedInstanceState == null){
-                Intent intent;
-                try{
-                    intent = getActivity().getIntent();
-                    if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-                        Uri uri = intent.getData();
-                        id = Integer.valueOf(uri.getQueryParameter("id"));
-                    }
-                } catch(Exception ex){
-
-                }
+            }else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+                Uri uri = intent.getData();
+                id = Integer.valueOf(uri.getQueryParameter("id"));
                 subscribedPoll(id);
             }
             else {
