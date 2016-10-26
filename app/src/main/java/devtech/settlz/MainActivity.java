@@ -636,7 +636,6 @@ public class MainActivity extends AppCompatActivity
         TextView expire;
         Button nextButton;
         Button voteButton;
-        int id;
         RadioGroup optionsRadioGroup;
         CheckBox subscribeCheckBox;
         Button reportButton;
@@ -651,6 +650,13 @@ public class MainActivity extends AppCompatActivity
         String currentDate;
         CallbackManager callbackManager;
         ShareDialog shareDialog;
+        int id;
+        int pollId;
+        int userId;
+        String email;
+        String password;
+        Boolean login;
+        Boolean checked;
 
         public PollFragment() {
 
@@ -684,6 +690,7 @@ public class MainActivity extends AppCompatActivity
             voteButton.setOnClickListener(this);
             optionsRadioGroup = (RadioGroup) rootView.findViewById(R.id.optionsRadioGroup);
             subscribeCheckBox = (CheckBox) rootView.findViewById(R.id.subscribeCheckBox);
+            subscribeCheckBox.setOnClickListener(this);
             layout = (LinearLayout) rootView.findViewById(R.id.linearLayout);
             chart = new PieChart(getActivity().getApplicationContext());
             reportButton = (Button) rootView.findViewById(R.id.reportButton);
@@ -693,11 +700,17 @@ public class MainActivity extends AppCompatActivity
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             SharedPreferences.Editor editor = pref.edit();
 
+            login = pref.getBoolean("login", false);
+            email = pref.getString("email", "");
+            password = pref.getString("password", "");
+            userId = connectionClass.login(email, password);
+
             Intent intent;
             intent = getActivity().getIntent();
-            int pollId = pref.getInt("pollid", 0);
+            pollId = pref.getInt("pollid", 0);
             if (pollId != 0) {
                 subscribedPoll(pollId);
+                subscribeCheckBox.setChecked(true);
                 editor.remove("pollid");
                 editor.commit();
             }else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
@@ -739,8 +752,6 @@ public class MainActivity extends AppCompatActivity
 
                 if(today.after(expiryDate) || today.equals(expiryDate)){
                     result(-1);
-                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Poll is expired", Toast.LENGTH_SHORT);
-                    toast.show();
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -765,6 +776,7 @@ public class MainActivity extends AppCompatActivity
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            checkSubscribe();
         }
 
         //method for nextButton
@@ -784,7 +796,7 @@ public class MainActivity extends AppCompatActivity
                 e.printStackTrace();
             }
             optionsRadioGroup.clearCheck();
-            subscribeCheckBox.setChecked(false);
+            checkSubscribe();
             if (optionsRadioGroup.getVisibility() == View.GONE) {
                 optionsRadioGroup.setVisibility(View.VISIBLE);
                 voteButton.setVisibility(View.VISIBLE);
@@ -793,9 +805,7 @@ public class MainActivity extends AppCompatActivity
                 newButton.setVisibility(View.VISIBLE);
                 layout.removeViewAt(6);
             }
-
         }
-
 
         //method for voteButton
         public void vote() {
@@ -816,7 +826,14 @@ public class MainActivity extends AppCompatActivity
                 Toast toast = Toast.makeText(getActivity().getApplicationContext(), "You have to select an option", Toast.LENGTH_SHORT);
                 toast.show();
             }
+        }
 
+        public void checkSubscribe(){
+            if(connectionClass.checkPollUser(id, userId)){
+                subscribeCheckBox.setChecked(true);
+            } else {
+                subscribeCheckBox.setChecked(false);
+            }
         }
 
         public void result(int selected){
@@ -863,17 +880,15 @@ public class MainActivity extends AppCompatActivity
         public void onClick(View v) {
             if (v.getId() == voteButton.getId()) {
                 vote();
-            }else if(v.getId() == shareButton.getId()){
+            } else if(v.getId() == shareButton.getId()){
                 ShareLinkContent content = new ShareLinkContent.Builder()
                         .setContentUrl(Uri.parse("http://settlz.com/view?id="+id))
                         .build();
                 shareDialog.show(content);
-            }
-            else if (v.getId() == nextButton.getId()) {
+            } else if (v.getId() == nextButton.getId()) {
                 next();
             } else if (v.getId() == newButton.getId()) {
                 SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                ;
                 boolean login = pref.getBoolean("login", false);
                 //user logged in
                 if (login) {
@@ -891,7 +906,29 @@ public class MainActivity extends AppCompatActivity
                     Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Please Login/Register", Toast.LENGTH_SHORT);
                     toast.show();
                 }
+            } else if (v.getId() == subscribeCheckBox.getId()) {
+                if (subscribeCheckBox.isChecked()) {
+                    if (login) {
+                        connectionClass.setSubscribePoll(id, userId);
+                        checked = connectionClass.checkPollUser(id, userId);
 
+                        Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Subscribe Checkbox Checked Poll: " + id + " - User: " + userId + " - Checked:" + checked, Toast.LENGTH_SHORT);
+                        toast.show();
+
+                    } else {
+                        Fragment fragment = new LoginFragment();
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        ft.replace(R.id.content_frame, fragment);
+                        ft.addToBackStack(null);
+                        ft.commit();
+                        Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Please Login/Register", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                } else {
+                    connectionClass.deleteSubscribedPoll(id, userId);
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Subscribe Checkbox Unchecked", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
             }
         }
     }

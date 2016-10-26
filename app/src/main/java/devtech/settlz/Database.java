@@ -132,6 +132,57 @@ public class Database {
 
     }
 
+    public ResultSet setSubscribePoll (int pollId, int userId){
+        String query= "INSERT INTO PollUser (Polls_PollId, Users_UserId) VALUES("+pollId+", "+userId+");";
+
+        ResultSet rs = null;
+        try {
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(query);
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rs;
+    }
+
+    public ResultSet deleteSubscribedPoll (int pollId, int userId){
+        String query = "DELETE FROM PollUser " +
+                "WHERE Polls_PollId = " + pollId + " AND Users_UserId = " + userId + ";";
+
+        ResultSet rs = null;
+        try {
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(query);
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rs;
+    }
+
+    public Boolean checkPollUser (int pollId, int userId){
+        String query = "SELECT Polls_PollId, Users_UserId " +
+                "FROM PollUser " +
+                "WHERE Polls_PollId = " + pollId + " AND Users_UserId = " + userId + ";";
+
+        ResultSet rs = null;
+        try {
+            Statement stmt = conn.createStatement();
+            rs = stmt.executeQuery(query);
+
+            if(rs.next()) {
+                return true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public int register(String email, String password) {
         try {
             String query="INSERT INTO Users (Password, Email) " +
