@@ -351,8 +351,11 @@ public class MainActivity extends AppCompatActivity
             String password = passwordEditText.getText().toString();
             connectionClass.login(email, password);
             int id = connectionClass.login(email, password);
-
-            if (!password.isEmpty() && id != -1 && !email.isEmpty()) {
+            if (connectionClass.banned(email, password)) {
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "User is banned", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+            else if (!password.isEmpty() && id != -1 && !email.isEmpty()) {
                 SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 SharedPreferences.Editor editor = pref.edit();
                 editor.putString("email", email);

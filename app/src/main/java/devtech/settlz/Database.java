@@ -268,6 +268,23 @@ public class Database {
         return -1;
     }
 
+    public boolean banned(String email, String password) {
+        try {
+            String query = "SELECT UserId, Banned " +
+                    "FROM Users " +
+                    "WHERE Email = '"+email+"' AND Password ='"+password+"' AND Banned = 1;";
+
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            if(rs.next()){
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public void changePassword(int id, String password) {
         try {
 
@@ -327,23 +344,6 @@ public class Database {
         }
         return rs;
     }
-
-    /*public ResultSet expiredPoll(int pollId) {
-        String query = "Select ExpiryDate " +
-                "from Polls " +
-                "WHERE PollId = "+pollId+";";
-
-        ResultSet rs = null;
-        try {
-            Statement stmt = conn.createStatement();
-            rs = stmt.executeQuery(query);
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return rs;
-    }*/
 
     public ResultSet getCategories(){
         String query = "Select CategoryId, CategoryName " +
