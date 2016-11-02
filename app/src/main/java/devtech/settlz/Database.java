@@ -491,6 +491,17 @@ public class Database {
         }
     }
 
+    public void updateTwitterCount(int twitterId) {
+        String query = "UPDATE Twitters Set TimesShared = TimesShared + 1 WHERE TwitterId = '"+twitterId+"'";
+        try {
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(query);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void reportPoll(int id) {
         String query = "UPDATE Polls Set ReportCount = ReportCount + 1 WHERE PollId = "+id;
         try {

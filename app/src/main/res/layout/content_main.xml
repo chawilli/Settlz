@@ -19,7 +19,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAlignment="center">
+        android:textAlignment="center"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
 
         <Button
             style="?android:attr/buttonStyleSmall"
@@ -158,10 +160,18 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Share"
+            android:text="Facebook"
             android:id="@+id/shareButton"
             android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Twitter"
+            android:id="@+id/twitterButton"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"/>
 
     </RelativeLayout>
 

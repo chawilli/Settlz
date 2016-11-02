@@ -14,6 +14,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -51,6 +52,20 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+import com.twitter.sdk.android.tweetcomposer.TweetComposer;
+
+import io.fabric.sdk.android.Fabric;
+import retrofit2.http.Url;
+
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -62,11 +77,18 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
+    private static final String TWITTER_KEY = "5RDt1TaGoPIoZQ2bpNRXeiyEi";
+    private static final String TWITTER_SECRET = "wTLAD6GO1WSyrRGMofLIYK3Nq0wbmLjJTO6rDGpu4CJA4EZXeV";
+
     //this is a comment
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+        Fabric.with(this, new Twitter(authConfig));
         setContentView(R.layout.activity_main);
 
         Fragment fragment = new PollFragment();
@@ -707,6 +729,7 @@ public class MainActivity extends AppCompatActivity
         Button reportButton;
         Button newButton;
         Button shareButton;
+        Button twitterButton;
         // get a layout defined in xml
         LinearLayout layout;
         // programmatically create a PieChart
@@ -739,6 +762,8 @@ public class MainActivity extends AppCompatActivity
             shareDialog = new ShareDialog(this);
             shareButton = (Button)rootView.findViewById(R.id.shareButton);
             shareButton.setOnClickListener(this);
+            twitterButton = (Button)rootView.findViewById(R.id.twitterButton);
+            twitterButton.setOnClickListener(this);
 
             connectionClass = new Database();
 
@@ -982,12 +1007,19 @@ public class MainActivity extends AppCompatActivity
         public void onClick(View v) {
             if (v.getId() == voteButton.getId()) {
                 vote();
-            }else if(v.getId() == shareButton.getId()){
+            } else if(v.getId() == shareButton.getId()){
                 connectionClass.updateShareCount(facebookId);
                 ShareLinkContent content = new ShareLinkContent.Builder()
                         .setContentUrl(Uri.parse("http://settlz.com/view?id="+id))
                         .build();
                 shareDialog.show(content);
+            } else if(v.getId() == twitterButton.getId()){
+                connectionClass.updateTwitterCount(twitterId);
+                TwitterAuthConfig authConfig =  new TwitterAuthConfig("consumerKey", "consumerSecret");
+                Fabric.with(getActivity(), new TweetComposer(), new Twitter(authConfig));
+                TweetComposer.Builder builder = new TweetComposer.Builder(getActivity())
+                        .text("http://settlz.com/view?id="+id);
+                builder.show();
             } else if (v.getId() == nextButton.getId()) {
                 next();
             } else if(v.getId() == reportButton.getId()){
