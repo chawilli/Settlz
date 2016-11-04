@@ -60,24 +60,14 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Back"
-            android:id="@+id/backButton"
-            />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="Register"
-            android:id="@+id/registerButton"
-            />
+            android:id="@+id/registerButton"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Login"
-            android:id="@+id/loginButton"
-            />
-
+            android:id="@+id/loginButton"/>
     </LinearLayout>
 
     <Button

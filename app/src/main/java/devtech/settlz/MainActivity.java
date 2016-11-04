@@ -322,7 +322,6 @@ public class MainActivity extends AppCompatActivity
         EditText passwordEditText;
         Button registerButton;
         Button loginButton;
-        Button backButton;
         Button forgotButton;
 
         public LoginFragment() {
@@ -338,8 +337,6 @@ public class MainActivity extends AppCompatActivity
             registerButton.setOnClickListener(this);
             loginButton = (Button) rootView.findViewById(R.id.loginButton);
             loginButton.setOnClickListener(this);
-            backButton = (Button) rootView.findViewById(R.id.backButton);
-            backButton.setOnClickListener(this);
             forgotButton = (Button) rootView.findViewById(R.id.forgotButton);
             forgotButton.setOnClickListener(this);
             return rootView;
@@ -347,9 +344,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onClick(View v) {
-            if (v.getId() == backButton.getId()) {
-                this.back();
-            } else if (v.getId() == registerButton.getId()) {
+            if (v.getId() == registerButton.getId()) {
                 this.register();
             } else if (v.getId() == loginButton.getId()) {
                 this.login();
@@ -412,7 +407,6 @@ public class MainActivity extends AppCompatActivity
         EditText emailEditText;
         EditText passwordEditText;
         EditText verifyEditText;
-        Button backButton;
         Button registerButton;
 
         public RegisterFragment() {
@@ -425,8 +419,6 @@ public class MainActivity extends AppCompatActivity
             emailEditText = (EditText) rootView.findViewById(R.id.emailEditText);
             passwordEditText = (EditText) rootView.findViewById(R.id.passwordEditText);
             verifyEditText = (EditText) rootView.findViewById(R.id.verifyEditText);
-            backButton = (Button) rootView.findViewById(R.id.backButton);
-            backButton.setOnClickListener(this);
             registerButton = (Button) rootView.findViewById(R.id.registerButton);
             registerButton.setOnClickListener(this);
             return rootView;
@@ -434,9 +426,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onClick(View v) {
-            if (v.getId() == backButton.getId()) {
-                this.back();
-            } else if (v.getId() == registerButton.getId()) {
+            if (v.getId() == registerButton.getId()) {
                 this.register();
             }
         }
@@ -488,7 +478,6 @@ public class MainActivity extends AppCompatActivity
     public static class CreateFragment extends Fragment implements View.OnClickListener {
         Database connectionClass;
         Button expiryButton;
-        Button backButton;
         Button createButton;
         static EditText expiryEditText;
         EditText argumentEditText;
@@ -572,12 +561,6 @@ public class MainActivity extends AppCompatActivity
                 }
             });
 
-
-
-
-            backButton = (Button) rootView.findViewById(R.id.backButton);
-            backButton.setOnClickListener(this);
-
             expiryButton = (Button) rootView.findViewById(R.id.expiryButton);
             expiryButton.setOnClickListener(this);
 
@@ -656,14 +639,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onClick(View v) {
-
-            if (v.getId() == backButton.getId()) {
-                Fragment fragment = new PollFragment();
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.content_frame, fragment);
-                ft.addToBackStack(null);
-                ft.commit();
-            } else if (v.getId() == expiryButton.getId()) {
+            if (v.getId() == expiryButton.getId()) {
                 DialogFragment newFragment = new DatePickerFragment();
                 newFragment.show(getFragmentManager(), "datePicker");
             } else if (v.getId() == expiryEditText.getId()) {
@@ -1036,7 +1012,6 @@ public class MainActivity extends AppCompatActivity
         Database connectionClass;
         EditText argumentEditTextView;
         Button searchButton;
-        Button backButton;
         Spinner spinnerCategory;
         LinearLayout searchResultsLayout;
         ArrayList<Button> buttonList;
@@ -1050,8 +1025,6 @@ public class MainActivity extends AppCompatActivity
             argumentEditTextView = (EditText) rootView.findViewById(R.id.argumentEditText);
             searchButton = (Button) rootView.findViewById(R.id.searchButton);
             searchButton.setOnClickListener(this);
-            backButton = (Button) rootView.findViewById(R.id.backButton);
-            backButton.setOnClickListener(this);
             getCategories();
             spinnerCategory = (Spinner) rootView.findViewById(R.id.spinnerCategory);
             ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, categories);
@@ -1121,13 +1094,6 @@ public class MainActivity extends AppCompatActivity
                     Log.d("SQLPROBLEM", e.toString());
 
                 }
-
-            } else if (view.getId() == backButton.getId()) {
-                Fragment fragment = new PollFragment();
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.content_frame, fragment);
-                ft.addToBackStack(null);
-                ft.commit();
             }
 
         }
@@ -1137,15 +1103,12 @@ public class MainActivity extends AppCompatActivity
         Database connectionClass;
         ArrayList<Button> buttonList;
         LinearLayout subscribeLayout;
-        Button backButton;
         public SubscribeFragment() {
 
         }
 
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_subscribe, container, false);
-            backButton = (Button)rootView.findViewById(R.id.backButton);
-            backButton.setOnClickListener(this);
             buttonList = new ArrayList<Button>();
             subscribeLayout = (LinearLayout) rootView.findViewById(R.id.subscribedResultsLayout);
             connectionClass = new Database();
@@ -1189,13 +1152,6 @@ public class MainActivity extends AppCompatActivity
                     ft.commit();
                     editor.commit();
                 }
-            }
-            if(view.getId() == backButton.getId()){
-                Fragment fragment = new ProfileFragment();
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.content_frame, fragment);
-                ft.addToBackStack(null);
-                ft.commit();
             }
         }
 

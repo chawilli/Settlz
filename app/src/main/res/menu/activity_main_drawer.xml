@@ -14,7 +14,6 @@
             android:icon="@drawable/ic_add"
             android:title="New Poll"/>
     </group>
-
     <item android:title="User">
         <menu>
             <item
