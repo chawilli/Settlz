@@ -45,17 +45,6 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true" />
 
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Poll"
-            android:id="@+id/newButton"
-            android:maxLength="50"
-            android:maxWidth="80dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"/>
-
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"
