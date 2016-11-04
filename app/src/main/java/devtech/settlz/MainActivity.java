@@ -128,15 +128,6 @@ public class MainActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        else if(id == R.id.action_share){
-
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -179,9 +170,7 @@ public class MainActivity extends AppCompatActivity
             ft.replace(R.id.content_frame, fragment);
             ft.addToBackStack(null);
             ft.commit();
-        } else if (id == R.id.nav_settings) {
-
-        } else if (id == R.id.nav_login) {
+        }  else if (id == R.id.nav_login) {
             Fragment fragment = new LoginFragment();
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.content_frame, fragment);
@@ -727,7 +716,6 @@ public class MainActivity extends AppCompatActivity
         RadioGroup optionsRadioGroup;
         CheckBox subscribeCheckBox;
         Button reportButton;
-        Button newButton;
         Button shareButton;
         Button twitterButton;
         // get a layout defined in xml
@@ -788,8 +776,6 @@ public class MainActivity extends AppCompatActivity
             layout = (LinearLayout) rootView.findViewById(R.id.linearLayout);
             chart = new PieChart(getActivity().getApplicationContext());
             reportButton = (Button) rootView.findViewById(R.id.reportButton);
-            newButton = (Button) rootView.findViewById(R.id.newButton);
-            newButton.setOnClickListener(this);
             reportButton = (Button)rootView.findViewById(R.id.reportButton);
             reportButton.setOnClickListener(this);
 
@@ -926,7 +912,6 @@ public class MainActivity extends AppCompatActivity
                 voteButton.setVisibility(View.VISIBLE);
                 subscribeCheckBox.setVisibility(View.VISIBLE);
                 reportButton.setVisibility(View.VISIBLE);
-                newButton.setVisibility(View.VISIBLE);
                 layout.removeViewAt(6);
             }
         }
@@ -994,7 +979,6 @@ public class MainActivity extends AppCompatActivity
             optionsRadioGroup.setVisibility(View.GONE);
             voteButton.setVisibility(View.GONE);
             reportButton.setVisibility(View.GONE);
-            newButton.setVisibility(View.GONE);
             chart.getLegend().setEnabled(false);
             DisplayMetrics metrics = new DisplayMetrics();
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -1027,25 +1011,6 @@ public class MainActivity extends AppCompatActivity
                 Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Thank you for reporting the malicious poll!", Toast.LENGTH_SHORT);
                 toast.show();
                 next();
-            }else if (v.getId() == newButton.getId()) {
-                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                boolean login = pref.getBoolean("login", false);
-                //user logged in
-                if (login) {
-                    Fragment fragment = new CreateFragment();
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.content_frame, fragment);
-                    ft.addToBackStack(null);
-                    ft.commit();
-                } else {
-                    Fragment fragment = new LoginFragment();
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.content_frame, fragment);
-                    ft.addToBackStack(null);
-                    ft.commit();
-                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Please Login/Register", Toast.LENGTH_SHORT);
-                    toast.show();
-                }
             } else if (v.getId() == subscribeCheckBox.getId()) {
                 if (subscribeCheckBox.isChecked()) {
                     if (login) {
