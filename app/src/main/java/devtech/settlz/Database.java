@@ -6,6 +6,7 @@ import android.util.Log;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -48,22 +49,26 @@ public class Database {
         }
     }
 
+    //This method queries for a randomized order of our polls.
+    // This is also run when the PollFragment has no specific poll to direct to
     public ResultSet randomPoll(String currentDate){
         //c = Calendar.getInstance();
         //df = new SimpleDateFormat("yyyy-MM-dd");
         //currentDate = df.format(c.getTime());
+        PreparedStatement preparedStmt = null;
         String query = "Select PollId, Argument, CategoryName, ExpiryDate, Option1, Option2, Option3, Option4, Facebook_FacebookId, Twitter_TwitterId " +
                 "from Polls " +
                 "INNER JOIN Options ON Polls.Option_OptionsId = Options.OptionsId " +
                 "INNER JOIN Categories ON Polls.CategoryCategoryId = Categories.CategoryId " +
-                "WHERE ExpiryDate > '"+currentDate+"' AND ReportCount < 3 " +
+                "WHERE ExpiryDate > ? AND ReportCount < 3 " +
                 "ORDER BY NEWID();";
+
 
         ResultSet rs = null;
         try {
-            Statement stmt = conn.createStatement();
-            rs = stmt.executeQuery(query);
-
+            preparedStmt = conn.prepareStatement(query);
+            preparedStmt.setString(1,currentDate);
+            rs = preparedStmt.executeQuery();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -72,17 +77,20 @@ public class Database {
     }
 
     public ResultSet nextPoll (int id, String currentDate){
+        PreparedStatement preparedStmt = null;
         String query = "Select PollId, Argument, CategoryName, ExpiryDate, Option1, Option2, Option3, Option4, Facebook_FacebookId, Twitter_TwitterId " +
                 "from Polls " +
                 "INNER JOIN Options ON Polls.Option_OptionsId = Options.OptionsId " +
                 "INNER JOIN Categories ON Polls.CategoryCategoryId = Categories.CategoryId " +
-                "WHERE PollId != " +id+ " AND ExpiryDate > '"+currentDate+"' AND ReportCount < 3 " +
+                "WHERE PollId != ? AND ExpiryDate > ? AND ReportCount < 3 " +
                 "ORDER BY NEWID();";
 
         ResultSet rs = null;
         try {
-            Statement stmt = conn.createStatement();
-            rs = stmt.executeQuery(query);
+            preparedStmt = conn.prepareStatement(query);
+            preparedStmt.setInt(1,id);
+            preparedStmt.setString(2,currentDate);
+            rs = preparedStmt.executeQuery();
 
 
         } catch (SQLException e) {
@@ -96,15 +104,16 @@ public class Database {
         ResultSet results = null;
         try {
             //Update Votes table
+            PreparedStatement preparedStmt = null;
             String query = "Select PollId, OptionsId, VotesId " +
                     "from Polls " +
                     "INNER JOIN Options ON Polls.Option_OptionsId = Options.OptionsId " +
                     "INNER JOIN Votes ON Options.Vote_VotesId = Votes.VotesId " +
-                    "WHERE PollId = " +pollId+
-                    ";";
+                    "WHERE PollId = ?";
+            preparedStmt = conn.prepareStatement(query);
+            preparedStmt.setInt(1,pollId);
             ResultSet rs = null;
-            Statement stmt = conn.createStatement();
-            rs = stmt.executeQuery(query);
+            rs = preparedStmt.executeQuery();
             rs.next();
             int optionsId = rs.getInt("OptionsId");
             int votesId = rs.getInt("VotesId"); //Store the VotesId to retrieve for results activity
@@ -185,18 +194,16 @@ public class Database {
 
     public int register(String email, String password) {
         try {
+            PreparedStatement preparedStmt = null;
             String query="INSERT INTO Users (Password, Email) " +
                      "VALUES ('"+password+"', '"+email+"');";
-
             Statement stmt = conn.createStatement();
-            stmt.executeQuery(query);
+            stmt.executeUpdate(query);
 
             String userid = "SELECT UserId " +
                     "FROM Users " +
-                    "WHERE Email="+email+";";
-
-            Statement stmt2 = conn.createStatement();
-            ResultSet rs = stmt2.executeQuery(userid);
+                    "WHERE Email='"+email+"';";
+            ResultSet rs = stmt.executeQuery(userid);
             rs.next();
             return rs.getInt("UserId");
 //            return 2;
@@ -250,11 +257,9 @@ public class Database {
 
     public int login(String email, String password) {
         try {
-
             String query = "SELECT UserId " +
                     "FROM Users " +
                     "WHERE Email = '"+email+"' AND Password ='"+password+"';";
-
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             if(rs.next()){
