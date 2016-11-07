@@ -931,10 +931,10 @@ public class MainActivity extends AppCompatActivity
                 ArrayList<Entry> entries = new ArrayList<Entry>();
                 entries.add(new Entry((float) rs.getInt("Vote1"), rs.getInt("Vote1")));
                 entries.add(new Entry((float) rs.getInt("Vote2"), rs.getInt("Vote2")));
-                if (option3RadioButton.getVisibility() == View.VISIBLE) {
+                if (option3RadioButton.getVisibility() == View.VISIBLE && rs.getInt("Vote3") == 0) {
                     entries.add(new Entry((float) rs.getInt("Vote3"), rs.getInt("Vote3")));
                 }
-                if (option4RadioButton.getVisibility() == View.VISIBLE) {
+                if (option4RadioButton.getVisibility() == View.VISIBLE && rs.getInt("Vote4") == 0) {
                     entries.add(new Entry((float) rs.getInt("Vote4"), rs.getInt("Vote4")));
                 }
                 PieDataSet dataset = new PieDataSet(entries, "");
