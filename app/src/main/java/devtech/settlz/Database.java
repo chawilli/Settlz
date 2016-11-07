@@ -92,7 +92,6 @@ public class Database {
             preparedStmt.setString(2,currentDate);
             rs = preparedStmt.executeQuery();
 
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -196,18 +195,20 @@ public class Database {
         try {
             PreparedStatement preparedStmt = null;
             String query="INSERT INTO Users (Password, Email) " +
-                     "VALUES ('"+password+"', '"+email+"');";
-            Statement stmt = conn.createStatement();
-            stmt.executeUpdate(query);
+                     "VALUES (?, ?);";
+            preparedStmt = conn.prepareStatement(query);
+            preparedStmt.setString(1,password);
+            preparedStmt.setString(2,email);
+            preparedStmt.executeQuery();
 
             String userid = "SELECT UserId " +
                     "FROM Users " +
-                    "WHERE Email='"+email+"';";
-            ResultSet rs = stmt.executeQuery(userid);
+                    "WHERE Email=?;";
+            preparedStmt = conn.prepareStatement(userid);
+            preparedStmt.setString(1,email);
+            ResultSet rs = preparedStmt.executeQuery();
             rs.next();
             return rs.getInt("UserId");
-//            return 2;
-
 
 
         } catch (SQLException e) {
@@ -259,9 +260,12 @@ public class Database {
         try {
             String query = "SELECT UserId " +
                     "FROM Users " +
-                    "WHERE Email = '"+email+"' AND Password ='"+password+"';";
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
+                    "WHERE Email = ? AND Password =?;";
+            PreparedStatement preparedStmt = conn.prepareStatement(query);
+            preparedStmt.setString(1,email);
+            preparedStmt.setString(2,password);
+
+            ResultSet rs = preparedStmt.executeQuery();
             if(rs.next()){
                 return rs.getInt("UserId");
             }
