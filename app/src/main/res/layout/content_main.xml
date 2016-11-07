@@ -146,21 +146,26 @@
 
         </LinearLayout>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Facebook"
-            android:id="@+id/shareButton"
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/twitter"
+            android:id="@+id/twitterButton"
+            android:scaleType="fitXY"
+            android:background="@null"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"/>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Twitter"
-            android:id="@+id/twitterButton"
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/facebook"
+            android:id="@+id/facebookButton"
+            android:scaleType="fitXY"
+            android:background="@null"
             android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"/>
+            android:layout_toStartOf="@+id/twitterButton"
+            android:layout_marginEnd="11dp"/>
 
     </RelativeLayout>
 

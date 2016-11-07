@@ -33,6 +33,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -692,8 +693,8 @@ public class MainActivity extends AppCompatActivity
         RadioGroup optionsRadioGroup;
         CheckBox subscribeCheckBox;
         Button reportButton;
-        Button shareButton;
-        Button twitterButton;
+        ImageButton facebookButton;
+        ImageButton twitterButton;
         // get a layout defined in xml
         LinearLayout layout;
         // programmatically create a PieChart
@@ -710,7 +711,6 @@ public class MainActivity extends AppCompatActivity
         String password;
         Boolean login;
         Boolean checked;
-
         int facebookId;
         int twitterId;
 
@@ -724,9 +724,9 @@ public class MainActivity extends AppCompatActivity
             FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
             callbackManager = CallbackManager.Factory.create();
             shareDialog = new ShareDialog(this);
-            shareButton = (Button)rootView.findViewById(R.id.shareButton);
-            shareButton.setOnClickListener(this);
-            twitterButton = (Button)rootView.findViewById(R.id.twitterButton);
+            facebookButton = (ImageButton)rootView.findViewById(R.id.facebookButton);
+            facebookButton.setOnClickListener(this);
+            twitterButton = (ImageButton)rootView.findViewById(R.id.twitterButton);
             twitterButton.setOnClickListener(this);
 
             connectionClass = new Database();
@@ -967,7 +967,7 @@ public class MainActivity extends AppCompatActivity
         public void onClick(View v) {
             if (v.getId() == voteButton.getId()) {
                 vote();
-            } else if(v.getId() == shareButton.getId()){
+            } else if(v.getId() == facebookButton.getId()){
                 connectionClass.updateShareCount(facebookId);
                 ShareLinkContent content = new ShareLinkContent.Builder()
                         .setContentUrl(Uri.parse("http://settlz.com/view?id="+id))
