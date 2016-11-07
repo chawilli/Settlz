@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -28,11 +29,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -77,12 +80,13 @@ import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
     private static final String TWITTER_KEY = "5RDt1TaGoPIoZQ2bpNRXeiyEi";
     private static final String TWITTER_SECRET = "wTLAD6GO1WSyrRGMofLIYK3Nq0wbmLjJTO6rDGpu4CJA4EZXeV";
 
+    private FrameLayout contentLayout;
     //this is a comment
 
     @Override
@@ -92,6 +96,8 @@ public class MainActivity extends AppCompatActivity
         Fabric.with(this, new Twitter(authConfig));
         setContentView(R.layout.activity_main);
 
+        contentLayout = (FrameLayout)findViewById(R.id.content_frame);
+        contentLayout.setOnClickListener(this);
         Fragment fragment = new PollFragment();
         getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
 
@@ -210,6 +216,14 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == contentLayout.getId()){
+            InputMethodManager imm =  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
     }
 
     public static class ProfileFragment extends Fragment implements View.OnClickListener {
@@ -418,6 +432,13 @@ public class MainActivity extends AppCompatActivity
             View rootView = inflater.inflate(R.layout.fragment_register, container, false);
             connectionClass = new Database();
             emailEditText = (EditText) rootView.findViewById(R.id.emailEditText);
+            emailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    InputMethodManager imm =  (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+            });
             passwordEditText = (EditText) rootView.findViewById(R.id.passwordEditText);
             verifyEditText = (EditText) rootView.findViewById(R.id.verifyEditText);
             registerButton = (Button) rootView.findViewById(R.id.registerButton);
