@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 
 public class Database {
@@ -388,7 +389,7 @@ public class Database {
         return -1;
     }
 
-    public int create(String argument, String option1, String option2, String option3, String option4, String s, int categoryId, int userId) {
+    public int create(String argument, String option1, String option2, String option3, String option4, String expiryDate, int categoryId, int userId) {
         try {
 //            DECLARE @voteid int
 //            DECLARE @twitterid int
@@ -443,8 +444,16 @@ public class Database {
             rs = stmt.executeQuery(getFacebookQuery);
             rs.next();
             facebookId = rs.getInt("FacebookId");
-            String insertPollsQuery = "INSERT INTO Polls (Argument,ReportCount,PollStatus,ExpiryDate,CategoryCategoryId,Option_OptionsId,Twitter_TwitterId,Facebook_FacebookId, User_UserId) " +
-                    "VALUES('"+argument+"',0,'True','"+s+"',"+categoryId+","+optionsId+","+twitterId+","+facebookId+","+userId+");";
+
+            Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            Log.d("CREATETEST","I GOT TO HERE");
+            String dateCreated = year+"-"+month+"-"+day;
+            String insertPollsQuery = "INSERT INTO Polls (Argument,ReportCount,PollStatus,ExpiryDate,CategoryCategoryId,Option_OptionsId,Twitter_TwitterId,Facebook_FacebookId, User_UserId, DateCreated) " +
+                    "VALUES('"+argument+"',0,'True','"+expiryDate+"',"+categoryId+","+optionsId+","+twitterId+","+facebookId+","+userId+", '"+dateCreated+"');";
             String getPollsQuery = "SELECT TOP 1 PollId FROM Polls " +
                     "ORDER BY PollId DESC";
             stmt = conn.createStatement();
@@ -453,6 +462,7 @@ public class Database {
             rs = stmt.executeQuery(getPollsQuery);
             rs.next();
             int pollId = rs.getInt("PollId");
+            Log.d("CREATETEST","I GOT TO HERE2");
 
             String insertPollUserQuery= "INSERT INTO PollUser (Polls_PollId, Users_UserId) VALUES("+pollId+", "+userId+");";
             stmt = conn.createStatement();

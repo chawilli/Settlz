@@ -963,7 +963,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 PieDataSet dataset = new PieDataSet(entries, "");
 
-                dataset.setColors(new int[] { Color.parseColor("#0026D5"), Color.parseColor("#00DB4A"), Color.parseColor("#6F00D4"), Color.parseColor("#4D0273") });
+                dataset.setColors(new int[] { Color.parseColor("#463BFF"), Color.parseColor("#8F2DFF"), Color.parseColor("#2C97FF"), Color.parseColor("#6B62FF") });
                 //dataset.setColors(new int[] { Color.MAGENTA, Color.CYAN, Color.parseColor("silver"), Color.parseColor("teal") });
 
                 dataset.setValueTextSize(16);
