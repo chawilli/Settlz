@@ -93,6 +93,12 @@
         android:text="Subscribed Polls"/>
 
     <Button
+        android:text="Facebook Log Out"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/facebookLogOutButton" />
+
+    <Button
         android:id="@+id/logoutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

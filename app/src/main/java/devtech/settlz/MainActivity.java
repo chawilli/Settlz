@@ -46,6 +46,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
+import com.facebook.login.LoginManager;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.github.mikephil.charting.charts.PieChart;
@@ -234,6 +235,7 @@ public class MainActivity extends AppCompatActivity
         Button logoutButton;
         Button changeButton;
         Button subscribeButton;
+        Button facebookLogoutButton;
         EditText passwordEditText;
         EditText verifyEditText;
         EditText changedEditText;
@@ -257,6 +259,8 @@ public class MainActivity extends AppCompatActivity
             changeButton.setOnClickListener(this);
             subscribeButton = (Button) rootView.findViewById(R.id.subscribedPollButton);
             subscribeButton.setOnClickListener(this);
+            facebookLogoutButton = (Button)rootView.findViewById(R.id.facebookLogOutButton);
+            facebookLogoutButton.setOnClickListener(this);
 
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             emailTextView = (TextView) rootView.findViewById(R.id.emailTextView);
@@ -285,6 +289,10 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onClick(View v) {
+            if(v.getId() == facebookLogoutButton.getId()){
+                FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
+                LoginManager.getInstance().logOut();
+            }
             if (v.getId() == logoutButton.getId()) {
                 this.logout();
             }
@@ -953,8 +961,12 @@ public class MainActivity extends AppCompatActivity
                 ResultSet rs = connectionClass.vote(id, selected);
                 rs.next();
                 ArrayList<Entry> entries = new ArrayList<Entry>();
-                entries.add(new Entry((float) rs.getInt("Vote1"), rs.getInt("Vote1")));
-                entries.add(new Entry((float) rs.getInt("Vote2"), rs.getInt("Vote2")));
+                if(rs.getInt("Vote1") != 0){
+                    entries.add(new Entry((float) rs.getInt("Vote1"), rs.getInt("Vote1")));
+                }
+                if(rs.getInt("Vote2") != 0){
+                    entries.add(new Entry((float) rs.getInt("Vote2"), rs.getInt("Vote2")));
+                }
                 if (option3RadioButton.getVisibility() == View.VISIBLE && rs.getInt("Vote3") != 0) {
                     entries.add(new Entry((float) rs.getInt("Vote3"), rs.getInt("Vote3")));
                 }
