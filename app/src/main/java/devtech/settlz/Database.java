@@ -194,12 +194,20 @@ public class Database {
 
     public int register(String email, String password) {
         try {
+            Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH)+1;
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            String dateCreated = year+"-"+month+"-"+day;
+
             PreparedStatement preparedStmt = null;
-            String query="INSERT INTO Users (Password, Email) " +
-                     "VALUES (?, ?);";
+            String query="INSERT INTO Users (Password, Email, Created) " +
+                     "VALUES (?, ?, ?);";
             preparedStmt = conn.prepareStatement(query);
             preparedStmt.setString(1,password);
             preparedStmt.setString(2,email);
+            preparedStmt.setString(3,dateCreated);
             preparedStmt.executeQuery();
 
             String userid = "SELECT UserId " +
@@ -450,7 +458,6 @@ public class Database {
             int month = c.get(Calendar.MONTH)+1;
             int day = c.get(Calendar.DAY_OF_MONTH);
 
-            Log.d("CREATETEST","I GOT TO HERE");
             String dateCreated = year+"-"+month+"-"+day;
             String insertPollsQuery = "INSERT INTO Polls (Argument,ReportCount,PollStatus,ExpiryDate,CategoryCategoryId,Option_OptionsId,Twitter_TwitterId,Facebook_FacebookId, User_UserId, DateCreated) " +
                     "VALUES('"+argument+"',0,'True','"+expiryDate+"',"+categoryId+","+optionsId+","+twitterId+","+facebookId+","+userId+", '"+dateCreated+"');";
@@ -462,7 +469,6 @@ public class Database {
             rs = stmt.executeQuery(getPollsQuery);
             rs.next();
             int pollId = rs.getInt("PollId");
-            Log.d("CREATETEST","I GOT TO HERE2");
 
             String insertPollUserQuery= "INSERT INTO PollUser (Polls_PollId, Users_UserId) VALUES("+pollId+", "+userId+");";
             stmt = conn.createStatement();
