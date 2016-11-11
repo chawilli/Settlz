@@ -201,21 +201,16 @@ public class Database {
 
             String dateCreated = year+"-"+month+"-"+day;
 
-            PreparedStatement preparedStmt = null;
+            Statement stmt = conn.createStatement();
+
             String query="INSERT INTO Users (Password, Email, Created) " +
-                     "VALUES (?, ?, ?);";
-            preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setString(1,password);
-            preparedStmt.setString(2,email);
-            preparedStmt.setString(3,dateCreated);
-            preparedStmt.executeQuery();
+                     "VALUES ('"+password+"', '"+email+"', '"+dateCreated+"');";
+            stmt.executeUpdate(query);
 
             String userid = "SELECT UserId " +
                     "FROM Users " +
-                    "WHERE Email=?;";
-            preparedStmt = conn.prepareStatement(userid);
-            preparedStmt.setString(1,email);
-            ResultSet rs = preparedStmt.executeQuery();
+                    "WHERE Email='"+email+"';";
+            ResultSet rs = stmt.executeQuery(userid);
             rs.next();
             return rs.getInt("UserId");
 
@@ -320,7 +315,7 @@ public class Database {
 
     //USED WHEN YOU PRESS A BUTTON IN SUBSCRIBEFRAGMENT
     public ResultSet subscribedPoll(int pollId) {
-        String query = "Select PollId, Argument, CategoryName, ExpiryDate, Option1, Option2, Option3, Option4 " +
+        String query = "Select PollId, Argument, CategoryName, ExpiryDate, Option1, Option2, Option3, Option4, Facebook_FacebookId, Twitter_TwitterId " +
                 "from Polls " +
                 "INNER JOIN Options ON Polls.Option_OptionsId = Options.OptionsId " +
                 "INNER JOIN Categories ON Polls.CategoryCategoryId = Categories.CategoryId " +

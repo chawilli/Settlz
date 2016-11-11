@@ -838,7 +838,8 @@ public class MainActivity extends AppCompatActivity
                 option4RadioButton.setText(rs.getString("Option4"));
                 category.setText(rs.getString("CategoryName"));
                 expire.setText(rs.getDate("ExpiryDate").toString());
-
+                facebookId = rs.getInt("Facebook_FacebookId");
+                twitterId = rs.getInt("Twitter_TwitterId");
                 c = Calendar.getInstance();
                 df = new SimpleDateFormat("yyyy-MM-dd");
                 c.setTime(df.parse(currentDate));
