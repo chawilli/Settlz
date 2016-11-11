@@ -5,8 +5,16 @@
               android:layout_height="match_parent"
               android:orientation="vertical"
               android:padding="10dp"
-              android:gravity="center"
               android:background="#aaaaaa">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Register"
+        android:id="@+id/textView6"
+        android:layout_gravity="center_horizontal"
+        android:textSize="25dp"/>
 
     <TextView
         android:text="@string/thanks"
@@ -15,6 +23,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/textView3"
         android:gravity="center"
+        android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
         android:textColor="#0004ff"/>
 
@@ -34,6 +43,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Email"
         android:id="@+id/emailTextView"
+        android:layout_gravity="center"
         android:textSize="15dp"/>
 
     <EditText
@@ -41,6 +51,7 @@
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
         android:ems="10"
+        android:layout_gravity="center_horizontal"
         android:id="@+id/emailEditText"/>
 
     <TextView
@@ -49,6 +60,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Password"
         android:id="@+id/passwordTextView"
+        android:layout_gravity="center"
         android:textSize="15dp"/>
 
     <EditText
@@ -56,6 +68,7 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
+        android:layout_gravity="center_horizontal"
         android:id="@+id/passwordEditText" />
 
     <TextView
@@ -64,6 +77,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Verify Password"
         android:id="@+id/verifyTextView"
+        android:layout_gravity="center"
         android:textSize="15dp"/>
 
     <EditText
@@ -71,6 +85,7 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
+        android:layout_gravity="center_horizontal"
         android:id="@+id/verifyEditText"
         />
 
