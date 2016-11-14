@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity
                 ft.replace(R.id.content_frame, fragment);
                 ft.addToBackStack(null);
                 ft.commit();
-                Toast toast = Toast.makeText(this.getApplicationContext(), "Please Login/Register", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(this.getApplicationContext(), "Please Login/Register", Toast.LENGTH_LONG);
                 toast.show();
             }
         } else if (id == R.id.nav_featured) {
@@ -213,7 +213,7 @@ public class MainActivity extends AppCompatActivity
                 ft.replace(R.id.content_frame, fragment);
                 ft.addToBackStack(null);
                 ft.commit();
-                Toast toast = Toast.makeText(this.getApplicationContext(), "Please Login/Register", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(this.getApplicationContext(), "Please Login/Register", Toast.LENGTH_LONG);
                 toast.show();
             }
 
@@ -280,7 +280,7 @@ public class MainActivity extends AppCompatActivity
             editor.remove("password");
             editor.putBoolean("login", false);
             editor.commit();
-            Toast toast = Toast.makeText(getActivity().getApplicationContext(), "You have been logged out", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(getActivity().getApplicationContext(), "You have been logged out", Toast.LENGTH_LONG);
             toast.show();
             Fragment fragment = new PollFragment();
             FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -324,7 +324,7 @@ public class MainActivity extends AppCompatActivity
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putString("password", changedPassword);
                     editor.commit();
-                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Password changed", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Password changed", Toast.LENGTH_LONG);
                     toast.show();
                     Fragment fragment = new ProfileFragment();
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -332,13 +332,13 @@ public class MainActivity extends AppCompatActivity
                     ft.addToBackStack(null);
                     ft.commit();
                 } else {
-                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_LONG);
                     toast.show();
                 }
 
 
             } else {
-                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_LONG);
                 toast.show();
             }
         }
@@ -387,7 +387,7 @@ public class MainActivity extends AppCompatActivity
             connectionClass.login(email, password);
             int id = connectionClass.login(email, password);
             if (connectionClass.banned(email, password)) {
-                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "User is banned", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "User is banned", Toast.LENGTH_LONG);
                 toast.show();
             }
             else if (!password.isEmpty() && id != -1 && !email.isEmpty()) {
@@ -398,7 +398,7 @@ public class MainActivity extends AppCompatActivity
                 editor.putBoolean("login", true);
                 editor.putInt("id", id);
                 editor.commit();
-                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Thank you for logging in", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Thank you for logging in", Toast.LENGTH_LONG);
                 toast.show();
                 Fragment fragment = new ProfileFragment();
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -406,7 +406,7 @@ public class MainActivity extends AppCompatActivity
                 ft.addToBackStack(null);
                 ft.commit();
             } else {
-                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_LONG);
                 toast.show();
             }
 
@@ -488,15 +488,15 @@ public class MainActivity extends AppCompatActivity
                     ft.replace(R.id.content_frame, fragment);
                     ft.addToBackStack(null);
                     ft.commit();
-                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Thank you for registering", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Thank you for registering", Toast.LENGTH_LONG);
                     toast.show();
                 } else {
-                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Email already in use", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Email already in use", Toast.LENGTH_LONG);
                     toast.show();
                 }
 
             } else {
-                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_LONG);
                 toast.show();
             }
         }
@@ -651,7 +651,7 @@ public class MainActivity extends AppCompatActivity
                 expiryDate = d.getTime();
 
                 if(nextDate.after(expiryDate)){
-                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_LONG);
                     toast.show();
                 } else {
                     month +=1;
@@ -943,7 +943,7 @@ public class MainActivity extends AppCompatActivity
             if (selected != 0) {
                 result(selected);
             } else {
-                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "You have to select an option", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "You have to select an option", Toast.LENGTH_LONG);
                 toast.show();
             }
         }
@@ -1026,7 +1026,7 @@ public class MainActivity extends AppCompatActivity
                 next();
             } else if(v.getId() == reportButton.getId()){
                 connectionClass.reportPoll(id);
-                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Thank you for reporting the malicious poll!", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Thank you for reporting the malicious poll!", Toast.LENGTH_LONG);
                 toast.show();
                 next();
             } else if (v.getId() == subscribeCheckBox.getId()) {
@@ -1040,7 +1040,7 @@ public class MainActivity extends AppCompatActivity
                         ft.replace(R.id.content_frame, fragment);
                         ft.addToBackStack(null);
                         ft.commit();
-                        Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Please Login/Register", Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Please Login/Register", Toast.LENGTH_LONG);
                         toast.show();
                     }
                 } else {

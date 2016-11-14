@@ -194,6 +194,7 @@ public class Database {
 
     public int register(String email, String password) {
         try {
+
             Calendar c = Calendar.getInstance();
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH)+1;
