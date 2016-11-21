@@ -31,6 +31,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -1145,6 +1146,11 @@ public class MainActivity extends AppCompatActivity
         Database connectionClass;
         ArrayList<Button> buttonList;
         LinearLayout subscribeLayout;
+        Spinner spinnerSubscribe;
+        Button updateButton;
+        private String[] showPolls = new String[] {"Show 10 Polls", "Show 25 Polls", "Show 50 Polls", "Show All Polls"};
+        private int top = 10;
+
         public SubscribeFragment() {
 
         }
@@ -1154,10 +1160,18 @@ public class MainActivity extends AppCompatActivity
             buttonList = new ArrayList<Button>();
             subscribeLayout = (LinearLayout) rootView.findViewById(R.id.subscribedResultsLayout);
             connectionClass = new Database();
+            updateButton = (Button) rootView.findViewById(R.id.updateButton);
+            updateButton.setOnClickListener(this);
+
+            spinnerSubscribe = (Spinner) rootView.findViewById(R.id.spinnerSubscribe);
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, showPolls);
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerSubscribe.setAdapter(dataAdapter);
+
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
             if (pref.getInt("id", -1) != -1) {
-                ResultSet rs = connectionClass.getSubscribedPolls(pref.getInt("id", -1));
+                ResultSet rs = connectionClass.getSubscribedPolls(pref.getInt("id", -1),top);
                 try {
                     while (rs.next()) {
                         Button button = new Button(getActivity());
@@ -1194,6 +1208,43 @@ public class MainActivity extends AppCompatActivity
                     ft.commit();
                     editor.commit();
                 }
+            }
+            if (view.getId() == updateButton.getId()){
+                if (spinnerSubscribe.getSelectedItemPosition() == 0){
+                    top = 10;
+                } else if (spinnerSubscribe.getSelectedItemPosition() == 1){
+                    top = 25;
+                }
+                else if (spinnerSubscribe.getSelectedItemPosition() == 2){
+                    top = 50;
+                }
+                else {
+                    top = 1000;
+                }
+                subscribeLayout.removeAllViews();
+                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+                if (pref.getInt("id", -1) != -1) {
+                    ResultSet rs = connectionClass.getSubscribedPolls(pref.getInt("id", -1),top);
+                    try {
+                        while (rs.next()) {
+                            Button button = new Button(getActivity());
+                            button.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                            button.setText(rs.getString("Argument"));
+                            button.setId(rs.getInt("PollId"));
+                            button.setOnClickListener(this);
+                            buttonList.add(button);
+                            subscribeLayout.addView(button);
+                        }
+                    } catch (SQLException e) {
+                        Log.d("SQLPROBLEM", e.toString());
+
+                    }
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Updated", Toast.LENGTH_LONG);
+                    toast.show();
+
+                }
+
             }
         }
 

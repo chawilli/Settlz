@@ -12,10 +12,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Subscribed"
+        android:text="Subscribed Polls"
         android:id="@+id/textView6"
         android:layout_gravity="center_horizontal"
         android:textSize="25dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:weightSum="1">
+
+        <Spinner
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:id="@+id/spinnerSubscribe"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Update"
+            android:id="@+id/updateButton"/>
+
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="wrap_content"

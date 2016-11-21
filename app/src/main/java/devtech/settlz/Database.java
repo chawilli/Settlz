@@ -222,8 +222,8 @@ public class Database {
         return -1;
     }
 
-    public ResultSet getSubscribedPolls(int userId) {
-        String query="SELECT Argument, PollId " +
+    public ResultSet getSubscribedPolls(int userId, int top) {
+        String query="SELECT TOP "+top+" Argument, PollId " +
                 "From Polls " +
                 "INNER JOIN PollUser " +
                 "ON PollId = PollUser.Polls_PollId " +
