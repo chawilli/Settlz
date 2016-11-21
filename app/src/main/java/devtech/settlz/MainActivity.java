@@ -377,7 +377,11 @@ public class MainActivity extends AppCompatActivity
             } else if (v.getId() == loginButton.getId()) {
                 this.login();
             } else if (v.getId() == forgotButton.getId()) {
-
+                Fragment fragment = new PasswordFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame, fragment);
+                ft.addToBackStack(null);
+                ft.commit();
             }
         }
 
@@ -436,7 +440,9 @@ public class MainActivity extends AppCompatActivity
         EditText passwordEditText;
         EditText verifyEditText;
         Button registerButton;
-
+        Spinner spinnerQuestions;
+        List<String> questions = new ArrayList<String>();
+        EditText answer;
         public RegisterFragment() {
 
         }
@@ -452,12 +458,33 @@ public class MainActivity extends AppCompatActivity
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
             });
+            answer = (EditText) rootView.findViewById(R.id.answerEditText);
             passwordEditText = (EditText) rootView.findViewById(R.id.passwordEditText);
             verifyEditText = (EditText) rootView.findViewById(R.id.verifyEditText);
             registerButton = (Button) rootView.findViewById(R.id.registerButton);
             registerButton.setOnClickListener(this);
+
+            getQuestions();
+            spinnerQuestions = (Spinner) rootView.findViewById(R.id.spinnerQuestions);
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, questions);
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerQuestions.setAdapter(dataAdapter);
             return rootView;
         }
+
+        public void getQuestions(){
+
+            ResultSet rs = connectionClass.getQuestions();
+            try {
+                while (rs.next()) {
+                    questions.add(rs.getString("securityQuestion"));
+                }
+                ;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
 
         @Override
         public void onClick(View v) {
@@ -467,6 +494,10 @@ public class MainActivity extends AppCompatActivity
         }
 
         public void register() {
+            String question = spinnerQuestions.getSelectedItem().toString();
+            int questionId = -1;
+            questionId = connectionClass.getQuestionId(question);
+            String answerString = answer.getText().toString().toLowerCase();
             String password = passwordEditText.getText().toString();
             String email = emailEditText.getText().toString();
             boolean emailValid = Patterns.EMAIL_ADDRESS.matcher(email).matches();
@@ -474,7 +505,7 @@ public class MainActivity extends AppCompatActivity
 
                 if (connectionClass.verifyEmail(email)) {
 
-                    int id = connectionClass.register(email, password);
+                    int id = connectionClass.register(email, password, questionId,answerString);
                     SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putString("email", email);
@@ -1197,6 +1228,112 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
+    }
+
+    public static class PasswordFragment extends Fragment implements View.OnClickListener {
+        Database connectionClass;
+        TextView emailTextView;
+        EditText usernameEditText;
+        Button verifyEmailButton;
+        TextView securityQuestionTextView;
+        EditText answerEditText;
+        Button answerButton;
+        TextView passwordTextView;
+        EditText passwordEditText;
+        TextView verifyTextView;
+        EditText verifyEditText;
+        Button changeButton;
+
+        public PasswordFragment(){
+
+        }
+
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_password, container, false);
+            connectionClass = new Database();
+            emailTextView = (TextView)rootView.findViewById(R.id.emailTextView);
+            usernameEditText = (EditText)rootView.findViewById(R.id.usernameEditText);
+            verifyEmailButton=(Button)rootView.findViewById(R.id.verifyEmailButton);
+            verifyEmailButton.setOnClickListener(this);
+            securityQuestionTextView = (TextView)rootView.findViewById(R.id.securityQuestionTextView);
+            securityQuestionTextView.setVisibility(View.GONE);
+            answerEditText = (EditText)rootView.findViewById(R.id.answerEditText);
+            answerEditText.setVisibility(View.GONE);
+            answerButton=(Button)rootView.findViewById(R.id.answerButton);
+            answerButton.setOnClickListener(this);
+            answerButton.setVisibility(View.GONE);
+            passwordTextView = (TextView)rootView.findViewById(R.id.passwordTextView);
+            passwordTextView.setVisibility(View.GONE);
+            passwordEditText = (EditText)rootView.findViewById(R.id.passwordEditText);
+            passwordEditText.setVisibility(View.GONE);
+            verifyTextView = (TextView)rootView.findViewById(R.id.verifyTextView);
+            verifyTextView.setVisibility(View.GONE);
+            verifyEditText = (EditText)rootView.findViewById(R.id.verifyEditText);
+            verifyEditText.setVisibility(View.GONE);
+            changeButton = (Button)rootView.findViewById(R.id.changeButton);
+            changeButton.setVisibility(View.GONE);
+            changeButton.setOnClickListener(this);
+            return rootView;
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            String email = usernameEditText.getText().toString();
+            if(v.getId() == verifyEmailButton.getId()){
+                //verifyemail is for registering to check if the email is free. In reverse, it can check if the user exists.
+                if(!connectionClass.verifyEmail(email)){
+                    emailTextView.setVisibility(View.GONE);
+                    usernameEditText.setVisibility(View.GONE);
+                    verifyEmailButton.setVisibility(View.GONE);
+                    String question = connectionClass.getQuestion(email);
+                    securityQuestionTextView.setText(question);
+                    securityQuestionTextView.setVisibility(View.VISIBLE);
+                    answerEditText.setVisibility(View.VISIBLE);
+                    answerButton.setVisibility(View.VISIBLE);
+                }
+
+
+            }
+            if(v.getId()==answerButton.getId()){
+                if(connectionClass.verifyAnswer(email,answerEditText.getText().toString())){
+                    securityQuestionTextView.setText("");
+                    securityQuestionTextView.setVisibility(View.GONE);
+                    answerEditText.setVisibility(View.GONE);
+                    answerButton.setVisibility(View.GONE);
+                    passwordTextView.setVisibility(View.VISIBLE);
+                    passwordEditText.setVisibility(View.VISIBLE);
+                    verifyTextView.setVisibility(View.VISIBLE);
+                    verifyEditText.setVisibility(View.VISIBLE);
+                    changeButton.setVisibility(View.VISIBLE);
+                }
+            }
+            if(v.getId()==changeButton.getId()){
+                String changedPassword = passwordEditText.getText().toString();
+                String verifyPassword = verifyEditText.getText().toString();
+                if (!changedPassword.isEmpty() && changedPassword.length() >= 6 && !verifyPassword.isEmpty() && verifyPassword.length() >= 6 && verifyPassword.equals(changedPassword)) {
+
+                    connectionClass.forgotPassword(email, changedPassword);
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Password changed", Toast.LENGTH_LONG);
+                    toast.show();
+                    passwordTextView.setVisibility(View.GONE);
+                    passwordEditText.setVisibility(View.GONE);
+                    verifyTextView.setVisibility(View.GONE);
+                    verifyEditText.setVisibility(View.GONE);
+                    changeButton.setVisibility(View.GONE);
+                    emailTextView.setVisibility(View.VISIBLE);
+                    usernameEditText.setVisibility(View.VISIBLE);
+                    verifyEmailButton.setVisibility(View.VISIBLE);
+                    Fragment fragment = new LoginFragment();
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.content_frame, fragment);
+                    ft.addToBackStack(null);
+                    ft.commit();} else {
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_LONG);
+                    toast.show();
+                }
+            }
+        }
     }
 
 }
