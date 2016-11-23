@@ -192,7 +192,7 @@ public class Database {
         return false;
     }
 
-    public int register(String email, String password) {
+    public int register(String email, String password, int security, String answer) {
         try {
 
             Calendar c = Calendar.getInstance();
@@ -204,8 +204,8 @@ public class Database {
 
             Statement stmt = conn.createStatement();
 
-            String query="INSERT INTO Users (Password, Email, Created) " +
-                     "VALUES ('"+password+"', '"+email+"', '"+dateCreated+"');";
+            String query="INSERT INTO Users (Password, Email, Created, SecurityId, Answer) " +
+                     "VALUES ('"+password+"', '"+email+"', '"+dateCreated+"', "+security+",'"+answer+"');";
             stmt.executeUpdate(query);
 
             String userid = "SELECT UserId " +
@@ -243,6 +243,7 @@ public class Database {
         return rs;
     }
 
+    //FOR REGISTERING
     public boolean verifyEmail(String email) {
         String query="SELECT * FROM USERS WHERE email='"+email+"';";
         try {
@@ -253,8 +254,6 @@ public class Database {
             if(rs.next() == false){
                 return true;
             }
-
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -307,7 +306,7 @@ public class Database {
                     "WHERE UserId="+id+"";
 
             Statement stmt = conn.createStatement();
-            stmt.executeQuery(query);
+            stmt.executeUpdate(query);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -528,6 +527,84 @@ public class Database {
     public void reportPoll(int id) {
         String query = "UPDATE Polls Set ReportCount = ReportCount + 1 WHERE PollId = "+id;
         try {
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(query);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ResultSet getQuestions() {
+        String query = "Select securityId, securityQuestion " +
+                "from Security;";
+
+        ResultSet rs = null;
+        try {
+            Statement stmt = conn.createStatement();
+            rs = stmt.executeQuery(query);
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rs;
+    }
+
+    public String getQuestion(String email){
+        String query = "SELECT email, securityQuestion, Answer from Users INNER JOIN Security ON Users.SecurityId = Security.securityId Where Users.Email = '"+email+"';";
+        ResultSet rs = null;
+        try {
+            Statement stmt = conn.createStatement();
+            rs = stmt.executeQuery(query);
+            rs.next();
+            return rs.getString("securityQuestion");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "Error";
+    }
+
+    public int getQuestionId(String question) {
+        String query = "Select securityId, securityQuestion " +
+                "from Security " +
+                "where securityQuestion = '"+question+"';";
+
+        ResultSet rs = null;
+        try {
+            Statement stmt = conn.createStatement();
+            rs = stmt.executeQuery(query);
+            rs.next();
+            return rs.getInt("securityId");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public boolean verifyAnswer(String email, String answer) {
+        String query="SELECT Answer FROM USERS WHERE email='"+email+"';";
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            rs.next();
+            if(rs.getString("Answer").toLowerCase().equals(answer.toLowerCase())){
+                return true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public void forgotPassword(String email, String changedPassword) {
+        try {
+
+            String query = "UPDATE Users " +
+                    "SET Password='"+changedPassword+"' " +
+                    "WHERE Email='"+email+"'";
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(query);
 

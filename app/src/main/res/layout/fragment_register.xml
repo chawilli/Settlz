@@ -7,93 +7,137 @@
               android:padding="10dp"
               android:background="#aaaaaa">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Register"
-        android:id="@+id/textView6"
-        android:layout_gravity="center_horizontal"
-        android:textSize="25dp"/>
-
-    <TextView
-        android:text="@string/thanks"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/textView3"
-        android:gravity="center"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:textColor="#0004ff"/>
+        android:layout_height="match_parent">
 
-    <TextView
-        android:text="@string/info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/textView2"
-        android:layout_marginBottom="20dp"
-        android:gravity="center"
-        android:textColor="#0004ff"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Register"
+                android:id="@+id/textView6"
+                android:layout_gravity="center_horizontal"
+                android:textSize="25dp"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Email"
-        android:id="@+id/emailTextView"
-        android:layout_gravity="center"
-        android:textSize="15dp"/>
+            <TextView
+                android:text="@string/thanks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/textView3"
+                android:gravity="center"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:textColor="#0004ff"/>
 
-    <EditText
-        android:layout_width="254dp"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:ems="10"
-        android:layout_gravity="center_horizontal"
-        android:id="@+id/emailEditText"/>
+            <TextView
+                android:text="@string/info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/textView2"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:textColor="#0004ff"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Password"
-        android:id="@+id/passwordTextView"
-        android:layout_gravity="center"
-        android:textSize="15dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Email"
+                android:id="@+id/emailTextView"
+                android:layout_gravity="center"
+                android:textSize="15dp"/>
 
-    <EditText
-        android:layout_width="254dp"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:layout_gravity="center_horizontal"
-        android:id="@+id/passwordEditText" />
+            <EditText
+                android:layout_width="254dp"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:ems="10"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/emailEditText"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Verify Password"
-        android:id="@+id/verifyTextView"
-        android:layout_gravity="center"
-        android:textSize="15dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Password"
+                android:id="@+id/passwordTextView"
+                android:layout_gravity="center"
+                android:textSize="15dp"/>
 
-    <EditText
-        android:layout_width="254dp"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:layout_gravity="center_horizontal"
-        android:id="@+id/verifyEditText"
-        />
+            <EditText
+                android:layout_width="254dp"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:ems="10"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/passwordEditText" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Register"
-        android:id="@+id/registerButton"
-        android:layout_gravity="center_horizontal"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Verify Password"
+                android:id="@+id/verifyTextView"
+                android:layout_gravity="center"
+                android:textSize="15dp"/>
+
+            <EditText
+                android:layout_width="254dp"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:ems="10"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/verifyEditText"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Secret Question"
+                android:id="@+id/questionTextView"
+                android:layout_gravity="center"
+                android:textSize="15dp"/>
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinnerQuestions"
+                android:layout_gravity="center_horizontal"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Secret Answer"
+                android:id="@+id/answerTextView"
+                android:layout_gravity="center"
+                android:textSize="15dp"/>
+
+            <EditText
+                android:layout_width="254dp"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:ems="10"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/answerEditText"
+                />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Register"
+                android:id="@+id/registerButton"
+                android:layout_gravity="center_horizontal"/>
+            </LinearLayout>
+
+    </ScrollView>
+
+
 
 </LinearLayout>
