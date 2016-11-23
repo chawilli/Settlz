@@ -994,17 +994,22 @@ public class MainActivity extends AppCompatActivity
             try {
                 ResultSet rs = connectionClass.vote(id, selected);
                 rs.next();
+                ArrayList<String> labels = new ArrayList<String>();
                 ArrayList<Entry> entries = new ArrayList<Entry>();
                 if(rs.getInt("Vote1") != 0){
+                    labels.add(rs.getString("Option1"));
                     entries.add(new Entry((float) rs.getInt("Vote1"), rs.getInt("Vote1")));
                 }
                 if(rs.getInt("Vote2") != 0){
+                    labels.add(rs.getString("Option2"));
                     entries.add(new Entry((float) rs.getInt("Vote2"), rs.getInt("Vote2")));
                 }
                 if (option3RadioButton.getVisibility() == View.VISIBLE && rs.getInt("Vote3") != 0) {
+                    labels.add(rs.getString("Option3"));
                     entries.add(new Entry((float) rs.getInt("Vote3"), rs.getInt("Vote3")));
                 }
                 if (option4RadioButton.getVisibility() == View.VISIBLE && rs.getInt("Vote4") != 0) {
+                    labels.add(rs.getString("Option4"));
                     entries.add(new Entry((float) rs.getInt("Vote4"), rs.getInt("Vote4")));
                 }
                 PieDataSet dataset = new PieDataSet(entries, "");
@@ -1013,11 +1018,11 @@ public class MainActivity extends AppCompatActivity
                 //dataset.setColors(new int[] { Color.MAGENTA, Color.CYAN, Color.parseColor("silver"), Color.parseColor("teal") });
 
                 dataset.setValueTextSize(16);
-                ArrayList<String> labels = new ArrayList<String>();
-                labels.add(rs.getString("Option1"));
-                labels.add(rs.getString("Option2"));
-                labels.add(rs.getString("Option3"));
-                labels.add(rs.getString("Option4"));
+
+
+
+
+
                 PieData data = new PieData(labels, dataset);
                 chart.setData(data);
                 chart.setDescription("Results");
