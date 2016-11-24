@@ -1120,7 +1120,6 @@ public class MainActivity extends AppCompatActivity
                 while (rs.next()) {
                     categories.add(rs.getString("CategoryName"));
                 }
-                ;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -1204,8 +1203,14 @@ public class MainActivity extends AppCompatActivity
             dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerSubscribe.setAdapter(dataAdapter);
 
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            populateSubscriptions(top);
 
+            return rootView;
+
+        }
+
+        public void populateSubscriptions(int top){
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             if (pref.getInt("id", -1) != -1) {
                 ResultSet rs = connectionClass.getSubscribedPolls(pref.getInt("id", -1),top);
                 try {
@@ -1220,14 +1225,8 @@ public class MainActivity extends AppCompatActivity
                     }
                 } catch (SQLException e) {
                     Log.d("SQLPROBLEM", e.toString());
-
                 }
-
-
             }
-
-            return rootView;
-
         }
 
         @Override
@@ -1258,29 +1257,10 @@ public class MainActivity extends AppCompatActivity
                     top = 1000;
                 }
                 subscribeLayout.removeAllViews();
-                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
-                if (pref.getInt("id", -1) != -1) {
-                    ResultSet rs = connectionClass.getSubscribedPolls(pref.getInt("id", -1),top);
-                    try {
-                        while (rs.next()) {
-                            Button button = new Button(getActivity());
-                            button.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                            button.setText(rs.getString("Argument"));
-                            button.setId(rs.getInt("PollId"));
-                            button.setOnClickListener(this);
-                            buttonList.add(button);
-                            subscribeLayout.addView(button);
-                        }
-                    } catch (SQLException e) {
-                        Log.d("SQLPROBLEM", e.toString());
-
-                    }
-                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Updated", Toast.LENGTH_LONG);
-                    toast.show();
-
-                }
-
+                buttonList.clear();
+                populateSubscriptions(top);
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Updated", Toast.LENGTH_LONG);
+                toast.show();
             }
         }
 
