@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity
     private static final String TWITTER_SECRET = "wTLAD6GO1WSyrRGMofLIYK3Nq0wbmLjJTO6rDGpu4CJA4EZXeV";
 
     private FrameLayout contentLayout;
-    //this is a comment
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -405,11 +406,24 @@ public class MainActivity extends AppCompatActivity
                 editor.commit();
                 Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Thank you for logging in", Toast.LENGTH_LONG);
                 toast.show();
-                Fragment fragment = new ProfileFragment();
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.content_frame, fragment);
-                ft.addToBackStack(null);
-                ft.commit();
+
+                if(pref.getInt("subscribeLogin",-1) != -1){
+                    editor.putInt("pollid", pref.getInt("subscribeLogin",1));
+                    editor.remove("subscribeLogin");
+                    editor.commit();
+                    Fragment fragment = new PollFragment();
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.content_frame, fragment);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }else{
+                    Fragment fragment = new ProfileFragment();
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.content_frame, fragment);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }
+
             } else {
                 Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_LONG);
                 toast.show();
@@ -834,7 +848,8 @@ public class MainActivity extends AppCompatActivity
             pollId = pref.getInt("pollid", 0);
             if (pollId != 0) {
                 subscribedPoll(pollId);
-                subscribeCheckBox.setChecked(true);
+//                subscribeCheckBox.setChecked(true);
+                checkSubscribe();
                 editor.remove("pollid");
                 editor.commit();
             }else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
@@ -974,6 +989,10 @@ public class MainActivity extends AppCompatActivity
 
             if (selected != 0) {
                 result(selected);
+                option1RadioButton.setChecked(false);
+                option2RadioButton.setChecked(false);
+                option3RadioButton.setChecked(false);
+                option4RadioButton.setChecked(false);
             } else {
                 Toast toast = Toast.makeText(getActivity().getApplicationContext(), "You have to select an option", Toast.LENGTH_LONG);
                 toast.show();
@@ -1060,7 +1079,12 @@ public class MainActivity extends AppCompatActivity
                         .text("http://settlz.com/view?id="+id);
                 builder.show();
             } else if (v.getId() == nextButton.getId()) {
-                next();
+                if(option1RadioButton.isChecked() || option2RadioButton.isChecked() || option3RadioButton.isChecked() || option4RadioButton.isChecked()){
+                    vote();
+                }else{
+                    next();
+                }
+
             } else if(v.getId() == reportButton.getId()){
                 connectionClass.reportPoll(id);
                 Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Thank you for reporting the malicious poll!", Toast.LENGTH_LONG);
@@ -1072,6 +1096,11 @@ public class MainActivity extends AppCompatActivity
                         connectionClass.setSubscribePoll(id, userId);
                         checked = connectionClass.checkPollUser(id, userId);
                     } else {
+                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putInt("subscribeLogin",id);
+                        editor.commit();
+                        subscribeCheckBox.setChecked(false);
                         Fragment fragment = new LoginFragment();
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
                         ft.replace(R.id.content_frame, fragment);
