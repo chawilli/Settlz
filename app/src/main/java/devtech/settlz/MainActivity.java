@@ -414,7 +414,6 @@ public class MainActivity extends AppCompatActivity
                 Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_LONG);
                 toast.show();
             }
-
         }
 
         public void register() {
@@ -531,14 +530,6 @@ public class MainActivity extends AppCompatActivity
                 Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_LONG);
                 toast.show();
             }
-        }
-
-        public void back() {
-            Fragment fragment = new PollFragment();
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.content_frame, fragment);
-            ft.addToBackStack(null);
-            ft.commit();
         }
     }
 
@@ -834,7 +825,7 @@ public class MainActivity extends AppCompatActivity
             pollId = pref.getInt("pollid", 0);
             if (pollId != 0) {
                 subscribedPoll(pollId);
-                subscribeCheckBox.setChecked(true);
+                checkSubscribe();
                 editor.remove("pollid");
                 editor.commit();
             }else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
@@ -1106,8 +1097,9 @@ public class MainActivity extends AppCompatActivity
             searchButton.setOnClickListener(this);
             getCategories();
             spinnerCategory = (Spinner) rootView.findViewById(R.id.spinnerCategory);
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, categories);
-            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, categories);
+
+            dataAdapter.setDropDownViewResource(R.layout.spinner_item);
             spinnerCategory.setAdapter(dataAdapter);
 
             return rootView;
@@ -1161,7 +1153,11 @@ public class MainActivity extends AppCompatActivity
 
                     while (rs.next()) {
                         Button button = new Button(getActivity());
+                        //DrawerLayout.LayoutParams params = new DrawerLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        //params.setMargins(5,100,5,100);
+                        //params.bottomMargin = 100;
                         button.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                        //button.setLayoutParams(params);
                         button.setText(rs.getString("Argument"));
                         button.setId(rs.getInt("PollId"));
                         button.setOnClickListener(this);

@@ -4,8 +4,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#aaaaaa"
-    android:gravity="top|center"
+    android:background="#7a7a7a"
+    android:gravity="center"
     android:orientation="vertical">
 
     <TextView
@@ -35,7 +35,7 @@
 
     <EditText
         android:id="@+id/passwordEditText"
-        android:layout_width="255dp"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPassword"
@@ -58,7 +58,7 @@
 
     <EditText
         android:id="@+id/changedEditText"
-        android:layout_width="255dp"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPassword"/>
@@ -73,7 +73,7 @@
 
     <EditText
         android:id="@+id/verifyEditText"
-        android:layout_width="255dp"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPassword"/>

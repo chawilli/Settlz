@@ -5,7 +5,7 @@
               android:layout_height="match_parent"
               android:orientation="vertical"
               android:padding="10dp"
-              android:background="#aaaaaa"
+              android:background="#7a7a7a"
     >
 
     <TextView
@@ -28,7 +28,7 @@
         android:textSize="15dp"/>
 
     <EditText
-        android:layout_width="254dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/argumentEditText"
         android:layout_gravity="center_horizontal"
@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/spinnerCategory"
         android:layout_gravity="center_horizontal"
-        />
+        android:backgroundTint="@color/colorAccent"/>
 
     <LinearLayout
         android:orientation="horizontal"

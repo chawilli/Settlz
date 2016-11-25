@@ -5,7 +5,7 @@
               android:layout_height="match_parent"
               android:orientation="vertical"
               android:padding="10dp"
-              android:background="#aaaaaa">
+              android:background="#7a7a7a">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -55,7 +55,7 @@
                 android:textSize="15dp"/>
 
             <EditText
-                android:layout_width="254dp"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
                 android:ems="10"
@@ -72,7 +72,7 @@
                 android:textSize="15dp"/>
 
             <EditText
-                android:layout_width="254dp"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:ems="10"
@@ -89,7 +89,7 @@
                 android:textSize="15dp"/>
 
             <EditText
-                android:layout_width="254dp"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:ems="10"
@@ -120,7 +120,7 @@
                 android:textSize="15dp"/>
 
             <EditText
-                android:layout_width="254dp"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:ems="10"

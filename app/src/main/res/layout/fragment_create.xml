@@ -3,7 +3,7 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#aaaaaa"
+    android:background="#7a7a7a"
     android:padding="10dp">
 
     <TextView
@@ -29,6 +29,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/spinnerCategory"
         android:layout_gravity="center_horizontal"
+        android:backgroundTint="@color/colorAccent"
         />
 
     <TextView
@@ -106,31 +107,10 @@
         android:layout_gravity="center_horizontal"
         android:background="#FFFFFF" />
 
-    <!--<TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Category"
-        android:id="@+id/textView16"
-        android:layout_gravity="center_horizontal" />
-
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinnerCategory"
-        android:layout_gravity="center_horizontal" />-->
-
-    <!--<TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Expiry Date"
-        android:id="@+id/textView17"
-        android:layout_gravity="center_horizontal" />-->
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Expiry Date"
+        android:text="Set Expiry Date"
         android:id="@+id/expiryButton"
         android:layout_gravity="center_horizontal" />
 
@@ -143,7 +123,7 @@
         android:layout_gravity="center_horizontal"
         android:text=""
         android:focusable="false"
-        android:background="@color/bright_foreground_disabled_material_light"
+        android:background="@color/colorAccent"
         android:clickable="false"
         android:textColor="#ffffff"/>
 
