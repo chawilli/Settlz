@@ -238,6 +238,7 @@ public class MainActivity extends AppCompatActivity
         Button logoutButton;
         Button changeButton;
         Button subscribeButton;
+        Button changeQuestionButton;
         Button facebookLogoutButton;
         EditText passwordEditText;
         EditText verifyEditText;
@@ -264,6 +265,8 @@ public class MainActivity extends AppCompatActivity
             subscribeButton.setOnClickListener(this);
             facebookLogoutButton = (Button)rootView.findViewById(R.id.facebookLogOutButton);
             facebookLogoutButton.setOnClickListener(this);
+            changeQuestionButton = (Button)rootView.findViewById(R.id.changeQuestionButton);
+            changeQuestionButton.setOnClickListener(this);
 
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             emailTextView = (TextView) rootView.findViewById(R.id.emailTextView);
@@ -301,6 +304,13 @@ public class MainActivity extends AppCompatActivity
             }
             if (v.getId() == changeButton.getId()) {
                 this.changePassword();
+            }
+            if(v.getId() == changeQuestionButton.getId()){
+                Fragment fragment = new QuestionFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame, fragment);
+                ft.addToBackStack(null);
+                ft.commit();
             }
             if (v.getId() == subscribeButton.getId()) {
                 Fragment fragment = new SubscribeFragment();
@@ -1404,6 +1414,72 @@ public class MainActivity extends AppCompatActivity
                     Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_LONG);
                     toast.show();
                 }
+            }
+        }
+    }
+
+    public static class QuestionFragment extends Fragment implements View.OnClickListener {
+        Database connectionClass;
+        Spinner spinnerQuestions;
+        Button changeButton;
+        EditText answer;
+        List<String> questions = new ArrayList<String>();
+        public QuestionFragment(){
+
+        }
+
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_question, container, false);
+            connectionClass = new Database();
+            changeButton = (Button)rootView.findViewById(R.id.changeQuestionButton);
+            changeButton.setOnClickListener(this);
+            answer = (EditText)rootView.findViewById(R.id.answerEditText);
+            getQuestions();
+            spinnerQuestions = (Spinner) rootView.findViewById(R.id.spinnerQuestions);
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, questions);
+            dataAdapter.setDropDownViewResource(R.layout.spinner_item);
+            spinnerQuestions.setAdapter(dataAdapter);
+            return rootView;
+
+        }
+
+        public void getQuestions(){
+
+            ResultSet rs = connectionClass.getQuestions();
+            try {
+                while (rs.next()) {
+                    questions.add(rs.getString("securityQuestion"));
+                }
+                ;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+            if(v.getId() == changeButton.getId()){
+                String question = spinnerQuestions.getSelectedItem().toString();
+                int questionId = -1;
+                questionId = connectionClass.getQuestionId(question);
+                if(questionId != -1){
+                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+                    connectionClass.changeQuestion(pref.getInt("id",-1),questionId,answer.getText().toString());
+
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Secrets Changed!", Toast.LENGTH_LONG);
+                    toast.show();
+                    Fragment fragment = new ProfileFragment();
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.content_frame, fragment);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }else{
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Error", Toast.LENGTH_LONG);
+                    toast.show();
+                }
+
+
             }
         }
     }

@@ -612,4 +612,18 @@ public class Database {
             e.printStackTrace();
         }
     }
+
+    public void changeQuestion(int id, int questionId, String answer) {
+        try {
+
+            String query = "UPDATE Users " +
+                    "SET SecurityId="+questionId+", Answer='"+answer+"' " +
+                    "WHERE UserId="+id;
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(query);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
