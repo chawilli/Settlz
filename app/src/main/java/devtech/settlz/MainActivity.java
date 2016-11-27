@@ -1192,7 +1192,9 @@ public class MainActivity extends AppCompatActivity
                         //DrawerLayout.LayoutParams params = new DrawerLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         //params.setMargins(5,100,5,100);
                         //params.bottomMargin = 100;
-                        button.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        params.setMargins(0,0,0,10);
+                        button.setLayoutParams(params);
                         //button.setLayoutParams(params);
                         button.setText(rs.getString("Argument"));
                         button.setId(rs.getInt("PollId"));
@@ -1248,7 +1250,9 @@ public class MainActivity extends AppCompatActivity
                 try {
                     while (rs.next()) {
                         Button button = new Button(getActivity());
-                        button.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        params.setMargins(0,0,0,10);
+                        button.setLayoutParams(params);
                         button.setText(rs.getString("Argument"));
                         button.setId(rs.getInt("PollId"));
                         button.setOnClickListener(this);
