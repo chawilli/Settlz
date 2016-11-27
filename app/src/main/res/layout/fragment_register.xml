@@ -30,9 +30,8 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/textView3"
-                android:gravity="center"
                 android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
+                android:gravity="center"
                 android:textColor="#0004ff"/>
 
             <TextView
@@ -41,7 +40,6 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/textView2"
-                android:layout_marginBottom="20dp"
                 android:gravity="center"
                 android:textColor="#0004ff"/>
 
@@ -109,6 +107,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/spinnerQuestions"
                 android:layout_gravity="center_horizontal"
+                android:backgroundTint="@color/colorAccent"
                 />
             <TextView
                 android:layout_width="wrap_content"

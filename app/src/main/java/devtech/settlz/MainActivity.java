@@ -480,8 +480,8 @@ public class MainActivity extends AppCompatActivity
 
             getQuestions();
             spinnerQuestions = (Spinner) rootView.findViewById(R.id.spinnerQuestions);
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, questions);
-            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, questions);
+            dataAdapter.setDropDownViewResource(R.layout.spinner_item);
             spinnerQuestions.setAdapter(dataAdapter);
             return rootView;
         }
@@ -1231,8 +1231,8 @@ public class MainActivity extends AppCompatActivity
             updateButton.setOnClickListener(this);
 
             spinnerSubscribe = (Spinner) rootView.findViewById(R.id.spinnerSubscribe);
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, showPolls);
-            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, showPolls);
+            dataAdapter.setDropDownViewResource(R.layout.spinner_item);
             spinnerSubscribe.setAdapter(dataAdapter);
 
             populateSubscriptions(top);

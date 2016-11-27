@@ -48,23 +48,16 @@
         android:layout_height="wrap_content"
         android:id="@+id/spinnerCategory"
         android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
         android:backgroundTint="@color/colorAccent"/>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
+    <Button
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginTop="15dp">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Search"
-            android:id="@+id/searchButton"
-            />
-
-    </LinearLayout>
+        android:text="Search"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:id="@+id/searchButton"/>
 
     <ScrollView
         android:layout_width="wrap_content"

@@ -21,7 +21,7 @@
         android:id="@+id/emailTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="20dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#0004ff"/>
 
@@ -89,6 +89,7 @@
         android:id="@+id/subscribedPollButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:layout_gravity="center_horizontal"
         android:text="Subscribed Polls"/>
 
@@ -96,12 +97,14 @@
         android:text="Facebook Log Out"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:id="@+id/facebookLogOutButton" />
 
     <Button
         android:id="@+id/logoutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:layout_gravity="center_horizontal"
         android:text="Log Out"/>
 
