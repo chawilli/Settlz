@@ -202,15 +202,22 @@ public class Database {
 
             String dateCreated = year+"-"+month+"-"+day;
 
-            Statement stmt = conn.createStatement();
+
 
             String query="INSERT INTO Users (Password, Email, Created, SecurityId, Answer) " +
-                     "VALUES ('"+password+"', '"+email+"', '"+dateCreated+"', "+security+",'"+answer+"');";
-            stmt.executeUpdate(query);
+                     "VALUES (?, ?, ?, ?, ?);";
+            PreparedStatement preparedStmt = conn.prepareStatement(query);
+            preparedStmt.setString(1,password);
+            preparedStmt.setString(2,email);
+            preparedStmt.setString(3,dateCreated);
+            preparedStmt.setInt(4,security);
+            preparedStmt.setString(5,answer);
+            preparedStmt.executeUpdate();
 
             String userid = "SELECT UserId " +
                     "FROM Users " +
                     "WHERE Email='"+email+"';";
+            Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(userid);
             rs.next();
             return rs.getInt("UserId");
@@ -456,11 +463,22 @@ public class Database {
             Log.d("CREATETEST","I GOT TO HERE");
             String dateCreated = year+"-"+month+"-"+day;
             String insertPollsQuery = "INSERT INTO Polls (Argument,ReportCount,PollStatus,ExpiryDate,CategoryCategoryId,Option_OptionsId,Twitter_TwitterId,Facebook_FacebookId, User_UserId, DateCreated) " +
-                    "VALUES('"+argument+"',0,'True','"+expiryDate+"',"+categoryId+","+optionsId+","+twitterId+","+facebookId+","+userId+", '"+dateCreated+"');";
+                    "VALUES(?,0,'True', ?, ?, ?, ?, ?, ?, ?);";
+            PreparedStatement preparedStmt = conn.prepareStatement(insertPollsQuery);
+            preparedStmt.setString(1,argument);
+            preparedStmt.setString(2,expiryDate);
+            preparedStmt.setInt(3,categoryId);
+            preparedStmt.setInt(4,optionsId);
+            preparedStmt.setInt(5,twitterId);
+            preparedStmt.setInt(6,facebookId);
+            preparedStmt.setInt(7,userId);
+            preparedStmt.setString(8,dateCreated);
+            preparedStmt.executeUpdate();
+
+
+
             String getPollsQuery = "SELECT TOP 1 PollId FROM Polls " +
                     "ORDER BY PollId DESC";
-            stmt = conn.createStatement();
-            stmt.executeUpdate(insertPollsQuery);
             stmt = conn.createStatement();
             rs = stmt.executeQuery(getPollsQuery);
             rs.next();
@@ -480,19 +498,30 @@ public class Database {
 
     public ResultSet getSearchResults(String s, int categoryId) {
             String query="SELECT TOP 10 PollId, Argument FROM Polls WHERE ReportCount < 3 AND ";
+
+
+
+
         if(categoryId!=-1){
-            query+="CategoryCategoryId = "+categoryId+" AND Argument LIKE '%%"+s+"%%' ";
+            query+="CategoryCategoryId = ? AND Argument LIKE ? ";
         }
         else{
-            query+="Argument LIKE '%%"+s+"%%' ";
+            query+="Argument LIKE ?";
         }
         query += "ORDER BY Argument;";
 
 //        String query ="SELECT TOP 2 PollId, Argument FROM Polls WHERE CategoryCategoryId = 7 AND Argument LIKE '%%%%';";
             ResultSet rs = null;
             try {
-                Statement stmt = conn.createStatement();
-                rs = stmt.executeQuery(query);
+                PreparedStatement preparedStmt = conn.prepareStatement(query);
+                if(categoryId!=-1){
+                    preparedStmt.setInt(1,categoryId);
+                    preparedStmt.setString(2,"%%"+s+"%%");
+                }
+                else{
+                    preparedStmt.setString(1,"%%"+s+"%%");
+                }
+                rs = preparedStmt.executeQuery();
                 return rs;
 
             } catch (SQLException e) {

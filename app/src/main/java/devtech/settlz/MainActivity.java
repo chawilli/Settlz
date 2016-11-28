@@ -1373,6 +1373,9 @@ public class MainActivity extends AppCompatActivity
                     securityQuestionTextView.setVisibility(View.VISIBLE);
                     answerEditText.setVisibility(View.VISIBLE);
                     answerButton.setVisibility(View.VISIBLE);
+                }else{
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Email is incorrect or does not exist.", Toast.LENGTH_LONG);
+                    toast.show();
                 }
 
 
@@ -1388,6 +1391,9 @@ public class MainActivity extends AppCompatActivity
                     verifyTextView.setVisibility(View.VISIBLE);
                     verifyEditText.setVisibility(View.VISIBLE);
                     changeButton.setVisibility(View.VISIBLE);
+                }else{
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Incorrect Answer.", Toast.LENGTH_LONG);
+                    toast.show();
                 }
             }
             if(v.getId()==changeButton.getId()){
@@ -1410,8 +1416,9 @@ public class MainActivity extends AppCompatActivity
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
                     ft.replace(R.id.content_frame, fragment);
                     ft.addToBackStack(null);
-                    ft.commit();} else {
-                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_LONG);
+                    ft.commit();}
+                else {
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid Information. Make sure password match and are at least 6 characters.", Toast.LENGTH_LONG);
                     toast.show();
                 }
             }
