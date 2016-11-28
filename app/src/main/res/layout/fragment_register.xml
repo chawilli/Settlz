@@ -30,7 +30,6 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/textView3"
-                android:layout_marginTop="20dp"
                 android:gravity="center"
                 android:textColor="#0004ff"/>
 
@@ -41,6 +40,7 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/textView2"
                 android:gravity="center"
+                android:layout_marginBottom="20dp"
                 android:textColor="#0004ff"/>
 
             <TextView

@@ -17,8 +17,8 @@
         android:id="@+id/questionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
         android:text="Secret Question"
+        android:layout_marginTop="20dp"
         android:layout_gravity="center" />
     <Spinner
         android:layout_width="match_parent"

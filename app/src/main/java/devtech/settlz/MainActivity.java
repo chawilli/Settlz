@@ -525,7 +525,7 @@ public class MainActivity extends AppCompatActivity
             String password = passwordEditText.getText().toString();
             String email = emailEditText.getText().toString();
             boolean emailValid = Patterns.EMAIL_ADDRESS.matcher(email).matches();
-            if (password.equals(verifyEditText.getText().toString()) && !password.isEmpty() && password.length() >= 6 && emailValid) {
+            if (password.equals(verifyEditText.getText().toString()) && !password.isEmpty() && password.length() >= 6 && emailValid && !answerString.isEmpty()) {
 
                 if (connectionClass.verifyEmail(email)) {
 
@@ -554,14 +554,6 @@ public class MainActivity extends AppCompatActivity
                 Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_LONG);
                 toast.show();
             }
-        }
-
-        public void back() {
-            Fragment fragment = new PollFragment();
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.content_frame, fragment);
-            ft.addToBackStack(null);
-            ft.commit();
         }
     }
 
@@ -659,8 +651,8 @@ public class MainActivity extends AppCompatActivity
 
             getCategories();
             spinnerCategory = (Spinner) rootView.findViewById(R.id.spinnerCategory);
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, categories);
-            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, categories);
+            dataAdapter.setDropDownViewResource(R.layout.spinner_item);
             spinnerCategory.setAdapter(dataAdapter);
 
             createButton = (Button) rootView.findViewById(R.id.createButton);
@@ -906,6 +898,8 @@ public class MainActivity extends AppCompatActivity
 
                 if(today.after(expiryDate) || today.equals(expiryDate)){
                     result(-1);
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Poll was settled", Toast.LENGTH_LONG);
+                    toast.show();
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -1459,23 +1453,27 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onClick(View v) {
             if(v.getId() == changeButton.getId()){
-                String question = spinnerQuestions.getSelectedItem().toString();
-                int questionId = -1;
-                questionId = connectionClass.getQuestionId(question);
-                if(questionId != -1){
-                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                if (!answer.getText().toString().isEmpty()) {
+                    String question = spinnerQuestions.getSelectedItem().toString();
+                    int questionId = -1;
+                    questionId = connectionClass.getQuestionId(question);
+                    if (questionId != -1) {
+                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                        connectionClass.changeQuestion(pref.getInt("id", -1), questionId, answer.getText().toString());
 
-                    connectionClass.changeQuestion(pref.getInt("id",-1),questionId,answer.getText().toString());
-
-                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Secrets Changed!", Toast.LENGTH_LONG);
-                    toast.show();
-                    Fragment fragment = new ProfileFragment();
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.content_frame, fragment);
-                    ft.addToBackStack(null);
-                    ft.commit();
-                }else{
-                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Error", Toast.LENGTH_LONG);
+                        Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Secrets changed", Toast.LENGTH_LONG);
+                        toast.show();
+                        Fragment fragment = new ProfileFragment();
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        ft.replace(R.id.content_frame, fragment);
+                        ft.addToBackStack(null);
+                        ft.commit();
+                    } else {
+                        Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Error", Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+                } else {
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_LONG);
                     toast.show();
                 }
 
