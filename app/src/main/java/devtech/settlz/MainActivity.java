@@ -1206,6 +1206,15 @@ public class MainActivity extends AppCompatActivity
                         buttonList.add(button);
                         searchResultsLayout.addView(button);
                     }
+                    if(searchResultsLayout.getChildCount() == 0){
+                        TextView tx = new TextView(getActivity());
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        params.setMargins(0,0,0,10);
+                        tx.setLayoutParams(params);
+                        tx.setText("No Results");
+                        searchResultsLayout.addView(tx);
+
+                    }
                 } catch (SQLException e) {
                     Log.d("SQLPROBLEM", e.toString());
 
