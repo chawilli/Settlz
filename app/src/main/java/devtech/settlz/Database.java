@@ -23,7 +23,7 @@ public class Database {
     String password = "Devtech1$";
     Connection conn = null;
 
-    public Database(){
+    public Database() {
         this.connect();
     }
 
@@ -50,12 +50,7 @@ public class Database {
         }
     }
 
-    //This method queries for a randomized order of our polls.
-    // This is also run when the PollFragment has no specific poll to direct to
-    public ResultSet randomPoll(String currentDate){
-        //c = Calendar.getInstance();
-        //df = new SimpleDateFormat("yyyy-MM-dd");
-        //currentDate = df.format(c.getTime());
+    public ResultSet randomPoll(String currentDate) {
         PreparedStatement preparedStmt = null;
         String query = "Select PollId, Argument, CategoryName, ExpiryDate, Option1, Option2, Option3, Option4, Facebook_FacebookId, Twitter_TwitterId " +
                 "from Polls " +
@@ -68,7 +63,7 @@ public class Database {
         ResultSet rs = null;
         try {
             preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setString(1,currentDate);
+            preparedStmt.setString(1, currentDate);
             rs = preparedStmt.executeQuery();
 
         } catch (SQLException e) {
@@ -77,7 +72,7 @@ public class Database {
         return rs;
     }
 
-    public ResultSet nextPoll (int id, String currentDate){
+    public ResultSet nextPoll(int id, String currentDate) {
         PreparedStatement preparedStmt = null;
         String query = "Select PollId, Argument, CategoryName, ExpiryDate, Option1, Option2, Option3, Option4, Facebook_FacebookId, Twitter_TwitterId " +
                 "from Polls " +
@@ -89,8 +84,8 @@ public class Database {
         ResultSet rs = null;
         try {
             preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setInt(1,id);
-            preparedStmt.setString(2,currentDate);
+            preparedStmt.setInt(1, id);
+            preparedStmt.setString(2, currentDate);
             rs = preparedStmt.executeQuery();
 
         } catch (SQLException e) {
@@ -99,11 +94,10 @@ public class Database {
         return rs;
     }
 
-    public ResultSet vote (int pollId, int selected){
+    public ResultSet vote(int pollId, int selected) {
 
         ResultSet results = null;
         try {
-            //Update Votes table
             PreparedStatement preparedStmt = null;
             String query = "Select PollId, OptionsId, VotesId " +
                     "from Polls " +
@@ -111,24 +105,24 @@ public class Database {
                     "INNER JOIN Votes ON Options.Vote_VotesId = Votes.VotesId " +
                     "WHERE PollId = ?";
             preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setInt(1,pollId);
+            preparedStmt.setInt(1, pollId);
             ResultSet rs = null;
             rs = preparedStmt.executeQuery();
             rs.next();
             int optionsId = rs.getInt("OptionsId");
-            int votesId = rs.getInt("VotesId"); //Store the VotesId to retrieve for results activity
-            if(selected != -1){
+            int votesId = rs.getInt("VotesId");
+            if (selected != -1) {
                 String update = "UPDATE Votes " +
-                        "SET Vote"+ selected + "= Vote" + selected + "+1 " +
-                        "WHERE VotesId = " +rs.getInt("VotesId")+";";
+                        "SET Vote" + selected + "= Vote" + selected + "+1 " +
+                        "WHERE VotesId = " + rs.getInt("VotesId") + ";";
                 Statement stmt2 = conn.createStatement();
                 stmt2.executeUpdate(update);
             }
 
-            String resultQuery= "Select Option1, Option2, Option3, Option4, Vote1, Vote2, Vote3, Vote4 " +
+            String resultQuery = "Select Option1, Option2, Option3, Option4, Vote1, Vote2, Vote3, Vote4 " +
                     "FROM Options " +
                     "INNER JOIN Votes ON Options.Vote_VotesId = Votes.VotesId " +
-                    "WHERE OptionsId = " +optionsId+" AND VotesId = "+votesId+";";
+                    "WHERE OptionsId = " + optionsId + " AND VotesId = " + votesId + ";";
             Statement stmt3 = conn.createStatement();
             results = stmt3.executeQuery(resultQuery);
             return results;
@@ -141,8 +135,8 @@ public class Database {
 
     }
 
-    public ResultSet setSubscribePoll (int pollId, int userId){
-        String query= "INSERT INTO PollUser (Polls_PollId, Users_UserId) VALUES("+pollId+", "+userId+");";
+    public ResultSet setSubscribePoll(int pollId, int userId) {
+        String query = "INSERT INTO PollUser (Polls_PollId, Users_UserId) VALUES(" + pollId + ", " + userId + ");";
 
         ResultSet rs = null;
         try {
@@ -156,7 +150,7 @@ public class Database {
         return rs;
     }
 
-    public ResultSet deleteSubscribedPoll (int pollId, int userId){
+    public ResultSet deleteSubscribedPoll(int pollId, int userId) {
         String query = "DELETE FROM PollUser " +
                 "WHERE Polls_PollId = " + pollId + " AND Users_UserId = " + userId + ";";
 
@@ -172,7 +166,7 @@ public class Database {
         return rs;
     }
 
-    public Boolean checkPollUser (int pollId, int userId){
+    public Boolean checkPollUser(int pollId, int userId) {
         String query = "SELECT Polls_PollId, Users_UserId " +
                 "FROM PollUser " +
                 "WHERE Polls_PollId = " + pollId + " AND Users_UserId = " + userId + ";";
@@ -182,7 +176,7 @@ public class Database {
             Statement stmt = conn.createStatement();
             rs = stmt.executeQuery(query);
 
-            if(rs.next()) {
+            if (rs.next()) {
                 return true;
             }
 
@@ -197,26 +191,25 @@ public class Database {
 
             Calendar c = Calendar.getInstance();
             int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH)+1;
+            int month = c.get(Calendar.MONTH) + 1;
             int day = c.get(Calendar.DAY_OF_MONTH);
 
-            String dateCreated = year+"-"+month+"-"+day;
+            String dateCreated = year + "-" + month + "-" + day;
 
 
-
-            String query="INSERT INTO Users (Password, Email, Created, SecurityId, Answer) " +
-                     "VALUES (?, ?, ?, ?, ?);";
+            String query = "INSERT INTO Users (Password, Email, Created, SecurityId, Answer) " +
+                    "VALUES (?, ?, ?, ?, ?);";
             PreparedStatement preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setString(1,password);
-            preparedStmt.setString(2,email);
-            preparedStmt.setString(3,dateCreated);
-            preparedStmt.setInt(4,security);
-            preparedStmt.setString(5,answer);
+            preparedStmt.setString(1, password);
+            preparedStmt.setString(2, email);
+            preparedStmt.setString(3, dateCreated);
+            preparedStmt.setInt(4, security);
+            preparedStmt.setString(5, answer);
             preparedStmt.executeUpdate();
 
             String userid = "SELECT UserId " +
                     "FROM Users " +
-                    "WHERE Email='"+email+"';";
+                    "WHERE Email='" + email + "';";
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(userid);
             rs.next();
@@ -230,13 +223,13 @@ public class Database {
     }
 
     public ResultSet getSubscribedPolls(int userId, int top) {
-        String query="SELECT TOP "+top+" Argument, PollId " +
+        String query = "SELECT TOP " + top + " Argument, PollId " +
                 "From Polls " +
                 "INNER JOIN PollUser " +
                 "ON PollId = PollUser.Polls_PollId " +
                 "INNER JOIN Users " +
                 "ON PollUser.Users_UserId = Users.UserId " +
-                "WHERE UserId = "+userId+" " +
+                "WHERE UserId = " + userId + " " +
                 "ORDER BY Argument;";
         ResultSet rs = null;
         try {
@@ -250,15 +243,12 @@ public class Database {
         return rs;
     }
 
-    //FOR REGISTERING
     public boolean verifyEmail(String email) {
-        String query="SELECT * FROM USERS WHERE email='"+email+"';";
+        String query = "SELECT * FROM USERS WHERE email='" + email + "';";
         try {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
-            //rs.next() returns false if the ResultSet is empty because the cursor is before first line
-            //this means email is available to register
-            if(rs.next() == false){
+            if (rs.next() == false) {
                 return true;
             }
         } catch (SQLException e) {
@@ -273,11 +263,11 @@ public class Database {
                     "FROM Users " +
                     "WHERE Email = ? AND Password =?;";
             PreparedStatement preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setString(1,email);
-            preparedStmt.setString(2,password);
+            preparedStmt.setString(1, email);
+            preparedStmt.setString(2, password);
 
             ResultSet rs = preparedStmt.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 return rs.getInt("UserId");
             }
 
@@ -292,11 +282,11 @@ public class Database {
         try {
             String query = "SELECT UserId, Banned " +
                     "FROM Users " +
-                    "WHERE Email = '"+email+"' AND Password ='"+password+"' AND Banned = 1;";
+                    "WHERE Email = '" + email + "' AND Password ='" + password + "' AND Banned = 1;";
 
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
-            if(rs.next()){
+            if (rs.next()) {
                 return true;
             }
         } catch (SQLException e) {
@@ -309,8 +299,8 @@ public class Database {
         try {
 
             String query = "UPDATE Users " +
-                    "SET Password='"+password+"' " +
-                    "WHERE UserId="+id+"";
+                    "SET Password='" + password + "' " +
+                    "WHERE UserId=" + id + "";
 
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(query);
@@ -320,13 +310,12 @@ public class Database {
         }
     }
 
-    //USED WHEN YOU PRESS A BUTTON IN SUBSCRIBEFRAGMENT
     public ResultSet subscribedPoll(int pollId) {
         String query = "Select PollId, Argument, CategoryName, ExpiryDate, Option1, Option2, Option3, Option4, Facebook_FacebookId, Twitter_TwitterId " +
                 "from Polls " +
                 "INNER JOIN Options ON Polls.Option_OptionsId = Options.OptionsId " +
                 "INNER JOIN Categories ON Polls.CategoryCategoryId = Categories.CategoryId " +
-                "WHERE PollId = "+pollId+";";
+                "WHERE PollId = " + pollId + ";";
 
         ResultSet rs = null;
         try {
@@ -341,16 +330,11 @@ public class Database {
     }
 
     public ResultSet subscribedExpiredPoll(int pollId) {
-        /*String query = "Select PollId, Argument, CategoryName, ExpiryDate, Option1, Option2, Option3, Option4 " +
-                "from Polls " +
-                "INNER JOIN Options ON Polls.Option_OptionsId = Options.OptionsId " +
-                "INNER JOIN Categories ON Polls.CategoryCategoryId = Categories.CategoryId " +
-                "WHERE PollId = "+pollId+";";*/
         String query = "Select PollId, OptionsId, VotesId " +
                 "from Polls " +
                 "INNER JOIN Options ON Polls.Option_OptionsId = Options.OptionsId " +
                 "INNER JOIN Votes ON Options.Vote_VotesId = Votes.VotesId " +
-                "WHERE PollId = " +pollId+
+                "WHERE PollId = " + pollId +
                 ";";
 
         ResultSet rs = null;
@@ -365,7 +349,7 @@ public class Database {
         return rs;
     }
 
-    public ResultSet getCategories(){
+    public ResultSet getCategories() {
         String query = "Select CategoryId, CategoryName " +
                 "from Categories;";
 
@@ -381,10 +365,10 @@ public class Database {
         return rs;
     }
 
-    public int getCategoryId(String name){
+    public int getCategoryId(String name) {
         String query = "Select CategoryId, CategoryName " +
                 "from Categories " +
-                "where CategoryName = '"+name+"';";
+                "where CategoryName = '" + name + "';";
 
         ResultSet rs = null;
         try {
@@ -401,10 +385,6 @@ public class Database {
 
     public int create(String argument, String option1, String option2, String option3, String option4, String expiryDate, int categoryId, int userId) {
         try {
-//            DECLARE @voteid int
-//            DECLARE @twitterid int
-//            DECLARE @facebookid int
-//            DECLARE @optionsid int
             int voteId;
             int twitterId;
             int facebookId;
@@ -433,7 +413,7 @@ public class Database {
 
 
             String insertOptionsQuery = "INSERT INTO Options (Option1,Option2,Option3,Option4,Vote_VotesId) " +
-                    "VALUES('"+option1+"','"+option2+"','"+option3+"','"+option4+"',"+voteId+");";
+                    "VALUES('" + option1 + "','" + option2 + "','" + option3 + "','" + option4 + "'," + voteId + ");";
             stmt = conn.createStatement();
             stmt.executeUpdate(insertOptionsQuery);
             stmt = conn.createStatement();
@@ -457,24 +437,23 @@ public class Database {
 
             Calendar c = Calendar.getInstance();
             int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH)+1;
+            int month = c.get(Calendar.MONTH) + 1;
             int day = c.get(Calendar.DAY_OF_MONTH);
 
-            Log.d("CREATETEST","I GOT TO HERE");
-            String dateCreated = year+"-"+month+"-"+day;
+            Log.d("CREATETEST", "I GOT TO HERE");
+            String dateCreated = year + "-" + month + "-" + day;
             String insertPollsQuery = "INSERT INTO Polls (Argument,ReportCount,PollStatus,ExpiryDate,CategoryCategoryId,Option_OptionsId,Twitter_TwitterId,Facebook_FacebookId, User_UserId, DateCreated) " +
                     "VALUES(?,0,'True', ?, ?, ?, ?, ?, ?, ?);";
             PreparedStatement preparedStmt = conn.prepareStatement(insertPollsQuery);
-            preparedStmt.setString(1,argument);
-            preparedStmt.setString(2,expiryDate);
-            preparedStmt.setInt(3,categoryId);
-            preparedStmt.setInt(4,optionsId);
-            preparedStmt.setInt(5,twitterId);
-            preparedStmt.setInt(6,facebookId);
-            preparedStmt.setInt(7,userId);
-            preparedStmt.setString(8,dateCreated);
+            preparedStmt.setString(1, argument);
+            preparedStmt.setString(2, expiryDate);
+            preparedStmt.setInt(3, categoryId);
+            preparedStmt.setInt(4, optionsId);
+            preparedStmt.setInt(5, twitterId);
+            preparedStmt.setInt(6, facebookId);
+            preparedStmt.setInt(7, userId);
+            preparedStmt.setString(8, dateCreated);
             preparedStmt.executeUpdate();
-
 
 
             String getPollsQuery = "SELECT TOP 1 PollId FROM Polls " +
@@ -483,9 +462,9 @@ public class Database {
             rs = stmt.executeQuery(getPollsQuery);
             rs.next();
             int pollId = rs.getInt("PollId");
-            Log.d("CREATETEST","I GOT TO HERE2");
+            Log.d("CREATETEST", "I GOT TO HERE2");
 
-            String insertPollUserQuery= "INSERT INTO PollUser (Polls_PollId, Users_UserId) VALUES("+pollId+", "+userId+");";
+            String insertPollUserQuery = "INSERT INTO PollUser (Polls_PollId, Users_UserId) VALUES(" + pollId + ", " + userId + ");";
             stmt = conn.createStatement();
             stmt.executeUpdate(insertPollUserQuery);
 
@@ -497,42 +476,37 @@ public class Database {
     }
 
     public ResultSet getSearchResults(String s, int categoryId) {
-            String query="SELECT TOP 10 PollId, Argument FROM Polls WHERE ReportCount < 3 AND ";
+        String query = "SELECT TOP 10 PollId, Argument FROM Polls WHERE ReportCount < 3 AND ";
 
 
-
-
-        if(categoryId!=-1){
-            query+="CategoryCategoryId = ? AND Argument LIKE ? ";
-        }
-        else{
-            query+="Argument LIKE ?";
+        if (categoryId != -1) {
+            query += "CategoryCategoryId = ? AND Argument LIKE ? ";
+        } else {
+            query += "Argument LIKE ?";
         }
         query += "ORDER BY Argument;";
 
-//        String query ="SELECT TOP 2 PollId, Argument FROM Polls WHERE CategoryCategoryId = 7 AND Argument LIKE '%%%%';";
-            ResultSet rs = null;
-            try {
-                PreparedStatement preparedStmt = conn.prepareStatement(query);
-                if(categoryId!=-1){
-                    preparedStmt.setInt(1,categoryId);
-                    preparedStmt.setString(2,"%%"+s+"%%");
-                }
-                else{
-                    preparedStmt.setString(1,"%%"+s+"%%");
-                }
-                rs = preparedStmt.executeQuery();
-                return rs;
-
-            } catch (SQLException e) {
-                e.printStackTrace();
+        ResultSet rs = null;
+        try {
+            PreparedStatement preparedStmt = conn.prepareStatement(query);
+            if (categoryId != -1) {
+                preparedStmt.setInt(1, categoryId);
+                preparedStmt.setString(2, "%%" + s + "%%");
+            } else {
+                preparedStmt.setString(1, "%%" + s + "%%");
             }
+            rs = preparedStmt.executeQuery();
             return rs;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rs;
 
     }
 
     public void updateShareCount(int facebookId) {
-        String query = "UPDATE Facebooks Set TimesShared = TimesShared + 1 WHERE FacebookId = '"+facebookId+"'";
+        String query = "UPDATE Facebooks Set TimesShared = TimesShared + 1 WHERE FacebookId = '" + facebookId + "'";
         try {
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(query);
@@ -543,7 +517,7 @@ public class Database {
     }
 
     public void updateTwitterCount(int twitterId) {
-        String query = "UPDATE Twitters Set TimesShared = TimesShared + 1 WHERE TwitterId = '"+twitterId+"'";
+        String query = "UPDATE Twitters Set TimesShared = TimesShared + 1 WHERE TwitterId = '" + twitterId + "'";
         try {
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(query);
@@ -554,7 +528,7 @@ public class Database {
     }
 
     public void reportPoll(int id) {
-        String query = "UPDATE Polls Set ReportCount = ReportCount + 1 WHERE PollId = "+id;
+        String query = "UPDATE Polls Set ReportCount = ReportCount + 1 WHERE PollId = " + id;
         try {
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(query);
@@ -580,8 +554,8 @@ public class Database {
         return rs;
     }
 
-    public String getQuestion(String email){
-        String query = "SELECT email, securityQuestion, Answer from Users INNER JOIN Security ON Users.SecurityId = Security.securityId Where Users.Email = '"+email+"';";
+    public String getQuestion(String email) {
+        String query = "SELECT email, securityQuestion, Answer from Users INNER JOIN Security ON Users.SecurityId = Security.securityId Where Users.Email = '" + email + "';";
         ResultSet rs = null;
         try {
             Statement stmt = conn.createStatement();
@@ -597,7 +571,7 @@ public class Database {
     public int getQuestionId(String question) {
         String query = "Select securityId, securityQuestion " +
                 "from Security " +
-                "where securityQuestion = '"+question+"';";
+                "where securityQuestion = '" + question + "';";
 
         ResultSet rs = null;
         try {
@@ -613,12 +587,12 @@ public class Database {
     }
 
     public boolean verifyAnswer(String email, String answer) {
-        String query="SELECT Answer FROM USERS WHERE email='"+email+"';";
+        String query = "SELECT Answer FROM USERS WHERE email='" + email + "';";
         try {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             rs.next();
-            if(rs.getString("Answer").toLowerCase().equals(answer.toLowerCase())){
+            if (rs.getString("Answer").toLowerCase().equals(answer.toLowerCase())) {
                 return true;
             }
 
@@ -632,8 +606,8 @@ public class Database {
         try {
 
             String query = "UPDATE Users " +
-                    "SET Password='"+changedPassword+"' " +
-                    "WHERE Email='"+email+"'";
+                    "SET Password='" + changedPassword + "' " +
+                    "WHERE Email='" + email + "'";
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(query);
 
@@ -646,8 +620,8 @@ public class Database {
         try {
 
             String query = "UPDATE Users " +
-                    "SET SecurityId="+questionId+", Answer='"+answer+"' " +
-                    "WHERE UserId="+id;
+                    "SET SecurityId=" + questionId + ", Answer='" + answer + "' " +
+                    "WHERE UserId=" + id;
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(query);
 

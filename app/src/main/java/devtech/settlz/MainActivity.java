@@ -90,7 +90,6 @@ public class MainActivity extends AppCompatActivity
     private static final String TWITTER_SECRET = "wTLAD6GO1WSyrRGMofLIYK3Nq0wbmLjJTO6rDGpu4CJA4EZXeV";
 
     private FrameLayout contentLayout;
-    //this is a comment
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +98,7 @@ public class MainActivity extends AppCompatActivity
         Fabric.with(this, new Twitter(authConfig));
         setContentView(R.layout.activity_main);
 
-        contentLayout = (FrameLayout)findViewById(R.id.content_frame);
+        contentLayout = (FrameLayout) findViewById(R.id.content_frame);
         contentLayout.setOnClickListener(this);
         Fragment fragment = new PollFragment();
         getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
@@ -116,8 +115,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -130,18 +127,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        InputMethodManager imm =  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(contentLayout.getWindowToken(), 0);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
 
         return super.onOptionsItemSelected(item);
     }
@@ -149,14 +142,12 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_create) {
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
             ;
             boolean login = pref.getBoolean("login", false);
-            //user logged in
             if (login) {
                 Fragment fragment = new CreateFragment();
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -184,7 +175,7 @@ public class MainActivity extends AppCompatActivity
             ft.replace(R.id.content_frame, fragment);
             ft.addToBackStack(null);
             ft.commit();
-        }  else if (id == R.id.nav_login) {
+        } else if (id == R.id.nav_login) {
             Fragment fragment = new LoginFragment();
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.content_frame, fragment);
@@ -201,7 +192,6 @@ public class MainActivity extends AppCompatActivity
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
             ;
             boolean login = pref.getBoolean("login", false);
-            //user logged in
             if (login) {
                 Fragment fragment = new ProfileFragment();
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -227,8 +217,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == contentLayout.getId()){
-            InputMethodManager imm =  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (v.getId() == contentLayout.getId()) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
     }
@@ -263,9 +253,9 @@ public class MainActivity extends AppCompatActivity
             changeButton.setOnClickListener(this);
             subscribeButton = (Button) rootView.findViewById(R.id.subscribedPollButton);
             subscribeButton.setOnClickListener(this);
-            facebookLogoutButton = (Button)rootView.findViewById(R.id.facebookLogOutButton);
+            facebookLogoutButton = (Button) rootView.findViewById(R.id.facebookLogOutButton);
             facebookLogoutButton.setOnClickListener(this);
-            changeQuestionButton = (Button)rootView.findViewById(R.id.changeQuestionButton);
+            changeQuestionButton = (Button) rootView.findViewById(R.id.changeQuestionButton);
             changeQuestionButton.setOnClickListener(this);
 
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -295,7 +285,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onClick(View v) {
-            if(v.getId() == facebookLogoutButton.getId()){
+            if (v.getId() == facebookLogoutButton.getId()) {
                 FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
                 LoginManager.getInstance().logOut();
             }
@@ -305,7 +295,7 @@ public class MainActivity extends AppCompatActivity
             if (v.getId() == changeButton.getId()) {
                 this.changePassword();
             }
-            if(v.getId() == changeQuestionButton.getId()){
+            if (v.getId() == changeQuestionButton.getId()) {
                 Fragment fragment = new QuestionFragment();
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.replace(R.id.content_frame, fragment);
@@ -404,8 +394,7 @@ public class MainActivity extends AppCompatActivity
             if (connectionClass.banned(email, password)) {
                 Toast toast = Toast.makeText(getActivity().getApplicationContext(), "User is banned", Toast.LENGTH_LONG);
                 toast.show();
-            }
-            else if (!password.isEmpty() && id != -1 && !email.isEmpty()) {
+            } else if (!password.isEmpty() && id != -1 && !email.isEmpty()) {
                 SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 SharedPreferences.Editor editor = pref.edit();
                 editor.putString("email", email);
@@ -416,8 +405,8 @@ public class MainActivity extends AppCompatActivity
                 Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Thank you for logging in", Toast.LENGTH_LONG);
                 toast.show();
 
-                if(pref.getInt("subscribeLogin",-1) != -1){
-                    editor.putInt("pollid", pref.getInt("subscribeLogin",1));
+                if (pref.getInt("subscribeLogin", -1) != -1) {
+                    editor.putInt("pollid", pref.getInt("subscribeLogin", 1));
                     editor.remove("subscribeLogin");
                     editor.commit();
                     Fragment fragment = new PollFragment();
@@ -425,7 +414,7 @@ public class MainActivity extends AppCompatActivity
                     ft.replace(R.id.content_frame, fragment);
                     ft.addToBackStack(null);
                     ft.commit();
-                }else{
+                } else {
                     Fragment fragment = new ProfileFragment();
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
                     ft.replace(R.id.content_frame, fragment);
@@ -447,19 +436,10 @@ public class MainActivity extends AppCompatActivity
             ft.addToBackStack(null);
             ft.commit();
         }
-
-        public void back() {
-            Fragment fragment = new PollFragment();
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.content_frame, fragment);
-            ft.addToBackStack(null);
-            ft.commit();
-        }
     }
 
     public static class RegisterFragment extends Fragment implements View.OnClickListener {
         Database connectionClass;
-        //        Statement stmt = null;
         EditText emailEditText;
         EditText passwordEditText;
         EditText verifyEditText;
@@ -467,6 +447,7 @@ public class MainActivity extends AppCompatActivity
         Spinner spinnerQuestions;
         List<String> questions = new ArrayList<String>();
         EditText answer;
+
         public RegisterFragment() {
 
         }
@@ -478,7 +459,7 @@ public class MainActivity extends AppCompatActivity
             emailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
-                    InputMethodManager imm =  (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
             });
@@ -496,7 +477,7 @@ public class MainActivity extends AppCompatActivity
             return rootView;
         }
 
-        public void getQuestions(){
+        public void getQuestions() {
 
             ResultSet rs = connectionClass.getQuestions();
             try {
@@ -529,7 +510,7 @@ public class MainActivity extends AppCompatActivity
 
                 if (connectionClass.verifyEmail(email)) {
 
-                    int id = connectionClass.register(email, password, questionId,answerString);
+                    int id = connectionClass.register(email, password, questionId, answerString);
                     SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putString("email", email);
@@ -593,7 +574,7 @@ public class MainActivity extends AppCompatActivity
             option4TextView = (TextView) rootView.findViewById(R.id.option4TextView);
             option4TextView.setVisibility(View.GONE);
             option4EditText.setVisibility(View.GONE);
-            option2EditText.addTextChangedListener(new TextWatcher(){
+            option2EditText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -601,10 +582,10 @@ public class MainActivity extends AppCompatActivity
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if(s.length() > 0){
+                    if (s.length() > 0) {
                         option3TextView.setVisibility(View.VISIBLE);
                         option3EditText.setVisibility(View.VISIBLE);
-                    }else if(s.length() == 0){
+                    } else if (s.length() == 0) {
                         option3TextView.setVisibility(View.GONE);
                         option4TextView.setVisibility(View.GONE);
                         option3EditText.setText("");
@@ -619,7 +600,7 @@ public class MainActivity extends AppCompatActivity
 
                 }
             });
-            option3EditText.addTextChangedListener(new TextWatcher(){
+            option3EditText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -627,10 +608,10 @@ public class MainActivity extends AppCompatActivity
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if(s.length() > 0){
+                    if (s.length() > 0) {
                         option4TextView.setVisibility(View.VISIBLE);
                         option4EditText.setVisibility(View.VISIBLE);
-                    }else if(s.length() == 0){
+                    } else if (s.length() == 0) {
                         option4TextView.setVisibility(View.GONE);
                         option4EditText.setText("");
                         option4EditText.setVisibility(View.GONE);
@@ -666,7 +647,6 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public Dialog onCreateDialog(Bundle savedInstanceState) {
-                // Use the current date as the default date in the picker
                 final Calendar c = Calendar.getInstance();
                 int year = c.get(Calendar.YEAR);
                 int month = c.get(Calendar.MONTH);
@@ -681,7 +661,6 @@ public class MainActivity extends AppCompatActivity
                 c.set(Calendar.MILLISECOND, 0);
                 nextDate = c.getTime();
 
-                // Create a new instance of DatePickerDialog and return it
                 return new DatePickerDialog(getActivity(), this, year, month, day);
             }
 
@@ -697,11 +676,11 @@ public class MainActivity extends AppCompatActivity
                 d.set(Calendar.MILLISECOND, 0);
                 expiryDate = d.getTime();
 
-                if(nextDate.after(expiryDate)){
+                if (nextDate.after(expiryDate)) {
                     Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_LONG);
                     toast.show();
                 } else {
-                    month +=1;
+                    month += 1;
                     expiryEditText.setText(year + "-" + month + "-" + day);
                 }
             }
@@ -737,10 +716,10 @@ public class MainActivity extends AppCompatActivity
                 categoryId = connectionClass.getCategoryId(categoryName);
 
                 SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                if(argument.isEmpty() || option1.isEmpty() || option2.isEmpty() || expiryEditText.getText().toString().isEmpty()){
+                if (argument.isEmpty() || option1.isEmpty() || option2.isEmpty() || expiryEditText.getText().toString().isEmpty()) {
                     Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Cannot make poll. Fill in the fields!", Toast.LENGTH_LONG);
                     toast.show();
-                }else{
+                } else {
                     int pollId = connectionClass.create(argument, option1, option2, option3, option4, expiryEditText.getText().toString(), categoryId, pref.getInt("id", 0));
 
                     if (pollId == -1) {
@@ -764,7 +743,6 @@ public class MainActivity extends AppCompatActivity
 
     public static class PollFragment extends Fragment implements View.OnClickListener {
         Database connectionClass;
-        //        Statement stmt = null;
         TextView pollTextView;
         RadioButton option1RadioButton;
         RadioButton option2RadioButton;
@@ -779,9 +757,7 @@ public class MainActivity extends AppCompatActivity
         Button reportButton;
         ImageButton facebookButton;
         ImageButton twitterButton;
-        // get a layout defined in xml
         LinearLayout layout;
-        // programmatically create a PieChart
         PieChart chart;
         Calendar c;
         SimpleDateFormat df;
@@ -808,9 +784,9 @@ public class MainActivity extends AppCompatActivity
             FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
             callbackManager = CallbackManager.Factory.create();
             shareDialog = new ShareDialog(this);
-            facebookButton = (ImageButton)rootView.findViewById(R.id.facebookButton);
+            facebookButton = (ImageButton) rootView.findViewById(R.id.facebookButton);
             facebookButton.setOnClickListener(this);
-            twitterButton = (ImageButton)rootView.findViewById(R.id.twitterButton);
+            twitterButton = (ImageButton) rootView.findViewById(R.id.twitterButton);
             twitterButton.setOnClickListener(this);
 
             connectionClass = new Database();
@@ -836,7 +812,7 @@ public class MainActivity extends AppCompatActivity
             layout = (LinearLayout) rootView.findViewById(R.id.linearLayout);
             chart = new PieChart(getActivity().getApplicationContext());
             reportButton = (Button) rootView.findViewById(R.id.reportButton);
-            reportButton = (Button)rootView.findViewById(R.id.reportButton);
+            reportButton = (Button) rootView.findViewById(R.id.reportButton);
             reportButton.setOnClickListener(this);
 
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -855,12 +831,11 @@ public class MainActivity extends AppCompatActivity
                 checkSubscribe();
                 editor.remove("pollid");
                 editor.commit();
-            }else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+            } else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
                 Uri uri = intent.getData();
                 id = Integer.valueOf(uri.getQueryParameter("id"));
                 subscribedPoll(id);
-            }
-            else {
+            } else {
                 random();
             }
 
@@ -868,7 +843,6 @@ public class MainActivity extends AppCompatActivity
             return rootView;
         }
 
-        //CALLED WHEN POLLFRAGMENT IS LOADED AFTER SUBSCRIBEFRAGMENT
         private void subscribedPoll(int pollId) {
             //Load a specific poll
             ResultSet rs = connectionClass.subscribedPoll(pollId);
@@ -878,10 +852,10 @@ public class MainActivity extends AppCompatActivity
                 pollTextView.setText(rs.getString("Argument"));
                 option1RadioButton.setText(rs.getString("Option1"));
                 option2RadioButton.setText(rs.getString("Option2"));
-                if(rs.getString("Option3").equals("")){
+                if (rs.getString("Option3").equals("")) {
                     option3RadioButton.setVisibility(View.GONE);
                 }
-                if(rs.getString("Option4").equals("")){
+                if (rs.getString("Option4").equals("")) {
                     option4RadioButton.setVisibility(View.GONE);
                 }
                 option3RadioButton.setText(rs.getString("Option3"));
@@ -899,7 +873,7 @@ public class MainActivity extends AppCompatActivity
                 e.setTime(df.parse(rs.getDate("ExpiryDate").toString()));
                 Date expiryDate = e.getTime();
 
-                if(today.after(expiryDate) || today.equals(expiryDate)){
+                if (today.after(expiryDate) || today.equals(expiryDate)) {
                     result(-1);
                     Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Poll was settled", Toast.LENGTH_LONG);
                     toast.show();
@@ -912,7 +886,6 @@ public class MainActivity extends AppCompatActivity
         }
 
         public void random() {
-            //Load a random poll
             ResultSet rs = connectionClass.randomPoll(currentDate);
             try {
                 rs.next();
@@ -920,10 +893,10 @@ public class MainActivity extends AppCompatActivity
                 pollTextView.setText(rs.getString("Argument"));
                 option1RadioButton.setText(rs.getString("Option1"));
                 option2RadioButton.setText(rs.getString("Option2"));
-                if(rs.getString("Option3").equals("")){
+                if (rs.getString("Option3").equals("")) {
                     option3RadioButton.setVisibility(View.GONE);
                 }
-                if(rs.getString("Option4").equals("")){
+                if (rs.getString("Option4").equals("")) {
                     option4RadioButton.setVisibility(View.GONE);
                 }
                 option3RadioButton.setText(rs.getString("Option3"));
@@ -938,13 +911,12 @@ public class MainActivity extends AppCompatActivity
             checkSubscribe();
         }
 
-        //method for nextButton
         public void next() {
             ResultSet rs = connectionClass.nextPoll(id, currentDate);
-            if(option3RadioButton.getVisibility() == View.GONE){
+            if (option3RadioButton.getVisibility() == View.GONE) {
                 option3RadioButton.setVisibility(View.VISIBLE);
             }
-            if(option4RadioButton.getVisibility() == View.GONE){
+            if (option4RadioButton.getVisibility() == View.GONE) {
                 option4RadioButton.setVisibility(View.VISIBLE);
             }
             try {
@@ -953,10 +925,10 @@ public class MainActivity extends AppCompatActivity
                 pollTextView.setText(rs.getString("Argument"));
                 option1RadioButton.setText(rs.getString("Option1"));
                 option2RadioButton.setText(rs.getString("Option2"));
-                if(rs.getString("Option3").equals("")){
+                if (rs.getString("Option3").equals("")) {
                     option3RadioButton.setVisibility(View.GONE);
                 }
-                if(rs.getString("Option4").equals("")){
+                if (rs.getString("Option4").equals("")) {
                     option4RadioButton.setVisibility(View.GONE);
                 }
                 option3RadioButton.setText(rs.getString("Option3"));
@@ -1004,16 +976,15 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        public void checkSubscribe(){
-            if(connectionClass.checkPollUser(id, userId)){
+        public void checkSubscribe() {
+            if (connectionClass.checkPollUser(id, userId)) {
                 subscribeCheckBox.setChecked(true);
             } else {
                 subscribeCheckBox.setChecked(false);
             }
         }
 
-        public void result(int selected){
-            // programmatically create a PieChart
+        public void result(int selected) {
             PieChart chart = new PieChart(getActivity().getApplicationContext());
 
             try {
@@ -1021,11 +992,11 @@ public class MainActivity extends AppCompatActivity
                 rs.next();
                 ArrayList<String> labels = new ArrayList<String>();
                 ArrayList<Entry> entries = new ArrayList<Entry>();
-                if(rs.getInt("Vote1") != 0){
+                if (rs.getInt("Vote1") != 0) {
                     labels.add(rs.getString("Option1"));
                     entries.add(new Entry((float) rs.getInt("Vote1"), rs.getInt("Vote1")));
                 }
-                if(rs.getInt("Vote2") != 0){
+                if (rs.getInt("Vote2") != 0) {
                     labels.add(rs.getString("Option2"));
                     entries.add(new Entry((float) rs.getInt("Vote2"), rs.getInt("Vote2")));
                 }
@@ -1039,13 +1010,9 @@ public class MainActivity extends AppCompatActivity
                 }
                 PieDataSet dataset = new PieDataSet(entries, "");
 
-                dataset.setColors(new int[] { Color.parseColor("#463BFF"), Color.parseColor("#8F2DFF"), Color.parseColor("#2C97FF"), Color.parseColor("#6B62FF") });
-                //dataset.setColors(new int[] { Color.MAGENTA, Color.CYAN, Color.parseColor("silver"), Color.parseColor("teal") });
+                dataset.setColors(new int[]{Color.parseColor("#463BFF"), Color.parseColor("#8F2DFF"), Color.parseColor("#2C97FF"), Color.parseColor("#6B62FF")});
 
                 dataset.setValueTextSize(16);
-
-
-
 
 
                 PieData data = new PieData(labels, dataset);
@@ -1070,27 +1037,27 @@ public class MainActivity extends AppCompatActivity
         public void onClick(View v) {
             if (v.getId() == voteButton.getId()) {
                 vote();
-            } else if(v.getId() == facebookButton.getId()){
+            } else if (v.getId() == facebookButton.getId()) {
                 connectionClass.updateShareCount(facebookId);
                 ShareLinkContent content = new ShareLinkContent.Builder()
-                        .setContentUrl(Uri.parse("http://settlz.com/view?id="+id))
+                        .setContentUrl(Uri.parse("http://settlz.com/view?id=" + id))
                         .build();
                 shareDialog.show(content);
-            } else if(v.getId() == twitterButton.getId()){
+            } else if (v.getId() == twitterButton.getId()) {
                 connectionClass.updateTwitterCount(twitterId);
-                TwitterAuthConfig authConfig =  new TwitterAuthConfig("consumerKey", "consumerSecret");
+                TwitterAuthConfig authConfig = new TwitterAuthConfig("consumerKey", "consumerSecret");
                 Fabric.with(getActivity(), new TweetComposer(), new Twitter(authConfig));
                 TweetComposer.Builder builder = new TweetComposer.Builder(getActivity())
-                        .text("http://settlz.com/view?id="+id);
+                        .text("http://settlz.com/view?id=" + id);
                 builder.show();
             } else if (v.getId() == nextButton.getId()) {
-                if(option1RadioButton.isChecked() || option2RadioButton.isChecked() || option3RadioButton.isChecked() || option4RadioButton.isChecked()){
+                if (option1RadioButton.isChecked() || option2RadioButton.isChecked() || option3RadioButton.isChecked() || option4RadioButton.isChecked()) {
                     vote();
-                }else{
+                } else {
                     next();
                 }
 
-            } else if(v.getId() == reportButton.getId()){
+            } else if (v.getId() == reportButton.getId()) {
                 connectionClass.reportPoll(id);
                 Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Thank you for reporting the malicious poll!", Toast.LENGTH_LONG);
                 toast.show();
@@ -1103,7 +1070,7 @@ public class MainActivity extends AppCompatActivity
                     } else {
                         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                         SharedPreferences.Editor editor = pref.edit();
-                        editor.putInt("subscribeLogin",id);
+                        editor.putInt("subscribeLogin", id);
                         editor.commit();
                         subscribeCheckBox.setChecked(false);
                         Fragment fragment = new LoginFragment();
@@ -1196,23 +1163,19 @@ public class MainActivity extends AppCompatActivity
 
                     while (rs.next()) {
                         Button button = new Button(getActivity());
-                        //DrawerLayout.LayoutParams params = new DrawerLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        //params.setMargins(5,100,5,100);
-                        //params.bottomMargin = 100;
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        params.setMargins(0,0,0,10);
+                        params.setMargins(0, 0, 0, 10);
                         button.setLayoutParams(params);
-                        //button.setLayoutParams(params);
                         button.setText(rs.getString("Argument"));
                         button.setId(rs.getInt("PollId"));
                         button.setOnClickListener(this);
                         buttonList.add(button);
                         searchResultsLayout.addView(button);
                     }
-                    if(searchResultsLayout.getChildCount() == 0){
+                    if (searchResultsLayout.getChildCount() == 0) {
                         TextView tx = new TextView(getActivity());
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        params.setMargins(0,0,0,10);
+                        params.setMargins(0, 0, 0, 10);
                         tx.setLayoutParams(params);
                         tx.setText("No Results");
                         searchResultsLayout.addView(tx);
@@ -1233,7 +1196,7 @@ public class MainActivity extends AppCompatActivity
         LinearLayout subscribeLayout;
         Spinner spinnerSubscribe;
         Button updateButton;
-        private String[] showPolls = new String[] {"Show 10 Polls", "Show 25 Polls", "Show 50 Polls", "Show All Polls"};
+        private String[] showPolls = new String[]{"Show 10 Polls", "Show 25 Polls", "Show 50 Polls", "Show All Polls"};
         private int top = 10;
 
         public SubscribeFragment() {
@@ -1259,15 +1222,15 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-        public void populateSubscriptions(int top){
+        public void populateSubscriptions(int top) {
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             if (pref.getInt("id", -1) != -1) {
-                ResultSet rs = connectionClass.getSubscribedPolls(pref.getInt("id", -1),top);
+                ResultSet rs = connectionClass.getSubscribedPolls(pref.getInt("id", -1), top);
                 try {
                     while (rs.next()) {
                         Button button = new Button(getActivity());
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        params.setMargins(0,0,0,10);
+                        params.setMargins(0, 0, 0, 10);
                         button.setLayoutParams(params);
                         button.setText(rs.getString("Argument"));
                         button.setId(rs.getInt("PollId"));
@@ -1296,16 +1259,14 @@ public class MainActivity extends AppCompatActivity
                     editor.commit();
                 }
             }
-            if (view.getId() == updateButton.getId()){
-                if (spinnerSubscribe.getSelectedItemPosition() == 0){
+            if (view.getId() == updateButton.getId()) {
+                if (spinnerSubscribe.getSelectedItemPosition() == 0) {
                     top = 10;
-                } else if (spinnerSubscribe.getSelectedItemPosition() == 1){
+                } else if (spinnerSubscribe.getSelectedItemPosition() == 1) {
                     top = 25;
-                }
-                else if (spinnerSubscribe.getSelectedItemPosition() == 2){
+                } else if (spinnerSubscribe.getSelectedItemPosition() == 2) {
                     top = 50;
-                }
-                else {
+                } else {
                     top = 1000;
                 }
                 subscribeLayout.removeAllViews();
@@ -1332,33 +1293,33 @@ public class MainActivity extends AppCompatActivity
         EditText verifyEditText;
         Button changeButton;
 
-        public PasswordFragment(){
+        public PasswordFragment() {
 
         }
 
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_password, container, false);
             connectionClass = new Database();
-            emailTextView = (TextView)rootView.findViewById(R.id.emailTextView);
-            usernameEditText = (EditText)rootView.findViewById(R.id.usernameEditText);
-            verifyEmailButton=(Button)rootView.findViewById(R.id.verifyEmailButton);
+            emailTextView = (TextView) rootView.findViewById(R.id.emailTextView);
+            usernameEditText = (EditText) rootView.findViewById(R.id.usernameEditText);
+            verifyEmailButton = (Button) rootView.findViewById(R.id.verifyEmailButton);
             verifyEmailButton.setOnClickListener(this);
-            securityQuestionTextView = (TextView)rootView.findViewById(R.id.securityQuestionTextView);
+            securityQuestionTextView = (TextView) rootView.findViewById(R.id.securityQuestionTextView);
             securityQuestionTextView.setVisibility(View.GONE);
-            answerEditText = (EditText)rootView.findViewById(R.id.answerEditText);
+            answerEditText = (EditText) rootView.findViewById(R.id.answerEditText);
             answerEditText.setVisibility(View.GONE);
-            answerButton=(Button)rootView.findViewById(R.id.answerButton);
+            answerButton = (Button) rootView.findViewById(R.id.answerButton);
             answerButton.setOnClickListener(this);
             answerButton.setVisibility(View.GONE);
-            passwordTextView = (TextView)rootView.findViewById(R.id.passwordTextView);
+            passwordTextView = (TextView) rootView.findViewById(R.id.passwordTextView);
             passwordTextView.setVisibility(View.GONE);
-            passwordEditText = (EditText)rootView.findViewById(R.id.passwordEditText);
+            passwordEditText = (EditText) rootView.findViewById(R.id.passwordEditText);
             passwordEditText.setVisibility(View.GONE);
-            verifyTextView = (TextView)rootView.findViewById(R.id.verifyTextView);
+            verifyTextView = (TextView) rootView.findViewById(R.id.verifyTextView);
             verifyTextView.setVisibility(View.GONE);
-            verifyEditText = (EditText)rootView.findViewById(R.id.verifyEditText);
+            verifyEditText = (EditText) rootView.findViewById(R.id.verifyEditText);
             verifyEditText.setVisibility(View.GONE);
-            changeButton = (Button)rootView.findViewById(R.id.changeButton);
+            changeButton = (Button) rootView.findViewById(R.id.changeButton);
             changeButton.setVisibility(View.GONE);
             changeButton.setOnClickListener(this);
             return rootView;
@@ -1368,9 +1329,8 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onClick(View v) {
             String email = usernameEditText.getText().toString();
-            if(v.getId() == verifyEmailButton.getId()){
-                //verifyemail is for registering to check if the email is free. In reverse, it can check if the user exists.
-                if(!connectionClass.verifyEmail(email)){
+            if (v.getId() == verifyEmailButton.getId()) {
+                if (!connectionClass.verifyEmail(email)) {
                     emailTextView.setVisibility(View.GONE);
                     usernameEditText.setVisibility(View.GONE);
                     verifyEmailButton.setVisibility(View.GONE);
@@ -1379,15 +1339,15 @@ public class MainActivity extends AppCompatActivity
                     securityQuestionTextView.setVisibility(View.VISIBLE);
                     answerEditText.setVisibility(View.VISIBLE);
                     answerButton.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Email is incorrect or does not exist.", Toast.LENGTH_LONG);
                     toast.show();
                 }
 
 
             }
-            if(v.getId()==answerButton.getId()){
-                if(connectionClass.verifyAnswer(email,answerEditText.getText().toString())){
+            if (v.getId() == answerButton.getId()) {
+                if (connectionClass.verifyAnswer(email, answerEditText.getText().toString())) {
                     securityQuestionTextView.setText("");
                     securityQuestionTextView.setVisibility(View.GONE);
                     answerEditText.setVisibility(View.GONE);
@@ -1397,12 +1357,12 @@ public class MainActivity extends AppCompatActivity
                     verifyTextView.setVisibility(View.VISIBLE);
                     verifyEditText.setVisibility(View.VISIBLE);
                     changeButton.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Incorrect Answer.", Toast.LENGTH_LONG);
                     toast.show();
                 }
             }
-            if(v.getId()==changeButton.getId()){
+            if (v.getId() == changeButton.getId()) {
                 String changedPassword = passwordEditText.getText().toString();
                 String verifyPassword = verifyEditText.getText().toString();
                 if (!changedPassword.isEmpty() && changedPassword.length() >= 6 && !verifyPassword.isEmpty() && verifyPassword.length() >= 6 && verifyPassword.equals(changedPassword)) {
@@ -1422,8 +1382,8 @@ public class MainActivity extends AppCompatActivity
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
                     ft.replace(R.id.content_frame, fragment);
                     ft.addToBackStack(null);
-                    ft.commit();}
-                else {
+                    ft.commit();
+                } else {
                     Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid Information. Make sure password match and are at least 6 characters.", Toast.LENGTH_LONG);
                     toast.show();
                 }
@@ -1437,16 +1397,17 @@ public class MainActivity extends AppCompatActivity
         Button changeButton;
         EditText answer;
         List<String> questions = new ArrayList<String>();
-        public QuestionFragment(){
+
+        public QuestionFragment() {
 
         }
 
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_question, container, false);
             connectionClass = new Database();
-            changeButton = (Button)rootView.findViewById(R.id.changeQuestionButton);
+            changeButton = (Button) rootView.findViewById(R.id.changeQuestionButton);
             changeButton.setOnClickListener(this);
-            answer = (EditText)rootView.findViewById(R.id.answerEditText);
+            answer = (EditText) rootView.findViewById(R.id.answerEditText);
             getQuestions();
             spinnerQuestions = (Spinner) rootView.findViewById(R.id.spinnerQuestions);
             ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, questions);
@@ -1456,7 +1417,7 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-        public void getQuestions(){
+        public void getQuestions() {
 
             ResultSet rs = connectionClass.getQuestions();
             try {
@@ -1471,7 +1432,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onClick(View v) {
-            if(v.getId() == changeButton.getId()){
+            if (v.getId() == changeButton.getId()) {
                 if (!answer.getText().toString().isEmpty()) {
                     String question = spinnerQuestions.getSelectedItem().toString();
                     int questionId = -1;
@@ -1495,10 +1456,7 @@ public class MainActivity extends AppCompatActivity
                     Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Invalid information", Toast.LENGTH_LONG);
                     toast.show();
                 }
-
-
             }
         }
     }
-
 }
