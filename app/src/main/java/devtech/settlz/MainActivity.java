@@ -737,23 +737,26 @@ public class MainActivity extends AppCompatActivity
                 categoryId = connectionClass.getCategoryId(categoryName);
 
                 SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                if(argument.isEmpty() || option1.isEmpty() || option2.isEmpty() || expiryEditText.getText().toString().isEmpty()){
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Cannot make poll. Fill in the fields!", Toast.LENGTH_LONG);
+                    toast.show();
+                }else{
+                    int pollId = connectionClass.create(argument, option1, option2, option3, option4, expiryEditText.getText().toString(), categoryId, pref.getInt("id", 0));
 
-                int pollId = connectionClass.create(argument, option1, option2, option3, option4, expiryEditText.getText().toString(), categoryId, pref.getInt("id", 0));
-
-                if (pollId == -1) {
-                    Log.d("ERRORR", "PROBLEMS");
-                } else {
-                    pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                    SharedPreferences.Editor editor = pref.edit();
-                    editor.putInt("pollid", pollId);
-                    Fragment fragment = new PollFragment();
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.content_frame, fragment);
-                    ft.addToBackStack(null);
-                    ft.commit();
-                    editor.commit();
+                    if (pollId == -1) {
+                        Log.d("ERRORR", "PROBLEMS");
+                    } else {
+                        pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putInt("pollid", pollId);
+                        Fragment fragment = new PollFragment();
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        ft.replace(R.id.content_frame, fragment);
+                        ft.addToBackStack(null);
+                        ft.commit();
+                        editor.commit();
+                    }
                 }
-
 
             }
         }
