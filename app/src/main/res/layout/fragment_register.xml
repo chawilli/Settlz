@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/register"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:padding="10dp"
-              android:background="#7a7a7a">
+    android:id="@+id/register"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#7a7a7a"
+    android:orientation="vertical"
+    android:padding="10dp">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -15,128 +15,127 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Register"
                 android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:textSize="25dp"/>
+                android:text="Register"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="25dp" />
 
             <TextView
-                android:text="@string/thanks"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/textView3"
-                android:gravity="center"
-                android:textColor="#0004ff"/>
-
-            <TextView
-                android:text="@string/info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/textView2"
-                android:gravity="center"
-                android:layout_marginBottom="20dp"
-                android:textColor="#0004ff"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Email"
-                android:id="@+id/emailTextView"
-                android:layout_gravity="center"
-                android:textSize="15dp"/>
-
-            <EditText
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:ems="10"
-                android:layout_gravity="center_horizontal"
-                android:id="@+id/emailEditText"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Password"
-                android:id="@+id/passwordTextView"
-                android:layout_gravity="center"
-                android:textSize="15dp"/>
-
-            <EditText
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:ems="10"
-                android:layout_gravity="center_horizontal"
-                android:id="@+id/passwordEditText" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Verify Password"
-                android:id="@+id/verifyTextView"
-                android:layout_gravity="center"
-                android:textSize="15dp"/>
-
-            <EditText
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:ems="10"
-                android:layout_gravity="center_horizontal"
-                android:id="@+id/verifyEditText"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Secret Question"
-                android:id="@+id/questionTextView"
-                android:layout_gravity="center"
-                android:textSize="15dp"/>
-            <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/spinnerQuestions"
-                android:layout_gravity="center_horizontal"
-                android:backgroundTint="@color/colorAccent"
-                />
+                android:gravity="center"
+                android:text="@string/thanks"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#0004ff" />
+
             <TextView
+                android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Secret Answer"
-                android:id="@+id/answerTextView"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:text="@string/info"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#0004ff" />
+
+            <TextView
+                android:id="@+id/emailTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textSize="15dp"/>
+                android:text="Email"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="15dp" />
 
             <EditText
+                android:id="@+id/emailEditText"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:ems="10"
                 android:layout_gravity="center_horizontal"
+                android:ems="10"
+                android:inputType="textEmailAddress" />
+
+            <TextView
+                android:id="@+id/passwordTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Password"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="15dp" />
+
+            <EditText
+                android:id="@+id/passwordEditText"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:ems="10"
+                android:inputType="textPassword" />
+
+            <TextView
+                android:id="@+id/verifyTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Verify Password"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="15dp" />
+
+            <EditText
+                android:id="@+id/verifyEditText"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:ems="10"
+                android:inputType="textPassword" />
+
+            <TextView
+                android:id="@+id/questionTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Secret Question"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="15dp" />
+
+            <Spinner
+                android:id="@+id/spinnerQuestions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:backgroundTint="@color/colorAccent" />
+
+            <TextView
+                android:id="@+id/answerTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Secret Answer"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="15dp" />
+
+            <EditText
                 android:id="@+id/answerEditText"
-                />
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:ems="10"
+                android:inputType="textPassword" />
 
             <Button
+                android:id="@+id/registerButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Register"
-                android:id="@+id/registerButton"
-                android:layout_gravity="center_horizontal"/>
-            </LinearLayout>
+                android:layout_gravity="center_horizontal"
+                android:text="Register" />
+        </LinearLayout>
 
     </ScrollView>
-
-
 
 </LinearLayout>

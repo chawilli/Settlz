@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/subscribe"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:padding="10dp"
-              android:background="#7a7a7a"
-    >
+    android:id="@+id/subscribe"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#7a7a7a"
+    android:orientation="vertical"
+    android:padding="10dp">
 
     <TextView
+        android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Subscribed Polls"
-        android:id="@+id/textView6"
         android:layout_gravity="center_horizontal"
-        android:textSize="25dp"/>
+        android:text="Subscribed Polls"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="25dp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -24,34 +23,33 @@
         android:layout_marginBottom="10dp">
 
         <Spinner
+            android:id="@+id/spinnerSubscribe"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/spinnerSubscribe"
-            android:backgroundTint="@color/colorAccent"
-            />
+            android:backgroundTint="@color/colorAccent" />
 
         <Button
+            android:id="@+id/updateButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Update"
-            android:id="@+id/updateButton"/>
+            android:text="Update" />
 
     </LinearLayout>
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/scrollView"
         android:layout_gravity="center">
 
         <LinearLayout
-            android:orientation="vertical"
+            android:id="@+id/subscribedResultsLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/subscribedResultsLayout"
-            android:gravity="center"
+            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"/>
+            android:gravity="center"
+            android:orientation="vertical" />
     </ScrollView>
 
 </LinearLayout>

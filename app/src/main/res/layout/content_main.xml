@@ -1,170 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#7a7a7a"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="devtech.settlz.MainActivity"
-    tools:showIn="@layout/app_bar_main"
-    android:background="#7a7a7a">
-
+    tools:showIn="@layout/app_bar_main">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:textAlignment="center">
 
         <LinearLayout
-            android:orientation="vertical"
+            android:id="@+id/linearLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:id="@+id/linearLayout"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true">
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:orientation="vertical">
 
             <TextView
+                android:id="@+id/categoryTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="category"
-                android:id="@+id/categoryTextView"
                 android:layout_alignParentTop="true"
                 android:layout_alignStart="@+id/backButton"
-                />
+                android:text="category"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="expires"
                 android:id="@+id/expiredTextView"
-                android:layout_below="@+id/pollTextView"
-                android:layout_alignParentStart="true"/>
-
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Argument"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/pollTextView"
+                android:text="expires"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
                 android:id="@+id/pollTextView"
-                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/optionsRadioGroup"
-                android:layout_marginTop="10dp"/>
+                android:layout_centerVertical="true"
+                android:layout_marginTop="10dp"
+                android:text="Argument"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <RadioGroup
+                android:id="@+id/optionsRadioGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minHeight="100dp"
-                android:minWidth="100dp"
-                android:id="@+id/optionsRadioGroup"
                 android:layout_above="@+id/voteButton"
                 android:layout_centerHorizontal="true"
-                >
+                android:minHeight="100dp"
+                android:minWidth="100dp">
 
                 <RadioButton
+                    android:id="@+id/option1RadioButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="New RadioButton"
-                    android:id="@+id/option1RadioButton"
                     android:layout_below="@+id/expiredTextView"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="36dp"
-                    android:checked="false" />
+                    android:checked="false"
+                    android:text="New RadioButton" />
 
                 <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="New RadioButton"
                     android:id="@+id/option2RadioButton"
-                    android:checked="false" />
-
-                <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="New RadioButton"
+                    android:checked="false"
+                    android:text="New RadioButton" />
+
+                <RadioButton
                     android:id="@+id/option3RadioButton"
-                    android:checked="false" />
-
-                <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="New RadioButton"
+                    android:checked="false"
+                    android:text="New RadioButton" />
+
+                <RadioButton
                     android:id="@+id/option4RadioButton"
-                    android:checked="false" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:text="New RadioButton" />
             </RadioGroup>
 
             <Button
+                android:id="@+id/voteButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Vote"
-                android:id="@+id/voteButton"
                 android:layout_above="@+id/subscribeCheckBox"
                 android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"/>
+                android:text="Vote" />
 
             <CheckBox
+                android:id="@+id/subscribeCheckBox"
                 style="?android:attr/starStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Subscribe"
-                android:id="@+id/subscribeCheckBox"
-                android:checked="false"
-                android:textColor="#ffffff"
                 android:layout_above="@+id/backButton"
-                android:layout_alignStart="@+id/voteButton"/>
+                android:layout_alignStart="@+id/voteButton"
+                android:checked="false"
+                android:text="Subscribe"
+                android:textColor="#ffffff" />
 
         </LinearLayout>
 
         <ImageButton
+            android:id="@+id/twitterButton"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/twitter"
-            android:id="@+id/twitterButton"
-            android:scaleType="fitXY"
-            android:background="@null"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"/>
+            android:background="@null"
+            android:scaleType="fitXY"
+            android:src="@drawable/twitter" />
 
         <ImageButton
+            android:id="@+id/facebookButton"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/facebook"
-            android:id="@+id/facebookButton"
-            android:scaleType="fitXY"
-            android:background="@null"
             android:layout_alignParentTop="true"
+            android:layout_marginEnd="11dp"
             android:layout_toStartOf="@+id/twitterButton"
-            android:layout_marginEnd="11dp"/>
+            android:background="@null"
+            android:scaleType="fitXY"
+            android:src="@drawable/facebook" />
 
         <Button
+            android:id="@+id/reportButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Report"
-            android:id="@+id/reportButton"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
             android:maxLength="50"
             android:maxWidth="80dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"/>
+            android:text="Report" />
 
         <Button
+            android:id="@+id/nextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Next"
-            android:id="@+id/nextButton"
-            android:maxLength="50"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"/>
+            android:layout_alignParentEnd="true"
+            android:maxLength="50"
+            android:text="Next" />
 
     </RelativeLayout>
 

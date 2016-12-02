@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#7a7a7a">
+    android:background="#7a7a7a"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/textView8"
@@ -11,45 +12,45 @@
         android:layout_gravity="center_horizontal"
         android:text="Change Secret Question"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="25dp"/>
+        android:textSize="25dp" />
 
     <TextView
         android:id="@+id/questionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Secret Question"
+        android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:layout_gravity="center" />
+        android:text="Secret Question" />
+
     <Spinner
+        android:id="@+id/spinnerQuestions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/spinnerQuestions"
         android:layout_gravity="center_horizontal"
-        android:backgroundTint="@color/colorAccent"
-        />
+        android:backgroundTint="@color/colorAccent" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:text="Secret Answer"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="15dp"
-        android:layout_gravity="center" />
+        android:textSize="15dp" />
 
     <EditText
         android:id="@+id/answerEditText"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:layout_gravity="center" />
+        android:inputType="textPersonName" />
 
     <Button
         android:id="@+id/changeQuestionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Change Secret Question"/>
+        android:text="Change Secret Question" />
 
 </LinearLayout>

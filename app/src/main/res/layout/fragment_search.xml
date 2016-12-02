@@ -1,87 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/search"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:padding="10dp"
-              android:background="#7a7a7a"
-    >
+    android:id="@+id/search"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#7a7a7a"
+    android:orientation="vertical"
+    android:padding="10dp">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Search"
         android:id="@+id/textView6"
-        android:layout_gravity="center_horizontal"
-        android:textSize="25dp"/>
-
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Search"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Argument"
+        android:textSize="25dp" />
+
+    <TextView
         android:id="@+id/TextView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:textSize="15dp"/>
+        android:text="Argument"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="15dp" />
 
     <EditText
+        android:id="@+id/argumentEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/argumentEditText"
         android:layout_gravity="center_horizontal"
-        android:background="#ffffff"/>
+        android:background="#ffffff" />
 
     <TextView
+        android:id="@+id/TextView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Category"
-        android:id="@+id/TextView8"
         android:layout_gravity="center"
-        android:textSize="15dp"/>
+        android:text="Category"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="15dp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="10dp">
-
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinnerCategory"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="10dp"
-        android:backgroundTint="@color/colorAccent"/>
+        android:orientation="horizontal">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Search"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="10dp"
-        android:id="@+id/searchButton"/>
+        <Spinner
+            android:id="@+id/spinnerCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:backgroundTint="@color/colorAccent" />
+
+        <Button
+            android:id="@+id/searchButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:text="Search" />
 
     </LinearLayout>
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/scrollView"
         android:layout_gravity="center">
 
         <LinearLayout
-            android:orientation="vertical"
+            android:id="@+id/searchResultsLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/searchResultsLayout"
-            android:gravity="center"
+            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"/>
+            android:gravity="center"
+            android:orientation="vertical" />
     </ScrollView>
 
 </LinearLayout>
